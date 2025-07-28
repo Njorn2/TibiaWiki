@@ -1,0 +1,1225 @@
+<style>
+    .imbuement-tool-panel {
+        display: flex;
+        max-width: 870px;
+        position: relative;
+        border: 2px solid #a2a9b1;
+        background: #ffffff;
+        border-radius: 5px;
+        -webkit-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        -moz-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-size: 13px;
+        color: black;
+    }
+    .imbument-tool-loading {
+        z-index: 9999;
+        background-color: rgba(255, 255, 255, 0.98);
+        display: inline-block;
+        border-radius: 3px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        align-content: center;
+        text-align: center;
+    }
+
+    .imbument-tool-loading>label {
+        position: relative;
+        bottom: 0px;
+        text-align: center;     
+        font-size: math;
+        background: transparent;
+    }
+    .imbument-tool-loading > span {
+        text-align: center;
+        align-content: center;
+        background-color: #c7451d;
+        height: 32px;
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        text-align: center;     
+        font-size: math;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+    .imbument-tool-menu-side {
+        width: 320px;
+        background-color: #c7451d;
+        padding: 5px;
+        color: white;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+    .imbument-tool-menu-side > h2 {
+        width: 100%;
+        text-align: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid black;
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-weight: bold;
+        color: white;
+    }
+    .imbument-tool-radio-box {
+        margin-top: 15px;
+        display: flex;
+        margin-top: 2px;
+    }
+    .imbument-tool-radio-box > label {
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .imbument-tool-category-box {
+        margin-top: 15px;
+        width: 100%;
+        display: block;
+    }
+    .imbument-tool-category-box > label {
+        width: 100%;
+        margin-left: 2px;
+        font-weight: bold;
+    }
+    .imbument-tool-category-box > select {
+        margin-top: 5px;
+        width: 100%;
+        min-height: 32px;
+        font-weight: bold;
+        border-radius: 5px;
+        border: 1px solid black;
+    }
+    .imbument-tool-search-box {
+        margin-top: 5px;
+        width: 100%;
+        display: flex;
+    }
+    .imbument-tool-search-box > input {
+        width: calc(100% - 25px);
+        height: 28px;
+        border: 1px solid black;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+    }
+    .imbument-tool-search-box > div {
+        width: 25px;
+        height: 30px;
+        background-color: white;
+        border-left: none;
+        border-right: 1px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        align-content: center;
+        text-align: center;
+    }
+    .imbument-tool-imbuements-panel {
+        display: block;
+        width: calc(100% - 330px);
+        padding: 5px;
+    }
+    .imbument-tool-items {
+        width: 100%;
+        margin-top: 15px;
+    }
+    .imbument-tool-items-data-box {
+        display: flex;
+    }
+    .imbument-tool-items-data-box > .imbument-tool-items-data-image-box {
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 5px;
+        align-content: center;
+        text-align: center;
+    }
+    .imbument-tool-items-data-box-data {
+        margin-left: 5px;
+    }
+    .imbument-tool-items-data-box-data > label {
+        width: 100%;
+        display: block;
+        margin-bottom: 7px;
+        font-weight: bold;
+        font-size: 15px;
+        text-align: left;
+    }
+    .imbument-tool-divisor-line {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid black;
+        padding: 0.25rem;
+        width: calc(100% - 15px);
+    }
+
+    .imbument-tool-version-label {
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        color: white;
+    }
+    #imbument-tool-items-container {
+        display: block;
+    }
+
+    .imbument-tool-imbuements-level-box {
+        width: 100%;
+    }
+    .imbument-tool-imbuements-level-box > h2 {
+        width: 100%;
+        text-align: center;
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-weight: bold;
+        border: none;
+    }
+    .imbuement-tool-level-list {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .imbuement-tool-level-list-item {
+        display: flex;
+        width: 100px;
+        height: 50px;
+        margin: 5px;
+        flex-shrink: 0;
+        align-content: center;
+        text-align: center;
+        border-radius: 5px;
+        border: 1px solid black;
+        justify-content: center;
+        align-items: center;
+    }
+    .imbuement-tool-level-list-item:hover {
+        background-color: #c04e2b;
+    }
+    .imbuement-tool-level-list-item.selected {
+        background-color: #c7451d;
+    }
+    .imbuement-tool-level-list-item > label {
+        font-weight: bold;
+        flex-shrink: 0;
+        margin-right: 5px;
+    }
+    .imbuement-tool-level-list-item > div {
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+    .imbuement-tool-level-list-item-level {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .imbuement-tool-level-list-item-level > img {
+        flex-shrink: 0;
+        width: 10px;
+        scale: 150%;
+    }
+
+    .imbument-tool-imbuements-data-box {
+        width: 100%;
+        min-height: 140px;
+        display: block;
+    }
+    .imbument-tool-imbuements-data-box > h2, .imbument-tool-imbuements-data-box > h3 {
+        width: 100%;
+        text-align: center;
+        align-content: center;
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-weight: bold;
+        border: none;
+    }
+    .imbuement-tool-data-table {
+        display: block;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .imbuement-tool-data-table-line {
+        display: block;
+        width: 100%;
+    }
+    .imbuement-tool-data-list {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .imbuement-tool-data-list-item {
+        width: 64px;
+        height: 64px;
+        margin: 5px;
+        border-radius: 5px;
+        /* border: 2px solid black; */
+    }
+    .imbuement-tool-data-list-item.selected {
+        width: 66px;
+        height: 66px;
+        filter: brightness(1.75);
+        border: 0.15rem solid chocolate;
+    }
+    .imbuement-tool-data-list-item.selected > img {
+        border-radius: 2px;
+    }
+    .imbuement-tool-data-list-item > img {
+        width: 100%;
+        scale: 100%;
+        border-radius: 5px;
+    }
+    .imbuement-tool-data-list-item:hover {
+        width: 66px;
+        height: 66px;
+        filter: brightness(1.25);
+    }
+    .imbuement-tool-list-items {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .imbuement-tool-list-items-box {
+        background-color: #f3f3f3;
+        margin: 5px;
+        width: 64px;
+        height: 64px;
+        border: 1px solid black;
+        border-radius: 5px;
+        display: block;
+        flex-shrink: 0;
+        text-align: center;
+        align-content: center;
+    }
+    .imbuement-tool-list-items-box > div {
+        width: 100%;
+        height: 44px;
+        text-align: center;
+        align-content: center;
+    }
+    .imbuement-tool-list-items-box > div > img {
+        width: 32px;
+    }
+    .imbuement-tool-list-items-box > label {
+        display: block;
+        font-weight: bold;
+        color: white;
+        width: 100%;
+        height: 20px;
+        text-align: center;
+        align-content: center;
+        border-top: 1px solid black;
+        background-color: #c7451d;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .imbuement-tool-prices {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .imbuement-tool-prices-items {
+        width: 50%;
+        margin-left: 10px;
+        display: block;
+        flex-shrink: 0;
+    }
+
+    .imbuement-tool-prices-items-box {
+        width: 100%;
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .imbuement-tool-prices-items-box > a {
+        height: 100%;
+        text-align: center;
+        align-content: end;
+    }
+    .imbuement-tool-prices-items-box > a > img {
+        width: 32px;
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+    .imbuement-tool-prices-items-box > div {
+        height: 40px;
+       margin: 0px 5px 0px 5px;    
+    }
+    .imbuement-tool-prices-items-box > div > label {
+        font-weight: bold;
+        font-size: 10px;
+    }
+    .imbuement-tool-prices-items-box > div > input {
+        width: 90%;
+        text-align: center;
+        border: 1px solid black;
+        border-radius: 3px;
+        height: 23px;
+    }
+
+    .imbuement-tool-prices-taxas-info {
+        width: 50%;
+        min-height: 200px;
+        padding: 5px;
+        border-left: 1px solid black;
+        display: block;
+        flex-shrink: 0;
+    }
+
+    .imbuement-tool-prices-taxas-info > h3 {
+        width: 100%;
+        margin: 0px 0px 15px 0px;
+        text-align: center;
+        align-content: center;
+    }
+    .imbuement-tool-prices-taxas-info > div {
+        width: 100%;
+        display: block;
+        margin-top: 5px;
+    }
+    .imbuement-tool-prices-taxas-info > label {
+        display: block;
+        width: 100%;
+        height: 20px;
+        margin-top: 5px;
+        font-weight: bold;
+        text-align: left;
+    }
+    .imbuement-tool-prices-taxas-info > div > label {
+        display: block;
+        width: 100%;
+        height: 20px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .mg-top-35px {
+        margin-top: 35px;
+    }
+    .label {
+        font-weight: bold;
+        font-size: 15px;
+    }
+    /* Extra small devices (phones, less than 576px) */
+    @media (max-width: 575.98px) {
+        .imbuement-tool-panel {
+            width: calc(100% - 5px);
+            display: block;
+        }
+
+        .imbument-tool-menu-side {
+            width: calc(100% - 10px);
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+
+        .imbument-tool-imbuements-panel {
+            width: 100%;
+        }
+
+        .imbuement-tool-prices {
+            display: block;
+        }
+        .imbuement-tool-prices-items, .imbuement-tool-prices-taxas-info {
+            width: calc(100% - 20px);
+            border-left: none;
+        }
+        .imbuement-tool-data-list-item, .imbuement-tool-data-list-item.selected {
+            height: 100%;
+        }
+    }   
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<div class="imbuement-tool-panel">
+    <label class="imbument-tool-version-label">v3.0.0</label>
+    <div class="imbument-tool-loading">
+        <img src="https://www.tibiawiki.com.br/images/c/ce/The_Epic_Wisdom.gif" /><br />
+        <label>Loading...</label>
+        <span>@TibiaWiki</span>
+    </div>
+    <div class="imbument-tool-menu-side">
+        <h2>Imbuement Tool</h2>
+        <div class="imbument-tool-radio-box">
+            <input type="radio" id="imbument-tool-items" value="Items" name="imbuement-options">
+            <label for="imbument-tool-items">Items</label>
+        </div>
+        <div class="imbument-tool-radio-box">
+            <input type="radio" id="imbument-tool-scrolls" value="Scrolls" name="imbuement-options">
+            <label for="imbument-tool-scrolls">Scrolls</label>
+        </div>
+        <span class="imbument-tool-divisor-line"></span>
+        <div id="imbument-tool-items-container">
+            <div class="imbument-tool-category-box">
+                <label for="">Categoria:</label>
+                <select id="imbuement-tool-items-category">
+                </select>
+            </div>
+            <div class="imbument-tool-category-box">
+                <label for="">Items:</label>
+                <div class="imbument-tool-search-box">
+                    <input id="imbument-tool-input-search" type="text" placeholder="buscar por item...">
+                    <div><i>&#x1F50D;</i></div>
+                </div>
+                <select id="imbuement-tool-items-list" size="10">
+                </select>
+            </div>
+        </div>
+        <div class="imbument-tool-items">
+            <div class="imbument-tool-items-data-box">
+                <div class="imbument-tool-items-data-image-box">
+                    <img id="imbument-tool-items-image" src="" alt="item-image">
+                </div>
+                <div class="imbument-tool-items-data-box-data">
+                    <label id="imbument-tool-items-name"><span class="label">Item:</span> Dauntless Dragon Scale Armor</label>
+                    <label id="imbument-tool-items-slots"><span class="label">Slots:</span> 2</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="imbument-tool-imbuements-panel">
+        <div class="imbument-tool-imbuements-level-box">
+            <h2>Nível do Imbuement</h2>
+            <div class="imbuement-tool-level-list">
+            </div>
+        </div>
+        <span class="imbument-tool-divisor-line"></span>
+        <div class="imbument-tool-imbuements-data-box">
+            <h2>Imbuements</h2>
+            <div class="imbuement-tool-data-table">
+            </div>
+        </div>
+        <span class="imbument-tool-divisor-line"></span>
+        <div class="imbument-tool-imbuements-data-box">
+            <h2>Imbuements Items</h2>
+            <h3 id="imbuement-tool-selected-imbuement-description"></h3>
+            <div class="imbuement-tool-list-items">
+            </div>
+        </div>
+        <span class="imbument-tool-divisor-line"></span>
+        <div class="imbument-tool-imbuements-data-box">
+            <h2>Informações</h2>
+            <div class="imbuement-tool-prices">
+                <div class="imbuement-tool-prices-items">
+                </div>
+                <div class="imbuement-tool-prices-taxas-info">
+                    <h3>Valores</h3>
+                    <!-- <span class="imbument-tool-divisor-line"></span> -->
+                    <div class="imbuement-tool-prices-taxas-info-items">   
+                    </div>
+                    <span class="imbument-tool-divisor-line"></span>
+                    <label id="lbl-total-gold-token">Total com Gold Token: 500000 GPs</label>
+                    <label id="lbl-total-items">Total com os Items: 450000 GPs</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    const version = "3.0.0";
+    var categories = new Object();
+    var selectedImbuementLevel = "";
+    var imbuementScrolls = {
+        "Blank Imbuement Scroll": {
+            "slots": 1,
+            "imbuements": {
+                "Vampirism": ["Intricate", "Powerful"],
+                "Void": ["Intricate", "Powerful"],
+                "Strike": ["Intricate", "Powerful"],
+                "Featherweight": ["Intricate", "Powerful"],
+                "Swiftness": ["Intricate", "Powerful"],
+                "Vibrancy": ["Intricate", "Powerful"],
+                "Reap": ["Intricate", "Powerful"],
+                "Venom": ["Intricate", "Powerful"],
+                "Scorch": ["Intricate", "Powerful"],
+                "Frost": ["Intricate", "Powerful"],
+                "Electrify": ["Intricate", "Powerful"],
+                "Cloud Fabric": ["Intricate", "Powerful"],
+                "Demon Presence": ["Intricate", "Powerful"],
+                "Dragon Hide": ["Intricate", "Powerful"],
+                "Lich Shroud": ["Intricate", "Powerful"],
+                "Quara Scale": ["Intricate", "Powerful"],
+                "Snake Skin": ["Intricate", "Powerful"],
+                "Bash": ["Intricate", "Powerful"],
+                "Blockade": ["Intricate", "Powerful"],
+                "Chop": ["Intricate", "Powerful"],
+                "Epiphany": ["Intricate", "Powerful"],
+                "Precision": ["Intricate", "Powerful"],
+                "Slash": ["Intricate", "Powerful"],
+                "Punch": ["Intricate", "Powerful"]
+            }
+        }
+    }
+    var goldToken = {
+        "name": "Gold Token",
+        "quantity": 6,
+        "link": "https://www.tibiawiki.com.br/wiki/Gold_Token",
+        "image": "https://www.tibiawiki.com.br/images/0/0b/Gold_Token.gif"
+    }
+
+    var loadAllItens = async () => {
+        let baseURL = 'https://mypper.com/tibia/v1/tibiawiki/';
+        $('.imbument-tool-loading label').text('Loading Imbuements and Itens for You, Adventurer!...');
+        await Promise.all([
+            loadData(baseURL, 'imbuements', 'Imbuements'),
+            loadData(baseURL, 'armors', 'Armors'),
+            loadData(baseURL, 'backpacks', 'Backpacks'),
+            loadData(baseURL, 'boots', 'Boots'),
+            loadData(baseURL, 'fists', 'Fists'),
+            loadData(baseURL, 'helmets', 'Helmets'),
+            loadData(baseURL, 'clubs', 'Clubs'),
+            loadData(baseURL, 'distance', 'Distance'),
+            loadData(baseURL, 'shields', 'Shields'),
+            loadData(baseURL, 'swords', 'Swords'),
+            loadData(baseURL, 'axes', 'Axes'),
+            loadData(baseURL, 'spellbooks', 'Spellbooks'),
+            loadData(baseURL, 'wandsRods', 'WandsRods')
+        ]).then((results) => {
+            categories = {
+                "Armaduras": armors,
+                "Backpacks": backpacks,
+                "Botas": boots,
+                "Capacetes": helmets,
+                "Clavas": clubs,
+                "Distância": distance,
+                "Escudos": shields,
+                "Espadas": swords,
+                "Machados": axes,
+                "Punhos": fists,
+                "Spellbooks": spellbooks,
+                "Wands e Rods": wandsRods
+            }
+            loadCategories();
+            $('.imbument-tool-loading')[0].style.display = 'none';
+            console.log("Load Done!");
+        }).catch((error) => {
+            showAlert();
+            console.error('Error:', error);
+        });
+    }
+
+    var loadData = async (baseURL, varName, path) => {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                contentType: 'text/plain; charset=utf-8',
+                url: baseURL + '/index.php?title=Tibia_Wiki:' + path + '/json&action=raw',
+                type: 'GET',
+                success: function(data) {
+                    callbacks(data.replace(/<pre id="[^"]*">/gi, '').replace(/<\/pre>/gi, ''), varName);
+                    resolve('Loaded: ' + varName);
+                },
+                error: function(error) {
+                    console.error(error);
+                    callbacks(null, varName);
+                }
+            });
+        });
+    }
+
+    var callbacks = (codigo, varName) => {
+        if (codigo == null) {
+            codigo = "";
+        } else {
+            console.log('Loaded:', varName);
+            window[varName] = JSON.parse(codigo);
+        }
+    }
+
+    var loadCategories = () => {
+        const categoriesSelect = document.getElementById('imbuement-tool-items-category');
+        if (Object.keys(categories).length === 0 || categoriesSelect == null) {
+            showAlert();
+            return;
+        }
+        Object.keys(categories).forEach(category => {
+            let option = document.createElement('option');
+            option.value = category;
+            option.innerHTML = category;
+            categoriesSelect.appendChild(option);
+        });
+        if (categoriesSelect.children.length > 0) {
+            categoriesSelect.children[0].setAttribute('selected', true);
+            loadItemList();
+        }
+    }
+
+    var loadItemList = (listItems) => {
+        const category = getSelectedCategory();
+        const itemsList = document.getElementById('imbuement-tool-items-list');
+        if (Object.keys(categories[category]).length === 0 || itemsList == null) {
+            showAlert();
+            return;
+        }        
+        itemsList.innerHTML = '';
+        const listOfItems = (listItems == null) ? categories[category] : listItems;
+        Object.keys(listOfItems).forEach(item => {
+            let option = document.createElement('option');
+            option.value = item;
+            option.innerHTML = item;
+            itemsList.appendChild(option);
+        });
+
+        if (itemsList.children.length > 0) {
+            itemsList.children[0].setAttribute('selected', true);
+            selectItem();
+        }
+    }
+
+    var selectItem = () => {
+        const selectedCategory = document.getElementById('imbuement-tool-items-category').value;
+        const selectedItem = document.getElementById('imbuement-tool-items-list').value;
+
+        const itemNameLabel = document.getElementById('imbument-tool-items-name');
+        const itemSlotsLabel = document.getElementById('imbument-tool-items-slots');
+        const itemImage = document.getElementById('imbument-tool-items-image');
+
+        itemNameLabel.innerHTML = `<span class="label">Item:</span> ${getSelectedItemName()}`;
+        itemSlotsLabel.innerHTML = `<span class="label">Slots:</span> ${getSelectedItemObject().slots}`;
+        itemImage.setAttribute('src', "https://www.tibiawiki.com.br/wiki/Especial:Redirecionar/file/" + getSelectedItemName() + ".gif");
+
+        loadImbuementsLevel();
+        createImbuementsLine();
+    }
+
+    var selectImbuementLevel = (component) => {
+        cleanSelectedImbuementLevel();
+        component.classList.add("selected");
+        selectedImbuementLevel = component.getAttribute('level');
+        createImbuementsLine();
+    }
+
+    var loadImbuementsLevel = () => {
+        
+        const imbuementLevelLists = document.getElementsByClassName("imbuement-tool-level-list");
+        if (imbuementLevelLists == null || imbuementLevelLists.length === 0) {
+            showAlert();
+            return;
+        }
+        const componentList = imbuementLevelLists[0];
+        componentList.innerHTML = "";
+
+        const selectedItem = getSelectedItemObject();
+        const selectedItemImbuements = selectedItem.imbuements;
+
+        selectedItemImbuements[Object.keys(selectedItemImbuements)[0]].forEach(level => {
+            const componentLevel = createImbuementLevelButton(level);
+            componentList.appendChild(componentLevel);
+        });
+        const mostLevelImbuement = document.getElementsByClassName("imbuement-tool-level-list-item");
+        if (mostLevelImbuement == null || mostLevelImbuement.length === 0) {
+            showAlert();
+            return;
+        }
+        if (selectedImbuementLevel.length === 0) {
+            mostLevelImbuement[mostLevelImbuement.length - 1].classList.add("selected");
+            selectedImbuementLevel = mostLevelImbuement[mostLevelImbuement.length - 1].getAttribute('level');
+        } else {
+            const indexes = Object.keys(mostLevelImbuement).filter(index => mostLevelImbuement[index].getAttribute('level') === selectedImbuementLevel);
+            mostLevelImbuement[indexes[0]].classList.add('selected');
+        }
+    }
+
+    var createImbuementLevelButton = (level) => {
+
+        const btn = document.createElement("div");
+        btn.classList.add("imbuement-tool-level-list-item");
+        btn.setAttribute("level", level);
+        btn.addEventListener('click', function() {
+            selectImbuementLevel(this);
+        }, false);
+
+        const imgBox = document.createElement("div");
+        imgBox.classList.add("imbuement-tool-level-list-item-level");
+
+        const label = document.createElement("label");
+        label.innerText = level;
+
+        let indexLevel = 1;
+        switch (level) {
+            case("Intricate"): {
+                indexLevel = 2;
+                break;
+            }
+            case("Powerful"): {
+                indexLevel = 3;
+                break;
+            }
+            default: {
+                indexLevel = 1;
+                break;
+            }
+        }
+        for(let i = 0; i < indexLevel; i++) {
+            const img = document.createElement('img');
+            img.setAttribute('src', 'https://www.tibiawiki.com.br/images/2/2f/The_Heart_of_the_Sea.gif');
+            img.setAttribute('alt', 'level');
+            imgBox.appendChild(img);
+        }
+        btn.appendChild(imgBox);
+        btn.appendChild(label);
+        return btn;
+    }
+
+    var createImbuementsLine = () => {
+        const selectedItem = getSelectedItemObject();
+        const selectedItemImbuements = selectedItem.imbuements;
+
+        const tables = document.getElementsByClassName('imbuement-tool-data-table');
+        if (tables == null || tables.length === 0) {
+            showAlert();
+            return;
+        }
+        const table = tables[0];
+        table.innerHTML = "";
+        let indexLine = 0;
+        let tableLine = null;
+        let tableDataLineList = null;
+        Object.keys(selectedItemImbuements).forEach(imbuement => {
+            if (indexLine === 0) {
+                tableLine = document.createElement("div");
+                tableLine.classList.add("imbuement-tool-data-table-line");
+
+                tableDataLineList = document.createElement("div");
+                tableDataLineList.classList.add("imbuement-tool-data-list");
+
+                tableLine.appendChild(tableDataLineList);
+            }
+
+            const itemList = createImbuementsItem(imbuement);
+            if (itemList) {
+                tableDataLineList.appendChild(itemList);
+            }
+
+            indexLine++;
+            if (indexLine === 6 || indexLine === Object.keys(selectedItemImbuements).length) {
+                table.append(tableLine);
+                indexLine = 0;
+            }
+        });
+
+        const imbuementComponent = document.getElementsByClassName("imbuement-tool-data-list-item")[0];
+        selectImbuementCell(imbuementComponent);
+    }
+
+    var createImbuementsItem = (imbuementName) => {
+        const imbuement = imbuements[imbuementName];
+        const imbuementLevel = getSelectedImbuementLevel();
+        const selectedItem = getSelectedItemObject();
+        if (!selectedItem.imbuements[imbuementName].includes(imbuementLevel)) {
+            return;
+        }
+
+        const divItem = document.createElement('div');
+        divItem.classList.add("imbuement-tool-data-list-item");
+        divItem.setAttribute("imbuement-name", imbuementName);
+        divItem.setAttribute("imbuement-level", imbuementLevel);
+        divItem.setAttribute("title", imbuementName.concat(" | ").concat(imbuement.name));
+
+        const img = document.createElement('img');
+        img.setAttribute('src', imbuement.level[imbuementLevel].image);
+
+        divItem.appendChild(img);
+
+        divItem.addEventListener('click', function() {
+            selectImbuementCell(this);
+        }, false);
+
+        return divItem;
+    }
+
+    var loadImbuementsItems = () => {
+        const listItems = document.getElementsByClassName("imbuement-tool-list-items");
+        if (listItems == null || Object.keys(listItems).length === 0) {
+            showAlert();
+            return;
+        }
+        const itemList = listItems[0];
+        itemList.innerHTML = "";
+
+        const imbuement = getSelectedImbuementObject();
+        imbuement.itens.forEach(item => {
+            const itemSlot = createImbuementItemSlot(item);
+            itemList.appendChild(itemSlot);
+        });
+    }
+
+    var createImbuementItemSlot = (imbuementItem) => {
+
+        const divBox = document.createElement("div");
+        divBox.classList.add("imbuement-tool-list-items-box");
+        divBox.setAttribute("title", new String(imbuementItem.quantity).concat("x ").concat(imbuementItem.name));
+
+        const divImg = document.createElement("div");
+        const a = document.createElement("a");
+        a.setAttribute('href', imbuementItem.link);
+        a.setAttribute('target', "_blank");
+        const img = document.createElement("img");
+        img.setAttribute('src', imbuementItem.image);
+        const label = document.createElement("label");
+        label.innerText = imbuementItem.quantity;
+
+        a.appendChild(img);
+        divImg.appendChild(a);
+        divBox.appendChild(divImg);
+        divBox.appendChild(label);
+
+        return divBox;
+    }
+
+    var selectImbuementCell = (component) => {
+        cleanSelectedImbuementCell();
+        component.classList.add('selected');
+        const imbuementDescription = document.getElementById('imbuement-tool-selected-imbuement-description');
+        imbuementDescription.innerText = imbuements[component.getAttribute('imbuement-name')].level[component.getAttribute('imbuement-level')].description;
+
+        loadImbuementsItems();
+        loadImbuementItemsInfos();
+        loadItemsInfosLine();
+        updateTotal();
+    }
+
+    var loadImbuementItemsInfos = () => {
+
+
+        const itemsInfosList = document.getElementsByClassName('imbuement-tool-prices-items');
+        if (itemsInfosList == null || Object.keys(itemsInfosList).length === 0) {
+            showAlert();
+            return;
+        }
+        const itemsInfosListComponent = itemsInfosList[0];
+        itemsInfosListComponent.innerHTML = "";
+
+        const imbuement = getSelectedImbuementObject();
+        if (imbuement.gold_token) {
+            goldToken.quantity = getGoldTokenQuantity();
+            const goldTokenBox = createImbuementItemInfoBox(goldToken, 0);
+            itemsInfosListComponent.appendChild(goldTokenBox);
+        }
+        let index = 1;
+        imbuement.itens.forEach(item => {
+            const itemInfoBox = createImbuementItemInfoBox(item, index);
+            itemsInfosListComponent.appendChild(itemInfoBox);
+            index++;
+        });
+    }
+
+    var createImbuementItemInfoBox = (item, indexId) => {
+
+        const img = document.createElement('img');
+        img.setAttribute('src', item.image);
+        img.setAttribute('alt', 'imbuement item');
+
+        const a = document.createElement('a');
+        a.setAttribute('href', item.link);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('title', item.name);
+        a.appendChild(img);
+
+        const labelQuantity = document.createElement('label');
+        labelQuantity.innerText = "Quantidade:";
+
+        const inputQuantity = document.createElement('input');
+        inputQuantity.setAttribute('value', item.quantity);
+        inputQuantity.setAttribute('min', '0');
+        inputQuantity.setAttribute('type', 'number');
+        inputQuantity.setAttribute('id', 'input-quantity-'.concat(indexId));
+        inputQuantity.addEventListener('input', function () {
+            updateValues(this, 'quantity', indexId);
+        });
+
+        const divQuantity = document.createElement('div');
+        divQuantity.appendChild(labelQuantity);
+        divQuantity.appendChild(inputQuantity);
+
+        const labelPrice = document.createElement('label');
+        labelPrice.innerText = "Valor Unitário (GPs):";
+
+        const inputPrice = document.createElement('input');
+        inputPrice.setAttribute('value', 0);
+        inputPrice.setAttribute('min', '0');
+        inputPrice.setAttribute('type', 'number');
+        inputPrice.setAttribute('id', 'input-price-'.concat(indexId));
+        inputPrice.addEventListener('input', function () {
+            updateValues(this, 'price', indexId);
+        });
+
+        const divPrice = document.createElement('div');
+        divPrice.appendChild(labelPrice);
+        divPrice.appendChild(inputPrice);
+
+        const divBox = document.createElement('div');
+        divBox.classList.add('imbuement-tool-prices-items-box');
+        divBox.appendChild(a);
+        divBox.appendChild(divQuantity);
+        divBox.appendChild(divPrice);
+        
+        return divBox;
+    }
+
+    var loadItemsInfosLine = () => {
+
+        const itemsInfoDivs = document.getElementsByClassName('imbuement-tool-prices-taxas-info-items');
+        if (itemsInfoDivs == null || Object.keys(itemsInfoDivs).length === 0) {
+            showAlert();
+            return;
+        }
+        const itemsInfo = itemsInfoDivs[0];
+        itemsInfo.innerHTML = "";
+
+        const imbuement = getSelectedImbuementObject();
+        if (imbuement.gold_token) {
+            const goldTokenBox = createItemInfoLabel(goldToken, 0);
+            itemsInfo.appendChild(goldTokenBox);
+        }
+        document.getElementById("lbl-total-gold-token").style.display = imbuement.gold_token ? 'block' : 'none';
+        let index = 1;
+        imbuement.itens.forEach(item => {
+            const itemLabel = createItemInfoLabel(item, index);
+            itemsInfo.appendChild(itemLabel);
+            index++;
+        });
+    }
+
+    var createItemInfoLabel = (item, indexId) => {
+        const label = document.createElement('label');
+        label.setAttribute('id', "lbl-item-".concat(indexId));
+        label.innerText = "Total ".concat(item.name).concat(": 0 GPs");
+        return label;
+    }
+
+    var getGoldTokenQuantity = () => {
+        switch(getSelectedImbuementLevel()) {
+            case ("Powerful"): {
+                return 6;
+            }
+            case ("Intricate"): {
+                return 4;
+            }
+            default: {
+                return 2;
+            }
+        }
+    }
+    var getSelectedImbuementLevel = () => {
+        return selectedImbuementLevel;
+    }
+
+    var getSelectedCategory = () => {
+        return document.getElementById('imbuement-tool-items-category').value;
+    }
+    var getSelectedItemName = () => {
+        return (getSelectedImbuementOption() === "Items") ? document.getElementById('imbuement-tool-items-list').value : Object.keys(imbuementScrolls)[0];
+    }
+    var getSelectedItemObject = () => {
+        return (getSelectedImbuementOption() === "Items") ? categories[getSelectedCategory()][getSelectedItemName()] : imbuementScrolls[getSelectedItemName()];
+    }
+    var getItemList = () => {
+        return categories[getSelectedCategory()];
+    }
+    var getSelectedImbuementObject = () => {
+        const selectedComponent = document.querySelector('.imbuement-tool-data-list-item.selected');
+        const imbuementName = selectedComponent.getAttribute('imbuement-name');
+        const imbuementLevel = selectedComponent.getAttribute('imbuement-level');
+        imbuements[imbuementName].level[imbuementLevel]["gold_token"] = imbuements[imbuementName].gold_token;
+        return imbuements[imbuementName].level[imbuementLevel];
+    }
+
+    // Limpa Campos.
+    var cleanSearchField = () => {
+        let searchInput = document.getElementById('imbument-tool-input-search');
+        searchInput.value = '';
+    }
+    var cleanSelectedImbuementLevel = () => {
+        const selectedComponent = document.querySelector('.imbuement-tool-level-list-item.selected');
+        if (selectedComponent == null) {
+            return;
+        }
+        selectedComponent.classList.remove("selected");
+        selectedImbuementLevel = "";
+
+        cleanSelectedImbuementCell();
+    }
+    var cleanSelectedImbuementCell = () => {
+        const selectedComponent = document.querySelector('.imbuement-tool-data-list-item.selected');
+        if (selectedComponent == null) {
+            return;
+        }
+        selectedComponent.classList.remove("selected");
+
+        const imbuementDescription = document.getElementById('imbuement-tool-selected-imbuement-description');
+        imbuementDescription.innerText = "";
+
+        const listItems = document.getElementsByClassName("imbuement-tool-list-items");
+        if (listItems == null || Object.keys(listItems).length === 0) {
+            showAlert();
+            return;
+        }
+        const itemList = listItems[0];
+        itemList.innerHTML = "";
+    }
+
+    var showSelectedOption = () => {
+        const selectedImbuementOption = getSelectedImbuementOption();
+        const itemsContainer = document.getElementById('imbument-tool-items-container');
+        if (itemsContainer == null) {
+            showAlert();
+            return;
+        }
+        itemsContainer.style.display = (selectedImbuementOption === "Items") ? 'block' : 'none';
+        cleanSelectedImbuementLevel();
+    }
+
+    // Busca Item na lista de Items.
+    var searchItems = (input) => {
+        let items = getItemList();
+        let filteredKeys = Object.keys(items).filter(name => name.toLowerCase().includes(input.value.toLowerCase()));
+        if (filteredKeys.length === 0) {
+            return
+        }
+        let filteredItems = new Object();
+        filteredKeys.forEach(itemName => {
+            filteredItems[itemName] = items[itemName];
+        });
+        loadItemList(filteredItems);
+    }
+
+    var updateValues = (component, type, indexId) => {
+        const value = component.value;
+
+        const multiplier = document.getElementById(`input-${(type === 'quantity') ? 'price' : 'quantity'}-${indexId}`).value;
+
+        const total = value * multiplier;
+        const imbuement = getSelectedImbuementObject();
+        const imbuementItemName = (indexId === 0) ? goldToken.name : imbuement.itens[indexId - 1].name;
+        document.getElementById(`lbl-item-${indexId}`).innerText = `Total ${imbuementItemName}: ${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} GPs`;
+
+        updateTotal();
+    }
+
+    var updateTotal = () => {
+        const imbuement = getSelectedImbuementObject();
+
+        let totalGoldTotken = 0;
+        if (imbuement.gold_token) {
+            const quantityGoldToken = document.getElementById('input-quantity-0').value;
+            const priceGoldToken = document.getElementById('input-price-0').value;
+            totalGoldTotken = quantityGoldToken * priceGoldToken;
+        }
+
+        let totalItens = 0;
+        for (let i = 1; i <= imbuement.itens.length; i++) {
+            const quantityItem = document.getElementById(`input-quantity-${i}`).value;
+            const priceItem = document.getElementById(`input-price-${i}`).value;
+            totalItens += quantityItem * priceItem;
+        }
+        const taxa = getTaxPrice();
+        if (imbuement.gold_token) {
+            document.getElementById('lbl-total-gold-token').innerText = `Total com Gold Token: ${(totalGoldTotken + taxa).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} GPs`;
+        }
+        document.getElementById('lbl-total-items').innerText = `Total com os Items: ${(totalItens + taxa).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} GPs`;
+    }
+
+    var getTaxPrice = () => {
+        switch(getSelectedImbuementLevel()) {
+            case('Powerful'): {
+                return 250000;
+            }
+            case('Intricate'): {
+                return 60000;
+            }
+            default: {
+                return 7500;
+            }
+        }
+    }
+
+    /**
+     * Adiciona Evento para quando houver interação nos selects, disparar uma ação/função.
+     */
+    var addEventListeners = () => {
+        // Category Select
+        document.getElementById('imbuement-tool-items-category').addEventListener('change', function() {
+            cleanSearchField();
+            loadItemList();
+            createImbuementsLine();
+        }, false);
+
+        // Item Select
+        document.getElementById('imbuement-tool-items-list').addEventListener('change', function() {
+            selectItem();
+        }, false);
+
+        // Imbuement Option Select
+        document.getElementById('imbument-tool-items').addEventListener('click', function() {
+            showSelectedOption();
+            selectItem();
+        }, false);
+        document.getElementById('imbument-tool-scrolls').addEventListener('click', function() {
+            showSelectedOption();
+            selectItem();
+        }, false);
+
+        let searchInput = document.getElementById('imbument-tool-input-search');
+        searchInput.addEventListener('input', () => {
+            searchItems(searchInput);
+        });
+
+        // // ImbuementSelect
+        // document.getElementById('imbuementSelect').addEventListener('change', function() {
+        //     let option = getSelectedValueFromSelect('imbuementSelect');
+        //     selectImbuement(option);
+        //     loadSelectImbuementLevel(option);
+        // }, false);
+
+        // // Imbuement Level Select
+        // document.getElementById('imbuementLevelSelect').addEventListener('change', function() {
+        //     let option = getSelectedValueFromSelect('imbuementLevelSelect');
+        //     selectImbuementLevel(option);
+        // }, false);
+    }
+
+    var showAlert = (message) => {
+        alert(message || "Desculpe pela inconveniência!\n\nAlgo deu errado. Por favor, recarregue a página.");
+    }
+
+    var getSelectedImbuementOption = () => {
+        return document.querySelector('input[name="imbuement-options"]:checked').value;
+    }
+
+    $(document).ready(function () {
+
+        $(".imbument-tool-version-label").text("v" + version);
+        const radioItems = document.getElementById('imbument-tool-items');
+        if (radioItems == null) {
+            showAlert();
+            return;
+        }
+        radioItems.setAttribute('checked', true);
+        // Adiona os eventos aos componentes.
+        addEventListeners();
+
+        loadAllItens();
+
+        showSelectedOption();
+    });
+</script>

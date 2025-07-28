@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<style>
+    .calc_bg {
+        background-color: #ffffff;
+        color: #000000;
+        font-family: Tahoma;
+        font-size: 12px;
+        border: 2px solid #a2a9b1;
+        border-left: #c7451d 5px solid;
+        border-collapse: separate;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        width: 50%;
+    }
+
+    .calc_bg input {
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        /* width: 55px; */
+        border-radius: 5px;
+        border-left: #c7451d 5px solid;
+        background: #f8f8f8;
+        border-collapse: separate;
+        margin: 0px 5px 0px 5px;
+        padding: 1px 1px 1px 1px;
+        line-height: 18px;
+        text-align: center;
+        display: inline-block;
+        vertical-align: top;
+        white-space: nowrap;
+        font-size: 13px;
+        color: black;
+    }
+
+    .calc_bg select {
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        width: 200px;
+        border-radius: 5px;
+        border-left: #c7451d 5px solid;
+        background: #f8f8f8;
+        border-collapse: separate;
+        margin: 0px 5px 0px 5px;
+        padding: 1px 1px 1px 1px;
+        height: 24px;
+        text-align: center;
+        display: inline-block;
+        vertical-align: top;
+        white-space: nowrap;
+        font-size: 13px;
+        color: black;
+    }
+
+    .calc_bg select option {
+        color: black;
+    }
+
+    .calc_border_bottom {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid #000000;
+        padding: 0.75rem;
+    }
+
+    .calc_header {
+        width: 100%;
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        -webkit-border-top-left-radius: 3px;
+        -moz-border-top-left-radius: 3px;
+        border-top-left-radius: 3px;
+    }
+    .info-box {
+        padding: 10px;
+        border-bottom: 1px solid black;
+    }
+    .data-box {
+        display: flex;
+    }
+    .data-box > div {
+        padding-left: 10px;
+        flex: 1;
+        text-align: left;
+        align-items: center;
+    }
+    .data-box > div > label {
+        margin-left: 5px;
+        margin-bottom: 5px;
+    }
+    .data-box > div > div > select, .data-box > div > div > input {
+        margin-top: 5px;
+    }
+</style>
+<meta charset="utf-8" />
+<div style="display: flex; flex-flow: column wrap; align-items: center">
+        <div class="calc_bg" style="display: flex; flex-flow: column wrap; align-items: center">
+            <div class="calc_header">
+                <div class="calc_border_bottom">
+                    <div>Informe o seu level:</div>
+                    <div id="level-input-wrapper"></div>
+                </div>
+            </div>
+            <div id="blessing-results" style="padding: 0.75rem">
+                <div id="blessing-cost"></div>
+                <div id="blessing-discount"></div>
+                <div id="blessing-total"></div>
+            </div>
+        </div>
+        <span class="calc_version" style="padding: 0.75rem">© TibiaWiki.com.br - Versão 4.0</span>
+</div>
+<script>
+    const BLESSINGS_HEADING = 'Blessings';
+    const DISCOUNTS_HEADING = 'Descontos';
+    const TOTALS_HEADING = 'Totais';
+    const ENHANCED = 'enhanced';
+    const REGULAR = 'regular';
+    const TWIST_OF_FATE = 'twist';
+    const ID = {
+        cost: 'blessing-cost',
+        discount: 'blessing-discount',
+        levelInput: 'blessing-level-input',
+        levelInputWrapper: 'level-input-wrapper',
+        results: 'blessing-results',
+        total: 'blessing-total',
+    };
+    const BLESSING = {
+        regular: {
+            amount: 5,
+            baseValue: 2000,
+            levelCeil: 120,
+            levelFloor: 30,
+            scaleAboveCeil: 75,
+            scaleAboveFloor: 200,
+        },
+        enhanced: {
+            amount: 2,
+            baseValue: 2600,
+            levelCeil: 120,
+            levelFloor: 30,
+            scaleAboveCeil: 100,
+            scaleAboveFloor: 260,
+        },
+        twist: {
+            baseValue: 2000,
+            levelCeil: 270,
+            levelFloor: 30,
+            scaleAboveFloor: 200,
+        },
+        inquisition: {
+            baseValue: 88000,
+            levelFloor: 100,
+            scaleAboveFloor: 1.1,
+        },
+    };
+    const DISCOUNT = {
+        phoenixEgg: 0.1,
+        pilgrimage: {
+            amount: 5,
+            baseValue: 1000,
+        },
+    };
+
+    const calcNormalBlessingValue = (
+        level,
+        baseValue,
+        levelCeil,
+        levelFloor,
+        scaleAboveFloor,
+        scaleAboveCeil,
+        amount
+    ) => {
+        const maxValue = baseValue + scaleAboveFloor * (levelCeil - levelFloor);
+        return level > levelCeil
+            ? (maxValue + scaleAboveCeil * (level - levelCeil)) * amount
+            : level > levelFloor
+                ? (baseValue + scaleAboveFloor * (level - levelFloor)) * amount
+                : baseValue * amount;
+    };
+
+    const calcTwistBlessingValue = (
+        level,
+        baseValue,
+        levelCeil,
+        levelFloor,
+        scaleAboveFloor,
+        amount
+    ) => {
+        const maxValue = baseValue + scaleAboveFloor * (levelCeil - levelFloor);
+        return level > levelCeil
+            ? maxValue * amount
+            : level > levelFloor
+                ? (baseValue + scaleAboveFloor * (level - levelFloor)) * amount
+                : baseValue * amount;
+    };
+
+    const calcBlessingValue = (level, type, amount = 1) => {
+        const { baseValue, levelCeil, levelFloor, scaleAboveFloor, scaleAboveCeil } =
+            BLESSING[type];
+
+        switch (type) {
+            case ENHANCED:
+            case REGULAR:
+                return calcNormalBlessingValue(
+                    level,
+                    baseValue,
+                    levelCeil,
+                    levelFloor,
+                    scaleAboveFloor,
+                    scaleAboveCeil,
+                    amount
+                );
+            case TWIST_OF_FATE:
+                return calcTwistBlessingValue(
+                    level,
+                    baseValue,
+                    levelCeil,
+                    levelFloor,
+                    scaleAboveFloor,
+                    amount
+                );
+            default:
+                return baseValue * amount;
+        }
+    };
+
+    const calcInqBlessingValue = (level) => {
+        const { amount } = BLESSING.regular;
+        const { baseValue, levelFloor, scaleAboveFloor } = BLESSING.inquisition;
+
+        if (level >= levelFloor) {
+            return Math.round(calcBlessingValue(level, REGULAR, amount) * scaleAboveFloor);
+        }
+
+        return baseValue * amount;
+    };
+
+    const calcPhxEggDiscount = (level) => {
+        return Math.round(calcBlessingValue(level, REGULAR) * DISCOUNT.phoenixEgg);
+    };
+
+    const renderLevelInput = () => {
+        const levelInputWrapper = document.querySelector(`#${ID.levelInputWrapper}`);
+
+        const input = document.createElement('input');
+        input.id = 'blessing-level-input';
+        input.type = 'text';
+        input.name = 'level';
+        input.min = '0';
+        input.max = '9999';
+        input.maxLength = '4';
+        input.value = '0';
+        input.addEventListener('click', () => (input.value = ''));
+        input.addEventListener('blur', () => (input.value = !input.value ? '0' : input.value));
+
+        if (levelInputWrapper !== null) {
+            levelInputWrapper.appendChild(input);
+        }
+    };
+
+    const setResultsVisibility = (level) => {
+        const resultsOutput = document.querySelector(`#${ID.results}`);
+
+        if (level === '' || level === 0) {
+            resultsOutput.style.display = 'none';
+            return;
+        }
+        resultsOutput.style.display = 'block';
+    };
+
+    const renderResults = (heading, messages, elementId) => {
+        const resultsList = messages.map((message) => `<li>${message}</li>`);
+        const resultsOutput = document.querySelector(`#${elementId}`);
+        // <h3>${heading}</h3> commented out until we have a proper CSS for it
+        resultsOutput.innerHTML = `<b>${heading}</b><ul>${resultsList.join('')}</ul>`;
+    };
+
+    const handleKeyDown = (event) => {
+        const allowedKeys = [
+            'Escape',
+            'Tab',
+            'ArrowLeft',
+            'ArrowRight',
+            'Home',
+            'End',
+            'Backspace',
+            'Delete',
+        ];
+
+        if (!allowedKeys.includes(event.code) && isNaN(parseInt(event.key))) {
+            event.preventDefault();
+        }
+    };
+
+    const handleInput = (level) => {
+        setResultsVisibility(level);
+
+        const enhancedAll = calcBlessingValue(level, ENHANCED, BLESSING.enhanced.amount);
+        const enhancedUnit = calcBlessingValue(level, ENHANCED);
+        const inquisitionUnit = calcInqBlessingValue(level);
+        const phoenixUnit = calcPhxEggDiscount(level);
+        const pilgrimageAll = DISCOUNT.pilgrimage.baseValue * DISCOUNT.pilgrimage.amount;
+        const pilgrimageUnit = DISCOUNT.pilgrimage.baseValue;
+        const regularAll = calcBlessingValue(level, REGULAR, BLESSING.regular.amount);
+        const regularUnit = calcBlessingValue(level, REGULAR);
+        const twistUnit = calcBlessingValue(level, TWIST_OF_FATE);
+        const twistPlusEnhanced = twistUnit + enhancedAll;
+        const inquisitionPlusEnhanced = inquisitionUnit + enhancedAll;
+        const allBlessings = regularAll + enhancedAll;
+        const allMinusPhoenix = allBlessings - phoenixUnit;
+        const allMinusDiscounts = allMinusPhoenix - pilgrimageAll;
+
+        const resultFor = {
+            blessing: {
+                regular: [
+                    // <a href="/wiki/Blessings#Bênçãos_Comuns"><b>Regulares</b></a>  commented out until we have a proper CSS for it
+                    `<b>Regulares</b> = `,
+                    `${regularUnit.toLocaleString()} gold coins (cada), `,
+                    `<b>${regularAll.toLocaleString()} gold coins</b> (total);`,
+                ].join(''),
+                enhanced: [
+                    // <a href="/wiki/Blessings#Bênçãos_Melhoradas"><b>Aprimoradas</b></a>  commented out until we have a proper CSS for it
+                    `<b>Aprimoradas</b> = `,
+                    `${enhancedUnit.toLocaleString()} gold coins (cada), `,
+                    `<b>${enhancedAll.toLocaleString()} gold coins</b> (total);`,
+                ].join(''),
+                twist: [
+                    // <a href="/wiki/Twist_of_Fate"><b>Twist of Fate</b></a>  commented out until we have a proper CSS for it
+                    `<b>Twist of Fate</b> <i>(protege as 5 regulares em caso de morte por PvP)</i> = `,
+                    `<b>${twistUnit.toLocaleString()} gold coins</b>;`,
+                ].join(''),
+            },
+            discount: {
+                // <a href="/wiki/Phoenix_Egg"><b>Phoenix Egg</b></a>  commented out until we have a proper CSS for it
+                phoenixEgg: `<b>Phoenix Egg</b> = <b>${phoenixUnit.toLocaleString()} gold coins</b>;`,
+                pilgrimage: [
+                    // <a href="/wiki/Pilgrimage_of_Ashes_Quest"><b>Pilgrimage of Ashes</b></a>  commented out until we have a proper CSS for it
+                    `<b>Pilgrimage of Ashes</b> <i>(apenas 1x)</i> = `,
+                    `${pilgrimageUnit.toLocaleString()} gold coins (cada), `,
+                    `<b>${pilgrimageAll.toLocaleString()} gold coins</b> (total);`,
+                ].join(''),
+            },
+            total: {
+                twistPlusEnhanced: [
+                    `<b>Twist of Fate</b> + <b>Aprimoradas</b> = `,
+                    `<b>${twistPlusEnhanced.toLocaleString()} gold coins</b>;`,
+                ].join(''),
+                normal: [
+                    `<b>Normais</b> <i>(regulares + aprimoradas)</i> = `,
+                    `<b>${allBlessings.toLocaleString()} gold coins</b>;`,
+                ].join(''),
+                normalMinusDiscounts: [
+                    `<b>Normais</b> - <b>Descontos</b> = `,
+                    `${allMinusPhoenix.toLocaleString()} gold coins (phoenix egg), `,
+                    `<b>${allMinusDiscounts.toLocaleString()} gold coins</b> (phoenix egg e pilgrimage);`,
+                ].join(''),
+            },
+        };
+
+        if (level >= BLESSING.inquisition.levelFloor) {
+            resultFor.blessing.inquisition = [
+                // <a href="/wiki/Blessing_of_the_Inquisition"><b>Inquisition</b></a>  commented out until we have a proper CSS for it
+                `<b>Inquisition</b> <i>(vale pelas 5 regulares)</i> = `,
+                `<b>${inquisitionUnit.toLocaleString()} gold coins</b>.`,
+            ].join('');
+            resultFor.total.inquisitionPlusEnhanced = [
+                `<b>Inquisition</b> + <b>Aprimoradas</b> = `,
+                `<b>${inquisitionPlusEnhanced.toLocaleString()} gold coins</b>.`,
+            ].join('');
+        }
+
+        const resultsForBlessings = Object.values(resultFor.blessing);
+        renderResults(BLESSINGS_HEADING, resultsForBlessings, ID.cost);
+
+        const resultsForDiscounts = Object.values(resultFor.discount);
+        renderResults(DISCOUNTS_HEADING, resultsForDiscounts, ID.discount);
+
+        const resultsForTotals = Object.values(resultFor.total);
+        renderResults(TOTALS_HEADING, resultsForTotals, ID.total);
+    };
+
+    window.onload = () => {
+        renderLevelInput();
+        const levelInput = document.querySelector(`#${ID.levelInput}`);
+        levelInput.addEventListener('keydown', (event) => handleKeyDown(event));
+        levelInput.addEventListener('input', ({ target: { value } }) => handleInput(value));
+    };
+</script>
+</body>
+
+</html>

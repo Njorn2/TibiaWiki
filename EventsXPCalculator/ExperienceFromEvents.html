@@ -1,0 +1,289 @@
+<style>
+    .no, .hide {
+        display:none;
+    }
+    .calc_bg {
+        background-color: #ffffff;
+        color: #000000;
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-size: 12px;
+        border: 2px solid #a2a9b1;
+        border-left: #c7451d 5px solid;
+        border-collapse: separate;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .calc_bg input {
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        /* width: 55px; */
+        border-radius: 5px;
+        border-left: #c7451d 5px solid;
+        background: #f8f8f8;
+        border-collapse: separate;
+        margin: 0px 5px 0px 5px;
+        padding: 1px 1px 1px 1px;
+        line-height: 18px;
+        text-align: center;
+        display: inline-block;
+        vertical-align: top;
+        white-space: nowrap;
+        font-size: 13px;
+        color: black;
+    }
+
+    .calc_bg select {
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        width: 200px;
+        border-radius: 5px;
+        border-left: #c7451d 5px solid;
+        background: #f8f8f8;
+        border-collapse: separate;
+        margin: 0px 5px 0px 5px;
+        padding: 1px 1px 1px 1px;
+        height: 24px;
+        text-align: center;
+        display: inline-block;
+        vertical-align: top;
+        white-space: nowrap;
+        font-size: 13px;
+        color: black;
+    }
+
+    .calc_bg select option {
+        color: black;
+    }
+
+    .calc_border_bottom {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid #000000;
+        padding: 0.75rem;
+    }
+
+    .calc_header {
+        width: 100%;
+        margin-bottom: 20px;
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        -webkit-border-top-left-radius: 3px;
+        -moz-border-top-left-radius: 3px;
+        border-top-left-radius: 3px;
+    }
+
+    .info-box {
+        padding: 10px;
+        text-align: left;
+        margin: 0px 5px 0px 5px;
+    }
+
+    .border-bottom {
+       border-bottom: 1px solid black;
+    }
+    
+
+    .data-box {
+        display: flex;
+    }
+
+    .data-box>div {
+        padding-left: 10px;
+        flex: 1;
+        text-align: center;
+        align-items: center;
+    }
+
+    .data-box>div>label {
+        margin-bottom: 5px;
+    }
+
+    .data-box>div>div>select,
+    .data-box>div>div>input {
+        margin-top: 5px;
+    }
+    .span-version {
+        padding: 15px;
+        background-color: #f8f9fa;
+        border: 1px solid #eaecf0;
+        color: black;
+        margin-top: 5px;
+        width: 350px;
+        text-align: center;
+    }
+    .panel-party-xp {
+        max-width: 600px;
+    }
+    .loading {
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 3px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top:0;
+        left:0;
+    }
+    .loading > label {
+        position: absolute;
+        bottom: 0;
+        display: grid;
+        text-align: center;
+        align-items: center;
+        height: 30px;
+        width: 100%;
+        background-color: #c7451d;
+        font-size: math;
+        font-weight: bold;
+    }
+    .loading > img {
+        height: 55px;
+    }
+</style>
+
+<div style="display: flex; flex-flow: column wrap; align-items: center">
+    <div id="calc_shard" class="calc_bg">
+        <div class="info-box border-bottom">
+            Como Usar: <br />
+            - Escolha qual item de experiência você usará.<br />
+            - Informe a quantidade de item que você irá entregar ao NPC. <br />
+            - Informe qual o seu level. <br />
+        </div>
+        <div class="data-box info-box border-bottom">
+            <div>
+                <label>Item</label>
+                <div id="botao_item" class="selection-items">
+                    <select id="item" onchange="changeItem()"><option value="1">Midnight Shard</option><option value="2">Stone of Insight</option></select>
+                </div>
+            </div>
+            <div>
+                <label>Quantidade</label>
+                <div id="botao_shard">
+                    <input name="quantidade" max="80" min="1" id="quantidade" type="number" size="10" value="1" onblur="this.value=!this.value?&#39;1&#39;:this.value;" />
+                </div>
+            </div>
+            <div>
+                <label>Level</label>
+                <div id="botao_level">
+                    <input name="level" min="8" id="level" type="number" size="10" value="8" onblur="this.value=!this.value?&#39;0&#39;:this.value;" />
+                </div>
+            </div>
+        </div>
+        <div class="data-box info-box border-bottom">
+            <div>
+                <label>Experiência (Soment Números)</label>
+                <div id="botao_item" class="selection-items">
+                    <input id="experience" >
+                </div>
+            </div>
+        </div>
+        <div class="info-box">
+            <label id="shard-result"></label><br /><br />
+            <label id="warning-label" class="hide" style="font-size: 15px;"><br />
+                Mas atenção! Você só pode usar 80 shards por ano.
+            </label>
+        </div>
+    </div>
+    <span class="span-version">© TibiaWiki.com.br - Versão 2.2.0</span>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+        $(document).ready(function () {
+            $('#calc_shard').bind("keyup change", function () {
+                let item = $("select#item").val();
+                if (item == 2) {
+                    managerStoneOfInsight();
+                } else {
+                    managerMidnightShards();
+                }
+                showComponent($('#shard-result'));
+            });
+            $("#calc_shard").keydown(function (event) {
+                if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39)) {
+                    return;
+                } else {
+                    if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+                        event.preventDefault();
+                    }
+                }
+            });
+            showResultOnStart();
+        });
+        function showResultOnStart() {
+            let item = $("select#item").val();
+            if (item == 2) {
+                managerStoneOfInsight();
+            } else {
+                managerMidnightShards();
+            }
+            showComponent($('#shard-result'));
+        }
+        function changeItem() {
+            let item = $("select#item").val();
+            let max = 80;
+            if (item == 2) {
+               max = 1;
+            }
+            let input = document.getElementById("quantidade");
+            input.setAttribute("max",max);
+            input.value = 1;
+        }
+        function managerStoneOfInsight() {
+            hideAllWarnings();
+            
+            let quantidade = $('#quantidade').val();
+            let level = $('#level').val();
+            let experience = (quantidade > 1) ? (level * level * 100 * quantidade) : (level * level * 100);
+            showMessage(experience);
+
+            if (quantidade >= 2) {
+                showComponent($('#shard-result'));
+                showComponent($('#warning-label'), "Mas atenção! Você só pode usar 1 stone por ano.");
+            } else {
+                showComponent($('#shard-result'));
+                hideComponent($('#warning-label'));
+            }
+        }
+        function managerMidnightShards() {
+            hideAllWarnings();
+            let quantidade = $('#quantidade').val();
+            let level = $('#level').val();
+            let experience = ((300 * level) * quantidade);
+            showMessage(experience);
+            
+            (quantidade > 80) ? showComponent(('#warning-label'), "Mas atenção! Você só pode usar 80 shards por ano.") : hideComponent($('#warning-label'));
+
+            if (quantidade <= 0) {
+                hideComponent($('#shard-result'));
+                hideComponent($('#warning-label'));
+            }
+        }
+
+        function hideAllWarnings() {
+            hideComponent($('#shard-result'));
+            hideComponent($('#warning-label'));
+        }
+        function hideComponent(component) {
+            $(component).addClass("hide");
+        }
+        function showComponent(component, message) {
+            if (message != null && message.length >= 0) {
+                $(component).text("");
+                $(component).append('<img alt="Iconefutureupdate.png" src="https://www.tibiawiki.com.br/images/6/67/Iconefutureupdate.png" decoding="async" width="15" height="15"> ' + message);
+            }
+            $(component).removeClass("hide");
+        }
+        function showMessage(experience) {
+            $('#shard-result').text('Você receberá ' + experience.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' de experiência.');
+        }
+</script>

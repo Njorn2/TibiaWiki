@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    .shared-exp-panel {
+        display: flex;
+        position: relative;
+        border: 2px solid #a2a9b1;
+        background: #ffffff;
+        border-radius: 5px;
+        -webkit-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        -moz-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-size: 13px;
+        color: black;
+    }
+    .shared-exp-panel > div > h2 {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid black;
+    }
+
+    .menu-side {
+        max-width: 200px;
+        background-color: #c7451d;
+        padding: 5px;
+        color: white;
+    }
+    .loading {
+        z-index: 9999;
+        background-color: rgba(255, 255, 255, 0.98);
+        display: none;
+        border-radius: 3px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        align-content: center;
+        text-align: center;
+    }
+
+    .loading>label {
+        position: relative;
+        bottom: 0px;
+        text-align: center;     
+        font-size: math;
+        background: transparent;
+    }
+    .loading > span {
+        text-align: center;
+        align-content: center;
+        background-color: #c7451d;
+        height: 32px;
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        text-align: center;     
+        font-size: math;
+        border-bottom-left-radius: 3px;
+    }
+    .divisor-line {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid black;
+        padding: 0.75rem;
+    }
+    input#level, input#name {
+        width: calc(100% - 10px);
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+    }
+    #box-character {
+        margin-top: 25px;
+    }
+    #box-character > div > label, #box-level > div > label {
+        display: block;
+    }
+    #box-character > div > label, #box-level > div > label {
+        width: 100%;
+    }
+    #box-character > button, #box-level > button {
+        margin-top: 5px;
+        width: 200px;
+        height: 25px;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        color: black;
+        border: none;
+        font-weight: bold;
+    }
+    #box-character > button:hover, #box-level > button:hover {
+        background-color: #eec1c1;
+    }
+    #box-character > button:active, #box-level > button:active {
+        background-color: #f79797;
+    }
+    .version {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0px 0px 0px;
+        font-weight: bold;
+    }
+    .info-result-panel {
+        display: block;
+        width: calc(100% - 210px);
+        padding: 5px;
+    }
+    #result-share-exp {
+        margin-top: 15px;
+        display: block;
+    }
+    /* Extra small devices (phones, less than 576px) */
+    @media (max-width: 575.98px) {
+        .shared-exp-panel {
+            display: block;
+        }
+
+        .menu-side {
+            max-width: 100%;
+        }
+        #box-character > button, #box-level > button {
+            width: 100%;
+        }
+        .info-result-panel {
+            width: calc(100% - 10px);
+        }
+    }
+</style>
+<div class="shared-exp-panel">
+    <div class="loading">
+        <img src="https://www.tibiawiki.com.br/images/c/ce/The_Epic_Wisdom.gif" /><br />
+        <label>Loading...</label>
+        <span>@TibiaWiki</span>
+    </div>
+    <div class="menu-side">
+        <h2>Calculadora de compartilhamento de experiência</h2>
+        <div id="box-level">
+            <div>
+                <label for="level"><b>Level:</b></label>
+                <input id="level" name="level" type="number" value="8">
+            </div>
+            <button onclick="calcule()">calcular level</button>
+        </div>
+        <span class="divisor-line"></span>
+        <div id="box-character">
+            <div>
+                <label for="name"><b>Nome do personagem:</b></label>
+                <input id="name" name="name" type="text" value="">
+            </div>
+            <button onclick="searchCharacter()">buscar personagem</button>
+        </div>
+        <div class="version">
+            v1.0.0
+        </div>
+    </div>
+    <div class="info-result-panel">
+        <h3>Info</h3>
+        <label>Use os campos de <b>level</b> ou <b>nome do personagem</b> para calcular o level mínimo e máximo para compartilhar experiência.</label>
+        <span class="divisor-line"></span>
+        <label id="result-share-exp"></label>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    var calcule = () => {
+        const levelValue = document.getElementById("level").value;
+        const result = document.getElementById("result-share-exp");
+        if (result == null) {
+            alert("Por favor, recarregue a página pra que todos os componentes sejam carregados corretamente.");
+            return
+        }
+        if (levelValue == null) {
+            result.innerHTML = "Erro ao calcular o level de compartilhamento de experiência. Por favor, informa apenas números.";
+            return
+        }
+        const min = parseInt((levelValue / 3) * 2);
+        const max = parseInt((levelValue / 2) * 3);
+        if (min == null || max == null) {
+            result.innerHTML = "Erro ao calcular o level de compartilhamento de experiência. Por favor, informa apenas números.";
+            return
+        }
+        result.innerHTML = `<b>Resultado:</b> Um personagem level <b>${levelValue}</b> pode compartilhar experiência com personagens do Level <b>${min}</b> até o level <b>${max}</b>.`;
+    }
+
+    var searchCharacter = async () => {
+        showLoading(true);
+        const characterName = document.getElementById("name").value;
+        const result = document.getElementById("result-share-exp");
+        if (characterName == null || characterName.length === 0) {
+            showLoading(false);
+            return
+        }
+        if (result == null) {
+            showLoading(false);
+            alert("Por favor, recarregue a página pra que todos os componentes sejam carregados corretamente.");
+            return
+        }
+        try {
+            let response = await fetch(`https://api.tibiadata.com/v4/character/${characterName}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+                showLoading(false);
+            }
+            let data = await response.json();
+            if (data.character == null || data.character.character == null) {
+                result.innerHTML = `Erro ao buscar pelo personagem <b>"${characterName}"</b>`;
+                showLoading(false);
+                return
+            }
+            const level = data.character.character.level;
+            const min = parseInt((level / 3) * 2);
+            const max = parseInt((level / 2) * 3);
+            if (min == null || max == null) {
+                result.innerHTML = "Erro ao calcular o level de compartilhamento de experiência. Por favor, informa apenas números.";
+                showLoading(false);
+                return
+            }
+            result.innerHTML = `<b>Resultado:</b> O personagem <b>${data.character.character.name}</b> de level <b>${data.character.character.level}</b> pode compartilhar experiência com personagens do Level <b>${min}</b> até o level <b>${max}</b>.`;
+        } catch (error) {
+            result.innerHTML = `O personagem <b>"${characterName}"</b> não existe.</b>`;
+            console.error('Error fetching data:', error);
+        }
+        showLoading(false);
+    }
+    var showLoading = (status) => {
+        document.querySelector('.loading').style.display  = (status) ? 'inline-block' : 'none';
+    }
+
+</script>

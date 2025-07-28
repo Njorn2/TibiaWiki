@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    .vocation-status-panel {
+        display: flex;
+        position: relative;
+        border: 2px solid #a2a9b1;
+        background: #ffffff;
+        border-radius: 5px;
+        -webkit-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        -moz-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-size: 13px;
+        color: black;
+    }
+    .vocation-staus-panel > div > h2 {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid black;
+    }
+
+    .menu-side {
+        max-width: 200px;
+        background-color: #c7451d;
+        padding: 5px;
+        color: white;
+    }
+    .divisor-line {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid black;
+        padding: 0.75rem;
+    }
+    input#level {
+        width: calc(100% - 10px);
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+    }
+    #box-vocation {
+        margin-top: 25px;
+    }
+    #box-vocation > legend {
+        width: 100%;
+    }
+    #box-vocation > div {
+        display: block;
+    }
+    #box-vocation > div > div {
+        margin: 5px 5px 0px 5px;
+        display: flex;
+    }
+    #box-vocation > div > div > label {
+        font-weight: bold;
+        margin-top: 2px;
+    }
+    #box-vocation > input {
+        width: 100%;
+    }
+    #box-level > div > label {
+        display: block;
+    }
+    #box-vocation > div > legend, #box-level > div > label {
+        width: 100%;
+    }
+
+    .version {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0px 0px 0px;
+        font-weight: bold;
+    }
+    .info-result-panel {
+        display: block;
+        width: calc(100% - 210px);
+        padding: 5px;
+    }
+    #result-vocation-status {
+        margin-top: 15px;
+        display: block;
+    }
+    /* Extra small devices (phones, less than 576px) */
+    @media (max-width: 575.98px) {
+        .vocation-status-panel {
+            display: block;
+        }
+
+        .menu-side {
+            max-width: 100%;
+        }
+
+        .info-result-panel {
+            width: calc(100% - 10px);
+        }
+    }
+</style>
+<div class="vocation-status-panel">
+    <div class="menu-side">
+        <h2>Calculadora de Status de Vocação</h2>
+        <div id="box-level">
+            <div>
+                <label for="level-status"><b>Level:</b></label>
+                <input id="level-status" name="level-status" type="number" value="8" min="0" oninput="calculeVocationStatus()">
+            </div>
+        </div>
+        <span class="divisor-line"></span>
+        <div id="box-vocation">
+            <legend><b>Vocação:</b></legend>
+            <div id="vocations">
+                <!-- Preencher por JavaScript -->
+            </div>
+        </div>
+        <div class="version">
+            v1.0.0
+        </div>
+    </div>
+    <div class="info-result-panel">
+        <h3>Info</h3>
+        <label>
+            Informe o <b>level</b> e a <b>vocação do personagem</b> para calcular o status de Capacidade, Vida e Mana do Personagem em cada Vocação. <br><br>
+            <img src="https://www.tibiawiki.com.br/images/a/ab/Warning_Icon_Yellow.png" width="15"> O cálculo é feito sem modificadores da <b><a href="https://www.tibiawiki.com.br/wiki/Wheel_of_Destiny" title="Roda do Destino"> Roda do Destino</a></b>
+        </label>
+        <span class="divisor-line"></span>
+        <h3>Resultado</h3>
+        <label id="result-vocation-status"></label>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    const vocations = {
+        "Druid": {
+            "capacity": 10,
+            "life": 5,
+            "mana": 30,
+            "regeneration": {
+                "non-promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 12
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 3
+                    }
+                },
+                "promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 12
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 2
+                    }
+                }
+            }
+        },
+        "Knight": {
+            "capacity": 25,
+            "life": 15,
+            "mana": 5,
+            "regeneration": {
+                "non-promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 6
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 6
+                    }
+                },
+                "promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 4
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 6
+                    }
+                }
+            }
+        },
+        "Monk": {
+            "capacity": 25,
+            "life": 10,
+            "mana": 10,
+            "regeneration": {
+                "non-promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 7
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 4
+                    }
+                },
+                "promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 5
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 3
+                    }
+                }
+            }
+        },
+        "Paladin": {
+            "capacity": 20,
+            "life": 10,
+            "mana": 15,
+            "regeneration": {
+                "non-promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 8
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 4
+                    }
+                },
+                "promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 6
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 3
+                    }
+                }
+            }
+        },
+        "Sorcerer": {
+            "capacity": 10,
+            "life": 5,
+            "mana": 30,
+            "regeneration": {
+                "non-promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 12
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 3
+                    }
+                },
+                "promoted": {
+                    "life": {
+                        "points": 1,
+                        "seconds": 12
+                    },
+                    "mana": {
+                        "points": 2,
+                        "seconds": 2
+                    }
+                }
+            }
+        }
+    }
+
+    var renderVocationOptions = () => {
+        const vocationsDiv = document.getElementById("vocations");
+        if (vocationsDiv == null) {
+            return;
+        }
+        let vocationsNames = Object.keys(vocations);
+        vocationsNames.forEach(vocation => {
+            const div = document.createElement('div');
+            
+            const input = document.createElement('input');
+            input.type = "radio";
+            input.id = vocation.toLowerCase();
+            input.name = "vocation";
+            input.value = vocation.toLowerCase();
+            input.addEventListener('change', () => {
+                if (input.checked) {
+                    calculeVocationStatus();
+                }
+            });
+
+            const label = document.createElement('label');
+            label.textContent = vocation;
+            label.htmlFor = vocation.toLowerCase()
+
+            div.append(input);
+            div.append(label);
+            vocationsDiv.append(div);
+        });
+        selectVocationOnLoad();
+    }
+    var selectVocationOnLoad = () => {
+        const radioOptions = document.querySelectorAll('input[type="radio"');
+        if (radioOptions == null || radioOptions.length === 0) {
+            alert("Por Favor, recarregue a página para que todos os componentes sejam carregados corretamente! Caso o problema persista, tente limpar o cache da página.")
+            return;
+        }
+        radioOptions[0].checked = true;
+        calculeVocationStatus();
+    }
+
+    var calculeVocationStatus = () => {
+        const selectedVocation = document.querySelector('input[type="radio"]:checked');
+        if (selectedVocation == null) {
+            alert("Por Favor, selecione uma vocação!")
+            return;
+        }
+        const inputLevel = document.getElementById('level-status');
+        if (inputLevel == null) {
+            alert("Por Favor, recarregue a página para que todos os componentes sejam carregados corretamente! Caso o problema persista, tente limpar o cache da página.")
+            return;
+        }
+        const vocation = selectedVocation.value.charAt(0).toUpperCase() + selectedVocation.value.slice(1);
+        const level = inputLevel.value
+        const mana = calcVocatioMana(vocation, level);
+        const life = calcVocatioLife(vocation, level);
+        const cap = calcVocatioCapacity(vocation, level);
+
+        const resultLabel = document.getElementById('result-vocation-status');
+        if (resultLabel == null) {
+            alert("Por Favor, recarregue a página para que todos os componentes sejam carregados corretamente! Caso o problema persista, tente limpar o cache da página.")
+            return;
+        }
+        resultLabel.innerHTML = `Um personagem level <b>${level}</b> da vocação <b>${vocation}</b>, possui os seguintes status: <br><b>- Vida:</b> ${life}<br><b>- Mana:</b> ${mana}<br><b>- Cap:</b> ${cap.base}<br><br><b>Cap com Imbuements:</b><br><b>- Basic:</b> ${cap.basic_imbuement}<br><b>- Intricate:</b> ${cap.intricate_imbuement}<br><b>- Powerful:</b> ${cap.powerful_imbuement}`;
+    }
+
+    var calcVocatioMana = (vocationName, level) => {
+        const vocation = vocations[vocationName];
+        const mana = (level < 9) ? 5 :  vocation.mana;
+        const baseValue = (level < 9) ? 50 : 90;
+        level = (level < 9) ? level : (level - 8);
+        return (level * vocation.mana) + baseValue;
+    }
+
+    var calcVocatioLife = (vocationName, level) => {
+        const vocation = vocations[vocationName];
+        const life = (level < 9) ? 5 :  vocation.life;
+        const baseValue = (level < 9) ? 125 : 185;
+        level = (level < 9) ? level : (level - 8);
+        return (level * vocation.life) + baseValue;
+    }
+
+    var calcVocatioCapacity = (vocationName, level) => {
+        const vocation = vocations[vocationName];
+        const capacity = (level < 9) ? 10 :  vocation.capacity;
+        const baseValue = (level < 9) ? 390 : 470;
+        level = (level < 9) ? level : (level - 8);
+        const cap = (level * capacity) + baseValue;
+        return {
+            "base": cap,
+            "basic_imbuement": parseInt((cap * 0.03) + cap),
+            "intricate_imbuement": parseInt((cap * 0.08) + cap),
+            "powerful_imbuement": parseInt((cap * 0.15) + cap)
+        };
+    }
+
+    $(function() {
+        renderVocationOptions();
+    });
+</script>

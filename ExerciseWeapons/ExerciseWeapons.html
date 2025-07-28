@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<style>
+.exercise-training {
+    display: flex;
+    width: 500px;
+    border-radius: 5px;
+    border: 2px solid #a2a9b1;
+    background: #ffffff;
+    margin: 2px;
+    -webkit-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+    -moz-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+    font-family: Verdana, Arial, Times New Roman, sans-serif;
+    color: #000000;
+    border-spacing: 0px;
+}
+.display-flex {
+    display: flex;
+}
+.side-by-side {
+    flex: 1; /* Distribute available space equally */
+}
+.side-by-side-07 {
+    flex: 0.7; /* Distribute available space equally */
+}
+.et-menu {
+    background-color: #c7451d;
+    color: #ffffff;
+    float: left;
+    max-width: 280px;
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.title-menu {
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding-bottom: 5px;
+}
+.title-menu > h4 {
+    color: #ffffff;
+}
+.titulo {
+    position: relative;
+    margin: 0px;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+    cursor: default;
+}
+.titulo > h4 {
+    color: #fff
+}
+.subtitulo {
+    float: left;
+    width: 100%;
+    margin-left: 5px;
+}
+.subtitulo > h5 {
+    float: left;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.et-menu > .subtitulo > h5 {
+    color: #ffffff;
+}
+
+.time-box {
+    border: black 1px solid;
+    border-radius: 5px;
+    border-left: #c7451d 5px solid;
+    background: #f8f8f8;
+    border-collapse: separate;
+    width: calc(100% - 20px);
+    height: 24px;
+    margin: 0px 5px 0px 5px;
+    padding: 1px 1px 1px 1px;
+    line-height: 18px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    /* font-family: Verdana, Arial, Times New Roman, sans-serif; */
+    font-size: 13px;
+    color: black;
+}
+
+.time-box > label {
+  line-height: 24px;
+}
+
+#time-label {
+  background: transparent;
+  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-size: 13px;
+  color: #000000;
+  display: block;
+  text-align: center;
+}
+.weapon-select {
+  padding: 10px 0px 0px 0px;
+}
+
+.weapon-select > div {
+    height: 5px;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    float: left;
+    margin-left: 5px;
+}
+
+.weapon-select > div > label {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+input[type=checkbox] {
+  width: 20px;
+  height: 20px;
+}
+
+#qtdCharges {
+    border: black 1px solid;
+    border-radius: 5px;
+    border-left: #c7451d 5px solid;
+    background: #f8f8f8;
+    border-collapse: separate;
+    width: calc(100% - 20px);
+    height: 24px;
+    margin: 0px 5px 0px 5px;
+    padding: 1px 1px 1px 1px;
+    line-height: 18px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    /* font-family: Verdana, Arial, Times New Roman, sans-serif; */
+    font-size: 13px;
+    color: black;
+}
+
+/* Tooltip */
+.tip {
+    font-family: Verdana, Arial, Times New Roman, sans-serif;
+    font-size: 12px;;
+    background-color: #ffffff;
+    border-radius: 2px;
+    box-shadow: 0 0 6px #888;
+    display: none;
+    position: absolute;
+    padding: 10px;
+    z-index: 1;
+    color: #000;
+}
+.tooltip {
+    position: relative;
+}
+.tooltip,
+.tooltip:hover + .tip,
+.tip:hover {
+    display: block;
+}
+.tooltip > a {
+  text-decoration: none;
+}
+.inpect-label {
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: 2px solid #ffbf00;
+    margin: 5px;
+    border-radius: 15px;
+    color: #ffbf00;
+}
+.version {
+    text-align: center;
+    padding: 5px;
+    margin-top: 15px;
+    border-top: 1px solid black;
+    font-size: 12px;
+    font-weight: bold;
+}
+</style>
+<meta charset="utf-8"/>
+<body>
+  <div class="exercise-training">
+    <div class="et-menu side-by-side-07">
+      <div class="title-menu">
+        <h4 id="hot-title" class="titulo">Calculadora de tempo de Exercise Weapons</h4>
+      </div>
+      <br>
+      <div class="subtitulo">
+          <h5>Normal Weapons:</h5>
+      </div>
+      <br>
+      <div id="normal-weapons-select" class="weapon-select"></div>
+      <br>
+      <div class="subtitulo">
+          <h5>Durable Weapons:</h5>
+      </div>
+      <br>
+      <div id="durable-weapons-select" class="weapon-select"></div>
+      <br>
+      <div class="subtitulo">
+          <h5>Lasting Weapons:</h5>
+      </div>
+      <br>
+      <div id="lasting-weapons-select" class="weapon-select"></div>
+      <br>
+      <div id="ewc-version" class="version"></div>
+    </div>
+    <div class="content side-by-side">
+      <div style="height: 60px; vertical-align: top;">
+        <div class="subtitulo">
+          <h5>Quantidade de Cargas:</h5>
+        </div>
+        <input type="number" id="qtdCharges" name="qtdCharges" value="1" min="1" oninput="updateTime()"><br>
+        <div class="subtitulo">
+          <h5>Tempo das Cargas:</h5>
+        </div>
+        <div class="time-box">
+          <label id="time-label"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        var ewc_version = "v2.1.0";
+        const exercise_weapons = {
+          "normal": [
+            {
+              name: "Exercise Axe",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/d/dd/Exercise_Axe.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Axe"
+            },
+            {
+              name: "Exercise Bow",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/2/29/Exercise_Bow.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Bow"
+            },
+            {
+              name: "Exercise Club",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/f/fa/Exercise_Club.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Club"
+            },
+            {
+              name: "Exercise Shield",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/2/26/Exercise_Shield.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Shield"
+            },
+            {
+              name: "Exercise Sword",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/c/c5/Exercise_Sword.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Sword"
+            },
+            {
+              name: "Exercise Rod",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/e/e8/Exercise_Rod.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Rod"
+            },
+            {
+              name: "Exercise Wand",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/9/93/Exercise_Wand.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Wand"
+            },
+            {
+              name: "Exercise Wraps",
+              charges: 500,
+              image: "https://www.tibiawiki.com.br/images/7/7b/Exercise_Wraps.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Wraps"
+            }
+          ],
+          "durable": [
+            {
+              name: "Exercise Axe",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/1/10/Durable_Exercise_Axe.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Durable_Exercise_Axe"
+            },
+            {
+              name: "Exercise Bow",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/e/e0/Durable_Exercise_Bow.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Durable_Exercise_Bow"
+            },
+            {
+              name: "Exercise Club",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/3/31/Durable_Exercise_Club.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Durable_Exercise_Club"
+            },
+            {
+              name: "Exercise Shield",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/2/26/Exercise_Shield.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Shield"
+            },
+            {
+              name: "Exercise Sword",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/2/2a/Durable_Exercise_Sword.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Durable_Exercise_Sword"
+            },
+            {
+              name: "Exercise Rod",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/3/3e/Durable_Exercise_Rod.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Durable_Exercise_Rod"
+            },
+            {
+              name: "Exercise Wand",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/2/25/Durable_Exercise_Wand.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Durable_Exercise_Wand"
+            },
+            {
+              name: "Exercise Wraps",
+              charges: 1800,
+              image: "https://www.tibiawiki.com.br/images/7/7b/Exercise_Wraps.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Durable_Exercise_Wraps"
+            }
+          ],
+          "lasting": [
+            {
+              name: "Exercise Axe",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/4/44/Lasting_Exercise_Axe.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Lasting_Exercise_Axe"
+            },
+            {
+              name: "Exercise Bow",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/7/7c/Lasting_Exercise_Bow.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Lasting_Exercise_Bow"
+            },
+            {
+              name: "Exercise Club",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/3/3b/Lasting_Exercise_Club.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Lasting_Exercise_Club"
+            },
+            {
+              name: "Exercise Shield",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/2/26/Exercise_Shield.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Exercise_Shield"
+            },
+            {
+              name: "Exercise Sword",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/d/db/Lasting_Exercise_Sword.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Lasting_Exercise_Sword"
+            },
+            {
+              name: "Exercise Rod",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/3/31/Lasting_Exercise_Rod.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Lasting_Exercise_Rod"
+            },
+            {
+              name: "Exercise Wand",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/1/1c/Lasting_Exercise_Wand.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Lasting_Exercise_Wand"
+            },
+            {
+              name: "Exercise Wraps",
+              charges: 14400,
+              image: "https://www.tibiawiki.com.br/images/1/12/Lasting_Exercise_Wraps.gif",
+              link: "https://www.tibiawiki.com.br/wiki/Lasting_Exercise_Wraps"
+            }
+          ]
+        }
+
+        const weapons = ["Axe", "Bow", "Club", "Shield", "Sword", "Rod", "Wand", "Wraps"]
+
+        var calcTime = (charges) => {
+          let hour = getHour(charges * 2);
+          let minutes = getMinute(charges * 2);
+          let seconds = getSeconds(charges * 2);
+          return ((hour < 10) ? "0" + hour : hour) + ":" + ((minutes < 10) ? "0" + minutes : minutes) + ":" + ((seconds < 10) ? "0" + seconds : seconds) + "h";
+        }
+
+        var getHour = (time) => {          
+          return Math.floor(time / 3600);
+        }
+
+        var getMinute = (time) => {
+          return Math.floor((time % 3600) / 60);
+        }
+
+        var getSeconds = (time) => {
+          return time % 60;
+        }
+
+        var getRandomWeapon = () => {
+          let randomIndex = Math.floor(Math.random() * weapons.length);
+          return weapons[randomIndex];
+        }
+
+         // Popula o Select de Items.
+         var populateWeaponSelect = async () => {
+            $("#normal-weapons-select").empty();
+            $("#durable-weapons-select").empty();
+            $("#lasting-weapons-select").empty();
+
+            let selectedWeaponClass = getRandomWeapon();
+            if (exercise_weapons != null) { // Verifica se a lista de weapons não é nula
+                let normal_weapon = exercise_weapons["normal"].find(weapon => weapon.name.includes(selectedWeaponClass));
+                let durable_weapon = exercise_weapons["durable"].find(weapon => weapon.name.includes(selectedWeaponClass));
+                let lasting_weapon = exercise_weapons["lasting"].find(weapon => weapon.name.includes(selectedWeaponClass));
+                
+                populateNormalWeaponSelect(normal_weapon);
+                populateDurableWeaponSelect(durable_weapon);
+                populateLastingWeaponSelect(lasting_weapon);
+            }
+        };
+
+        var populateNormalWeaponSelect = (weapon) => {
+          let image = "<img style=\"width: 25px; height 25px;\" src=\""+ weapon.image + "\"/>";
+          let tooltip = "<span class=\"tooltip\"><a href=\"" + weapon.link + "\" target=\"blank\"><div class=\"inpect-label\"> ? </div></a></span><span class=\"tip\" id=\"fonte3\">" + weapon.name + ": " + weapon.charges +"</span>"
+          $("#normal-weapons-select").append("<div><input type=\"checkbox\" id=\"normal-weapon\" name=\"" + weapon.name + "\" value=\"" + weapon.charges + "\" onchange=\"updateSelectedWeapon(this)\">" + image + "<label for=\"normal-weapon\"> " + weapon.name + "</label>" + tooltip + "</div><br>");
+        }
+
+        var populateDurableWeaponSelect = (weapon) => {
+          let image = "<img style=\"width: 25px; height 25px;\" src=\""+ weapon.image + "\"/>";
+          let tooltip = "<span class=\"tooltip\"><a href=\"" + weapon.link + "\" target=\"blank\"><div class=\"inpect-label\"> ? </div></a></span><span class=\"tip\" id=\"fonte3\">" + weapon.name + ": " + weapon.charges +"</span>"
+          $("#durable-weapons-select").append("<div><input type=\"checkbox\" id=\"durable-weapon\" name=\"" + weapon.name + "\" value=\"" + weapon.charges + "\" onchange=\"updateSelectedWeapon(this)\">" + image + "<label for=\"durable-weapon\"> " + weapon.name + "</label>" + tooltip + "</div><br>");
+        }
+
+        var populateLastingWeaponSelect = (weapon) => {
+          let image = "<img style=\"width: 25px; height 25px;\" src=\""+ weapon.image + "\"/>";
+          let tooltip = "<span class=\"tooltip\"><a href=\"" + weapon.link + "\" target=\"blank\"><div class=\"inpect-label\"> ? </div></a></span><span class=\"tip\" id=\"fonte3\">" + weapon.name + ": " + weapon.charges +"</span>"
+          $("#lasting-weapons-select").append("<div><input type=\"checkbox\" id=\"lasting-weapon\" name=\"" + weapon.name + "\" value=\"" + weapon.charges + "\" onchange=\"updateSelectedWeapon(this)\">" + image + "<label for=\"lasting-weapon\"> " + weapon.name + "</label>" + tooltip + "</div><br>");
+        }
+
+        var updateSelectedWeapon = (weapon) => {
+          document.getElementById("normal-weapon").checked = false;
+          document.getElementById("durable-weapon").checked = false;
+          document.getElementById("lasting-weapon").checked = false;
+          weapon.checked = true;
+          updateQtdCharges(weapon.value);
+        }
+
+        var updateQtdCharges = (charges) => {
+          document.getElementById("qtdCharges").value = charges;
+          updateTime();
+        }
+
+        var updateTime = () => {
+          let charges = document.getElementById("qtdCharges").value;
+          let time = calcTime(charges);          
+          $("#time-label").text(time);
+        }
+
+        $(document).ready(function() {
+            $("#ewc-version").text(ewc_version);
+            populateWeaponSelect();
+            updateSelectedWeapon(document.getElementById("normal-weapon"));
+        });
+    </script>
+  </body>
+</html>

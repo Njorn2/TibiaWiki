@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html>
+<style>
+.main_div {
+    display: flex;
+    width: 600px;
+    border-radius: 5px;
+    border: 2px solid #a2a9b1;
+    background: #ffffff;
+    margin: 2px;
+    -webkit-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+    -moz-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+    font-family: Verdana, Arial, Times New Roman, sans-serif;
+    color: #000000;
+    border-spacing: 0px;
+}
+.display-flex {
+    display: flex;
+}
+.side-by-side {
+    flex: 1; /* Distribute available space equally */
+}
+.side-by-side-04 {
+    flex: 0.4; /* Distribute available space equally */
+}
+.border-bottom {
+    border-bottom: 1px solid black;
+}
+.padding-side {
+    padding: 0px 5px;
+}
+.menu {
+    background-color: #c7451d;
+    color: #ffffff;
+    float: left;
+    padding: 10px;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+}
+.skill-box {
+    width: auto;
+    display: flex;
+    border-spacing: 0px;
+    height: 55px;
+    text-align: center;
+    align-items: center;
+}
+.title-menu {
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+.title-menu > h4 {
+    color: #ffffff;
+}
+.titulo {
+    position: relative;
+    margin: 0px;
+    padding: 0;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-weight: bold;
+    /* font-size: 12px; */
+    cursor: default;
+}
+.titulo > h4 {
+    color: #fff
+}
+.subtitulo {
+    float: left;
+    width: 100%;
+    margin-left: 5px;
+}
+.subtitulo > h5 {
+    float: left;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.input-nums {
+    font-family: Verdana, Arial, Times New Roman, sans-serif;
+    width: 55px;
+    border-radius: 5px;
+    border-left: #c7451d 5px solid;
+    background: #f8f8f8;
+    border-collapse: separate;
+    margin: 0px 5px 0px 5px;
+    padding: 1px 1px 1px 1px;
+    line-height: 18px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    /* font-family: Verdana, Arial, Times New Roman, sans-serif; */
+    font-size: 13px;
+    color: black;
+}
+#input-nums:hover, #input-nums:focus-visible {
+    outline: none;
+}
+.input-skills {
+    width: 50px;
+}
+#vocation-select {
+    height: 437px;
+    padding: 10px 0px 0px 0px;
+}
+
+input[type=checkbox] {
+  width: 20px;
+  height: 20px;
+}
+.loyalty-box {
+    padding: 0px 0px 5px 0px;
+    text-align: center;
+}
+.vocation-box {
+    margin-top: 5px;
+    height: 19px;
+    margin-bottom: 5px;
+    display: flex;
+    width: 100%;
+    font-size: 12px;
+    font-weight: bold;
+    float: left;
+}
+.skills-icon {
+  height: 10px;
+  width: 10px;
+}
+
+/* Tooltip */
+.tip {
+    font-family: Verdana, Arial, Times New Roman, sans-serif;
+    font-size: 12px;;
+    background-color: #ffffff;
+    border-radius: 2px;
+    box-shadow: 0 0 6px #888;
+    display: none;
+    position: absolute;
+    padding: 10px;
+    z-index: 1;
+    color: #000;
+}
+.tooltip {
+    position: relative;
+}
+.tooltip,
+.tooltip:hover + .tip,
+.tip:hover {
+    display: block;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: grey;
+}
+
+.skills-progress-bar {
+  width: 1%;
+  height: 3px;
+  background-color: #00ff04;
+}
+
+.label-loyalty {
+    margin-left: 5px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.header-skills {
+    width: 110.03px;
+    display: table-cell;
+    text-align: center;
+}
+
+.skills-td {
+    width: 110.03px;
+    text-align: center;
+}
+
+.label-img {
+    font-size: 14px;
+}
+.inspect-label {
+    margin: 5px;
+    line-height: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color: #ffbf00;
+}
+.inspect-label > a {
+    color: #ffbf00;
+}
+.version {
+    text-align: center;
+    padding: 5px;
+    margin-top: 15px;
+    border-top: 1px solid black;
+    font-size: 12px;
+    font-weight: bold;
+.mark {
+    border: 2px solid #c7451d;
+    padding: 1px;
+}
+
+div + div {
+    background-color: #000;
+}
+
+</style>
+<meta charset="utf-8"/>
+<body>
+    <div class="main_div">
+        <div class="menu side-by-side-04">
+            <div class="title-menu">
+                <h4 id="hot-title" class="titulo">Calculadora de Skills</h4>
+            </div>
+            <br>
+            <div class="subtitulo">
+                <h5>Vocações:</h5>
+            </div>
+            <br>
+            <div id="vocation-select">
+                <div class="vocation-box">
+                    <input type="checkbox" id="none-select" name="none-select" value="none" onchange="onSelectVocation(this)">
+                        <label for="none-select">None</label>
+                </div>
+                <br>
+                <div class="vocation-box">
+                    <input type="checkbox" id="druid-select" name="druid-select" value="druid" onchange="onSelectVocation(this)">
+                        <label for="druid-select">Druid</label><span class="tooltip"><div class="inspect-label"> &#9432; </div></span><span class="tip"><a href="https://www.tibiawiki.com.br/wiki/Druid" target="blank"> Druid | Elder Druid </a></span>
+                </div>
+                <br>
+                <div class="vocation-box">
+                    <input type="checkbox" id="knight-select" name="knight-select" value="knight" onchange="onSelectVocation(this)">
+                        <label for="knight-select">Knight</label><span class="tooltip"><div class="inspect-label"> &#9432; </div></span><span class="tip"><a href="https://www.tibiawiki.com.br/wiki/Knight" target="blank"> Knight | Elite Knight </a></span>
+                </div>
+                <br>
+                <div class="vocation-box">
+                    <input type="checkbox" id="monk-select" name="monk-select" value="monk" onchange="onSelectVocation(this)">
+                        <label for="monk-select">Monk</label><span class="tooltip"><div class="inspect-label"> &#9432; </div></span><span class="tip"><a href="https://www.tibiawiki.com.br/wiki/Monk" target="blank"> Monk | Exalted Monk </a></span>
+                </div>
+                <br>
+                <div class="vocation-box">
+                    <input type="checkbox" id="paladin-select" name="paladin-select" value="paladin" onchange="onSelectVocation(this)">
+                        <label for="paladin-select">Paladin</label> <span class="tooltip"><div class="inspect-label"> &#9432; </div></span><span class="tip"><a href="https://www.tibiawiki.com.br/wiki/Paladin" target="blank"> Paladin | Royal Paladin </a></span>
+                </div>
+                <br>
+                <div class="vocation-box">
+                    <input type="checkbox" id="sorcerer-select" name="sorcerer-select" value="sorcerer" onchange="onSelectVocation(this)">
+                        <label for="sorcerer-select">Sorcerer</label> <span class="tooltip"><div class="inspect-label"> &#9432; </div></span><span class="tip"><a href="https://www.tibiawiki.com.br/wiki/Sorcerer" target="blank"> Sorcerer | Master Sorcerer </a></span>
+                </div>
+                <br>
+            </div>
+            <div id="cs-version" class="version"></div>
+        </div>
+        <div class="content side-by-side">
+            <div class="skills-box">
+                <div class="subtitulo side-by-side">
+                    <h5>Loyalty:</h5>
+                </div>
+                <div class="loyalty-box border-bottom side-by-side">
+                    <label class="label-loyalty">Points:</label>
+                    <input type="number" class="input-nums" id="loyalty-points" name="loyalty-points" value="0" min="0" oninput="updateLoyalties(this)">
+                    <label class="label-loyalty">Bonus:</label>
+                    <input type="number" class="input-nums" id="loyalty-bonus" name="loyalty-bonus" value="0" min="0" max="50" step="5" oninput="updateLoyalties(this)">
+                    <label>%</label>
+                </div>
+            </div>
+            <div class="skills-box">
+                <div class="skill-box border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> </label>
+                    </div>
+                    <div class="side-by-side display-flex ">
+                        <span class="tooltip"><div> <label class="label-img"> Bar Skills &#9432;</label> </div></span><span class="tip"> Skill com Loyalty <br><br> <label class="mark">147</label> = 143 (+4 Loyalty) <br> You have 46.21 percent to go </span>
+                    </div>
+                    <div class="side-by-side">
+                        <label class="label-img"> % </label>
+                    </div>
+                    <div class="side-by-side">
+                        <label class="label-img"> Base Skills </label>
+                    </div>
+                    <div class="side-by-side">
+                        <label class="label-img"> % </label>
+                    </div>
+                    
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/7/7e/Spellbook.gif"> Magic</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="magic-skill" name="magic" value="0" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="magic-skill-percent" name="magic" value="100" min="1" max="100" step="any" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="magic-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="magic-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side" >
+                        <label id="magic-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="magic-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/8/8a/Pair_of_Iron_Fists.gif"> Fist</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="fist-skill" name="fist" value="10" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="fist-skill-percent" name="fist" value="100" min="1" max="100" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="fist-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="fist-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="fist-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="fist-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/3/37/Club.gif"> Club</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="club-skill" name="club" value="10" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="club-skill-percent" name="club" value="100" min="1" max="100" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="club-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="club-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side" style="vertical-align: middle; padding-top: 10px;">
+                        <label id="club-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="club-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/1/1f/Sword.gif"> Sword</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="sword-skill" name="sword" value="10" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="sword-skill-percent" name="sword" value="100" min="1" max="100" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="sword-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="sword-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="sword-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="sword-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/3/31/Axe.gif"> Axe</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="axe-skill" name="axe" value="10" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="axe-skill-percent" name="axe" value="100" min="1" max="100" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="axe-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="axe-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="axe-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="axe-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/1/12/Guardcatcher.gif"> Distance</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="distance-skill" name="distance" value="10" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="distance-skill-percent" name="distance" value="100" min="1" max="100" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="distance-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="distance-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="distance-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="distance-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/2/2d/Wooden_Shield.gif"> Shielding</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="shielding-skill" name="shielding" value="10" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="shielding-skill-percent" name="shielding" value="100" min="1" max="100" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="shielding-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="shielding-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="shielding-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="shielding-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-box padding-side border-bottom">
+                    <div class="side-by-side">
+                        <label class="label-img"> <img class="skills-icon" src="https://www.tibiawiki.com.br/images/b/bb/Fish.gif"> Fishing</label>
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" style="margin-bottom: 10px;" class="input-nums input-skills" id="fishing-skill" name="fishing" value="10" min="0" max="500" oninput="updateSkills(this)">
+                    </div>
+                    <div class="side-by-side">
+                        <input type="number" class="input-nums input-skills" id="fishing-skill-percent" name="fishing" value="100" min="1" max="100" oninput="updateSkills(this)"> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="fishing-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="fishing-raw-skill">0</label>
+                    </div>
+                    <div class="side-by-side">
+                        <label id="fishing-raw-percent">100%</label> <br>
+                        <div class="progress-bar" style="margin-top: 5px;">
+                            <div id="fishing-raw-progress-bar" style="width: 1%;" class="skills-progress-bar"></div>
+                        </div>
+                    </div>
+                </tr>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        const cs_version = "v2.1.0";
+
+        const skill_constants = {
+            "magic": {
+                "constant": 1600,
+                "offset": 0,
+            },
+            "melee": {
+                "constant": 50,
+                "offset": 10,
+            },
+            "distance": {
+                "constant": 25,
+                "offset": 10,
+            },
+            "shielding": {
+                "constant": 100,
+                "offset": 10,
+            },
+            "fishing": {
+                "constant": 20,
+                "offset": 10,
+            },
+            getAttribByType: (type) => {
+                if (type == "club" || type == "axe" || type == "sword" || type == "fist") {
+                    return skill_constants["melee"]
+                }
+                return skill_constants[type]
+            }
+        };
+        const vocation_constants = {
+            none: {
+                "magic": 4.0,
+                "melee": 2.0,
+                "fist": 1.5,
+                "distance": 2.0,
+                "shielding": 1.5,
+                "fishing": 1.1
+            },
+            knight: {
+                "magic": 3.0,
+                "melee": 1.1,
+                "fist": 1.1,
+                "distance": 1.4,
+                "shielding": 1.1,
+                "fishing": 1.1
+            },
+            monk: {
+                "magic": 1.25,
+                "melee": 1.4,
+                "fist": 1.1,
+                "distance": 1.5,
+                "shielding": 1.15,
+                "fishing": 1.1
+            },
+            paladin: {
+                "magic": 1.4,
+                "melee": 1.2,
+                "fist": 1.2,
+                "distance": 1.1,
+                "shielding": 1.1,
+                "fishing": 1.1
+            },
+            sorcerer: {
+                "magic": 1.1,
+                "melee": 2,
+                "fist": 1.5,
+                "distance": 2.0,
+                "shielding": 1.5,
+                "fishing": 1.1
+            },
+            druid: {
+                "magic": 1.1,
+                "melee": 1.8,
+                "fist": 1.5,
+                "distance": 1.8,
+                "shielding": 1.5,
+                "fishing": 1.1
+            },
+            getAttribByType: (vocation, type) => {
+                if (type == "club" || type == "axe" || type == "sword") {
+                    return vocation_constants[vocation]["melee"]
+                }
+                return vocation_constants[vocation][type]
+            }
+        }
+
+        const loyalties = {
+            0: 0,
+            360: 0.05,
+            720: 0.1,
+            1080: 0.15,
+            1440: 0.2,
+            1800: 0.25,
+            2160: 0.3,
+            2520: 0.35,
+            2880: 0.4,
+            3240: 0.45,
+            3600: 0.5
+        }
+
+        function calcSkillsFromPoints(skillspoints, skill_constant, vocation_constant) {
+            // Define the initial values for the range [aMin, aMax]
+            let aMin = 0;
+            let aMax = 500;
+            let a = (aMin + aMax) / 2;
+            let maxIndex = skillspoints;
+            for (var i = 0; i < 500; i++) {
+                if (f(a, skill_constant, vocation_constant) > skillspoints) {
+                    aMax = a;
+                } else {
+                    aMin = a;
+                }
+                a = (aMin + aMax) / 2;
+            }
+            return parseFloat(a.toFixed(2));
+        }
+
+        var loadSelect = () => {
+            onSelectVocation(document.getElementById("monk-select"));
+        }
+
+        // Calc points at a skills
+        var calcSkillsPoints = (valueSkill, percentSkills, type) => {
+            
+            let skill_constant = skill_constants.getAttribByType(type);
+            
+            let vocation_constant = vocation_constants.getAttribByType(getSelectedVocation().value, type);
+
+            let loyalty = getLoyaylty()
+            let beforeSkillsSun = skill_constant.offset;
+
+            // Calculo de skills Points
+            let barSkillsPoints = skillLevelToPoints(skill_constant.constant, vocation_constant, valueSkill, beforeSkillsSun, 1); // Skills da Barra em Skills Points
+            let nextBarSkillsPoints = skillLevelToPoints(skill_constant.constant, vocation_constant, (valueSkill + 1), beforeSkillsSun); // Skills da Barra +1 em Skills Points
+            let diffSkillsPoints = nextBarSkillsPoints - barSkillsPoints; // Diferença do Skills da Barra e o proximo skills. 
+            let pointsToUpSkill = ((100 - percentSkills) / 100) * diffSkillsPoints;
+            barSkillsPoints = Math.round(barSkillsPoints + pointsToUpSkill);
+            
+            let rawSkillsPoints = calcRawSkillsPoints(barSkillsPoints, loyalty);
+            let rawSkills = Math.floor(Math.log((rawSkillsPoints * (vocation_constant - 1)) / skill_constant.constant + 1) / Math.log(vocation_constant)) + beforeSkillsSun;
+            
+            let realNextRawSkillsPoints = skillLevelToPoints(skill_constant.constant, vocation_constant, rawSkills + 1, beforeSkillsSun);
+
+            let advanceSkillsPoints = upPercent(skill_constant.constant, rawSkills, vocation_constant, beforeSkillsSun);
+
+            let percentSkillsPoints = realNextRawSkillsPoints - rawSkillsPoints;
+
+            let rawPercent = Math.ceil(100 * (percentSkillsPoints / advanceSkillsPoints));
+
+            return {
+                rawSkills: {
+                    skills: rawSkills,
+                    percent: rawPercent,
+                    points: rawSkillsPoints
+                },
+                barSkills: { 
+                    skills: valueSkill,
+                    percent: percentSkills,
+                    points: barSkillsPoints
+                }
+            }
+        }
+
+        var skillLevelToPoints = (skill_constant, vocation_constant, valueSkill, beforeSkillsSun) => {
+            let result = skill_constant * ((Math.pow(vocation_constant, valueSkill - beforeSkillsSun) - 1) / (vocation_constant - 1));
+            return Math.round(result);
+        }
+
+        var upPercent = function (skill_constant, valueSkills, vocation_constant, beforeSkillsSun) {
+            let result = skill_constant * Math.pow(vocation_constant, valueSkills - beforeSkillsSun);
+            return Math.round(result);
+        };
+
+        var calcRawSkillsPoints = (points, loyalty) => {
+            let result = points / loyalty;
+            return Math.floor(result);
+        }
+
+        var onSelectVocation = (checkbox) => {
+            document.getElementById("none-select").checked = false;
+            document.getElementById("druid-select").checked = false;
+            document.getElementById("knight-select").checked = false;
+            document.getElementById("monk-select").checked = false;
+            document.getElementById("paladin-select").checked = false;
+            document.getElementById("sorcerer-select").checked = false;
+            checkbox.checked = true;
+            updateAllSkills();
+        }
+
+        var getSelectedVocation = () => {
+            if (document.getElementById("none-select").checked) {
+                return document.getElementById("none-select")
+            }
+            if (document.getElementById("druid-select").checked) {
+                return document.getElementById("druid-select")
+            }
+            if (document.getElementById("knight-select").checked) {
+                return document.getElementById("knight-select")
+            }
+            if (document.getElementById("monk-select").checked) {
+                return document.getElementById("monk-select")
+            }
+            if (document.getElementById("paladin-select").checked) {
+                return document.getElementById("paladin-select")
+            }
+            if (document.getElementById("sorcerer-select").checked) {
+                return document.getElementById("sorcerer-select")
+            }
+        }
+
+        var getLoyaylty = () => {
+            let inputBonus = document.getElementById("loyalty-bonus")
+            let value = (Math.floor(inputBonus.value) / 100) + 1;
+
+            value = (value > 1.5) ? 1.5 : ((value <= 0) ? 1 : value);
+
+            return value;
+        }
+
+        var updateLoyalties = (input) => {
+            if (input.name == "loyalty-points") {
+                updateLoyaltiesByPoints(input)
+            } else {
+                updateLoyaltiesByBonus(input)
+            }
+        }
+
+        var updateLoyaltiesByBonus = (input) => {
+            for (const key in loyalties) {
+                if (loyalties.hasOwnProperty(key) && loyalties[key] === (input.value / 100)) {
+                    document.getElementById("loyalty-points").value = key;
+                    break;
+                }
+            }
+            updateAllSkills()
+        }
+
+        var updateLoyaltiesByPoints = (input) => {
+            let value = input.value
+            
+            if (value < 360) {
+                document.getElementById("loyalty-bonus").value = loyalties[0] * 100
+            } else if (value >= 360 && value < 720) {
+                document.getElementById("loyalty-bonus").value = loyalties[360] * 100
+            } else if (value >= 720 && value < 1080) {
+                document.getElementById("loyalty-bonus").value = loyalties[720] * 100
+            } else if (value >= 1080 && value < 1440) {
+                document.getElementById("loyalty-bonus").value = loyalties[1080] * 100
+            } else if (value >= 1440 && value < 1800) {
+                document.getElementById("loyalty-bonus").value = loyalties[1440] * 100
+            } else if (value >= 1800 && value < 2160) {
+                document.getElementById("loyalty-bonus").value = loyalties[1800] * 100
+            } else if (value >= 2160 && value < 2520) {
+                document.getElementById("loyalty-bonus").value = loyalties[2160] * 100
+            } else if (value >= 2520 && value < 2880) {
+                document.getElementById("loyalty-bonus").value = loyalties[2520] * 100
+            } else if (value >= 2880 && value < 3240) {
+                document.getElementById("loyalty-bonus").value = loyalties[2880] * 100
+            } else if (value >= 3240 && value < 2600) {
+                document.getElementById("loyalty-bonus").value = loyalties[3240] * 100
+            } else {
+                document.getElementById("loyalty-bonus").value = loyalties[3600] * 100
+            }
+        }
+
+        var updateAllSkills = () => {
+            updateMagic()
+            updateFist()
+            updateClub()
+            updateSword()
+            updateAxe()
+            updateDistance()
+            updateShielding()
+            updateFishing()
+        }
+
+        var updateSkills = (option) => {
+            if (option.name == "magic") {
+                updateMagic();
+            }
+            if (option.name == "fist") {
+                updateFist();
+            }
+            if (option.name == "club") {
+                updateClub();
+            }
+            if (option.name == "sword") {
+                updateSword();
+            }
+            if (option.name == "axe") {
+                updateAxe();
+            }
+            if (option.name == "distance") {
+                updateDistance();
+            }
+            if (option.name == "shielding") {
+                updateShielding();
+            }
+            if (option.name == "fishing") {
+                updateFishing();
+            }
+        }
+
+        var updateMagic = () => {
+            let inputSkills = document.getElementById("magic-skill");
+            let inputPercent = document.getElementById("magic-skill-percent");
+            let skills = parseFloat(inputSkills.value);
+
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("magic", {skills: skills, percent: percentSkills})
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "magic");
+            updateLoadBars("magic-raw", resultSkills.rawSkills);
+        }
+
+        var updateFist = () => {
+            let inputSkills = document.getElementById("fist-skill");
+            let inputPercent = document.getElementById("fist-skill-percent");
+            let skills = parseFloat(inputSkills.value);
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("fist", {skills: skills, percent: percentSkills})
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "fist");
+            updateLoadBars("fist-raw", resultSkills.rawSkills)
+        }
+
+        var updateClub = () => {
+            let inputSkills = document.getElementById("club-skill");
+            let inputPercent = document.getElementById("club-skill-percent");
+            let skills = parseFloat(inputSkills.value);
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("club", {skills: skills, percent: percentSkills})
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "club");
+            updateLoadBars("club-raw", resultSkills.rawSkills)
+        }
+
+        var updateSword = () => {
+            let inputSkills = document.getElementById("sword-skill");
+            let inputPercent = document.getElementById("sword-skill-percent");
+            let skills = parseFloat(inputSkills.value);
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("sword", {skills: skills, percent: percentSkills});
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "sword");
+            updateLoadBars("sword-raw", resultSkills.rawSkills)
+        }
+
+        var updateAxe = () => {
+            let inputSkills = document.getElementById("axe-skill")
+            let inputPercent = document.getElementById("axe-skill-percent")
+            let skills = parseFloat(inputSkills.value)
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("axe", {skills: skills, percent: percentSkills})
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "axe")
+            updateLoadBars("axe-raw", resultSkills.rawSkills)
+        }
+
+        var updateDistance = () => {
+            let inputSkills = document.getElementById("distance-skill")
+            let inputPercent = document.getElementById("distance-skill-percent")
+            let skills = parseFloat(inputSkills.value)
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("distance", {skills: skills, percent: percentSkills})
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "distance")
+            updateLoadBars("distance-raw", resultSkills.rawSkills)
+        }
+
+        var updateShielding = () => {
+            let inputSkills = document.getElementById("shielding-skill")
+            let inputPercent = document.getElementById("shielding-skill-percent")
+            let skills = parseFloat(inputSkills.value)
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("shielding", {skills: skills, percent: percentSkills})
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "shielding")
+            updateLoadBars("shielding-raw", resultSkills.rawSkills)
+        }
+
+        var updateFishing = () => {
+            let inputSkills = document.getElementById("fishing-skill")
+            let inputPercent = document.getElementById("fishing-skill-percent")
+            let skills = parseFloat(inputSkills.value)
+            let percentSkills = parseInt(inputPercent.value, 10);
+            if (percentSkills > 100) {
+                percentSkills = 100;
+            } else if (percentSkills < 1) {
+                percentSkills = 1;
+            }
+            updateLoadBars("fishing", {skills: skills, percent: percentSkills})
+
+            let resultSkills = calcSkillsPoints(skills, percentSkills, "fishing")
+            updateLoadBars("fishing-raw", resultSkills.rawSkills)
+        }
+
+        var updateLoadBars = (barType, value) => {
+            let bar = document.getElementById(barType + "-progress-bar");
+            let percent = parseInt(value.percent);
+            if (barType.includes("-raw")) {
+                let rawLabelPercent = document.getElementById(barType + "-percent")
+                let rawLabelSkill = document.getElementById(barType + "-skill")
+                rawLabelPercent.innerHTML = percent + "%"
+                rawLabelSkill.innerHTML = value.skills;
+            }
+
+            bar.style.width = (100 - percent) + "%";
+            
+        }
+
+        $(document).ready(function() {
+            $("#cs-version").text(cs_version);
+            loadSelect();
+        });
+    </script>
+  </body>
+</html>

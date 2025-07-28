@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html>
+<style>
+    .main_div {
+        position: relative;
+        display: flex;
+        width: 600px;
+        border-radius: 5px;
+        border: 2px solid #a2a9b1;
+        background: #ffffff;
+        margin: 2px;
+        -webkit-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        -moz-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        color: #000000;
+        border-spacing: 0px;
+    }
+
+    .display-flex {
+        display: flex;
+    }
+
+    .border-top {
+        border-top: 1px solid black;
+    }
+
+    .border-bottom {
+        border-bottom: 1px solid black;
+    }
+
+    .side-by-side {
+        flex: 1;
+        /* Distribute available space equally */
+    }
+
+    .container-flex {
+        display: flex;
+        /* Use flexbox for the container */
+    }
+
+    .menu {
+        background-color: #c7451d;
+        color: #ffffff;
+        float: left;
+        max-width: 280px;
+        padding: 10px;
+        border-bottom-left-radius: 3px;
+        border-top-left-radius: 3px;
+    }
+
+    .title-menu {
+        width: 100%;
+        border-bottom: 1px solid black;
+    }
+
+    .title-menu>h4 {
+        color: #ffffff;
+    }
+
+    .titulo {
+        position: relative;
+        margin: 0px;
+        padding: 0;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        font-weight: bold;
+        /* font-size: 12px; */
+        cursor: default;
+    }
+
+    .titulo>h4 {
+        color: #fff
+    }
+
+    .subtitulo {
+        float: left;
+        width: 100%;
+        margin-left: 5px;
+    }
+
+    .subtitulo>h5 {
+        float: left;
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+
+    #foodSelect {
+        height: 650px;
+    }
+
+    .quantity-box {
+        border-bottom-left-radius: 5px;
+        height: 22px;
+        line-height: 15px;
+        font-weight: bold;
+        border-right: 1px solid #cccccc;
+        border-top: 1px solid #cccccc;
+        text-align: center;
+        cursor: default;
+        font-size: 12px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    .title-box {
+        line-height: 60px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+        cursor: default;
+        height: 60px;
+        width: calc(100% - 95px);
+    }
+
+    .food-title {
+        background: transparent;
+        font-size: 13px;
+        font-weight: bold;
+        display: inline-table;
+    }
+
+    .link-system {
+        color: black !important;
+    }
+
+    .ingredients-list-container {
+        max-height: 616px;
+        border-radius: 5px;
+        overflow: auto;
+        overflow-x: hidden;
+        /* Hide horizontal scrollbar */
+        border: none;
+    }
+
+    .ingredients-list {
+        list-style: none;
+        /* Remove default list bullet points */
+        padding: 5px;
+        margin: 0.3em 1em 0 1em !important;
+    }
+
+    .ingredients-list li {
+        height: 60px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        border-left: 4px solid #c7451d;
+    }
+
+    input[type=checkbox] {
+        width: 20px;
+        height: 20px;
+    }
+
+    .image-box {
+        border-right: 1px solid #cccccc;
+        border-top-left-radius: 5px;
+        padding: 0 auto;
+        text-align: center;
+        cursor: default;
+    }
+
+    #qtdPlayers {
+        border: black 1px solid;
+        border-radius: 5px;
+        border-left: #c7451d 5px solid;
+        background: #f8f8f8;
+        border-collapse: separate;
+        width: calc(100% - 20px);
+        height: 24px;
+        margin: 0px 5px 0px 5px;
+        padding: 1px 1px 1px 1px;
+        line-height: 18px;
+        text-align: center;
+        display: inline-block;
+        vertical-align: top;
+        white-space: nowrap;
+        /* font-family: Verdana, Arial, Times New Roman, sans-serif; */
+        font-size: 13px;
+        color: black;
+    }
+
+    #qtdPlayers:hover,
+    #qtdPlayers:focus-visible {
+        outline: none;
+    }
+
+    .first-time-box {
+        height: 20px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: flex;
+        margin-left: 5px;
+        align-items: center;
+    }
+
+    .food-option {
+        float: left;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+    }
+
+    /* Tooltip */
+    .tip {
+        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-size: 12px;
+        ;
+        background-color: #ffffff;
+        border-radius: 2px;
+        box-shadow: 0 0 6px #888;
+        display: none;
+        position: absolute;
+        padding: 10px;
+        z-index: 1;
+        color: #000;
+    }
+
+    .tooltip {
+        position: relative;
+    }
+
+    .tooltip,
+    .tooltip:hover+.tip,
+    .tip:hover {
+        display: block;
+    }
+
+    /* Buttons */
+    .button-copy {
+        font-size: 10px;
+        background-color: transparent;
+        color: #ffbf00;
+        border-width: 0px;
+        border: 1px solid #ffbf00;
+        border-radius: 13px;
+        width: 15px;
+        height: 15px;
+        line-height: 15px;
+        font-weight: bold;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    .button-copy:hover {
+        width: 25px;
+        height: 25px;
+        background-color: #990000;
+    }
+
+    .button-delete {
+        font-size: 15px;
+        font-weight: bold;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        background-color: #c7451d;
+        color: #ffffff;
+        border-width: 0px;
+        display: inline;
+        float: right;
+        height: 60px;
+        width: 60px;
+    }
+
+    .button-delete:hover {
+        font-size: 20px;
+        background-color: darkred;
+        color: #ffbf00;
+        border-width: 0px;
+    }
+
+    .button-update-ingredients {
+        width: 75%;
+        height: 100%;
+        float: right;
+        font-size: 15px;
+        background-color: #c7451d;
+        color: #ffffff;
+        border-width: 0px;
+        font-weight: bold;
+    }
+
+    .button-update-ingredients:hover {
+        font-size: 15px;
+        background-color: #990000;
+        color: #ffbf00;
+        border-width: 0px;
+    }
+
+    /* labels */
+    .inspect-label {
+        margin: 5px;
+        line-height: 15px;
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        color: #ffbf00;
+    }
+    .inspect-label > .link-system {
+        color: #ffbf00 !important;
+        text-decoration: none;
+    }
+
+    .version {
+        text-align: center;
+        padding: 5px;
+        margin-top: 15px;
+        border-top: 1px solid black;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .loading {
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 3px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    .loading>label {
+        position: absolute;
+        bottom: 0;
+        display: grid;
+        text-align: center;
+        align-items: center;
+        height: 30px;
+        width: 100%;
+        background-color: #c7451d;
+        font-size: math;
+    }
+</style>
+<meta charset="utf-8" />
+
+<body>
+    <div class="main_div side-by-side">
+        <div class="loading">
+            <img src="https://www.tibiawiki.com.br/images/c/ce/The_Epic_Wisdom.gif" /><br />
+            <label>Loading...</label>
+        </div>
+        <div class="menu">
+            <div class="title-menu">
+                <h4 id="hot-title" class="titulo">Calculadora da Hot Cuisine</h4>
+            </div>
+            <br>
+            <div class="subtitulo">
+                <h5 style="color: #ffffff;">Foods:</h5>
+            </div>
+            <br>
+            <div id="foodSelect">
+            </div>
+            <div id="hot-version" class="version"></div>
+        </div>
+        <div class="content side-by-side">
+            <div class="subtitulo">
+                <h5>Quantidade de Personagens:</h5>
+            </div>
+            <input type="number" id="qtdPlayers" name="qtdPlayers" value="1" min="1" oninput="updateQuantity()"><br>
+            <div class="first-time-box">
+                <input type="checkbox" id="first-time" name="first-time" value="first-time"
+                    onchange="updateQuantity()" /><label for="first-time">Primeira vez</label><br><br>
+            </div>
+            <div class="ingredients-box">
+                <div class="display-flex border-bottom border-top">
+                    <div class="subtitulo side-by-side">
+                        <h5>Ingredientes:</h5>
+                    </div>
+                    <div class="side-by-side">
+                        <button class="button-update-ingredients" onclick="reloadIngredients()">⟲ Refresh List</button>
+                    </div>
+                </div>
+                <div class="ingredients-list-container">
+                    <ul id="ingredients" class="ingredients-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        var hot_version = "v2.0.1";
+        const ingredients = {
+            "Meat": {
+                "link": "https://www.tibiawiki.com.br/wiki/Meat",
+                "image": "https://www.tibiawiki.com.br/images/5/58/Meat.gif"
+            },
+            "Potato": {
+                "link": "https://www.tibiawiki.com.br/wiki/Potato",
+                "image": "https://www.tibiawiki.com.br/images/f/fa/Potato.gif"
+            },
+            "Onion": {
+                "link": "https://www.tibiawiki.com.br/wiki/Onion",
+                "image": "https://www.tibiawiki.com.br/images/5/57/Onion.gif"
+            },
+            "Bulb of Garlic": {
+                "link": "https://www.tibiawiki.com.br/wiki/Bulb_of_Garlic",
+                "image": "https://www.tibiawiki.com.br/images/6/63/Bulb_of_Garlic.gif"
+            },
+            "Flour": {
+                "link": "https://www.tibiawiki.com.br/wiki/Flour",
+                "image": "https://www.tibiawiki.com.br/images/1/13/Flour.gif"
+            },
+            "Beer": {
+                "link": "https://www.tibiawiki.com.br/wiki/Beer",
+                "image": "https://www.tibiawiki.com.br/images/8/8b/Beer.gif"
+            },
+            "Hydra Tongue": {
+                "link": "https://www.tibiawiki.com.br/wiki/Hydra_Tongue",
+                "image": "https://www.tibiawiki.com.br/images/4/44/Hydra_Tongue.gif"
+            },
+            "Tomato": {
+                "link": "https://www.tibiawiki.com.br/wiki/Tomato",
+                "image": "https://www.tibiawiki.com.br/images/0/06/Tomato.gif"
+            },
+            "Cucumber": {
+                "link": "https://www.tibiawiki.com.br/wiki/Cucumber",
+                "image": "https://www.tibiawiki.com.br/images/5/51/Cucumber.gif"
+            },
+            "Egg": {
+                "link": "https://www.tibiawiki.com.br/wiki/Egg",
+                "image": "https://www.tibiawiki.com.br/images/e/ed/Egg.gif"
+            },
+            "Troll Green": {
+                "link": "https://www.tibiawiki.com.br/wiki/Troll_Green",
+                "image": "https://www.tibiawiki.com.br/images/e/e4/Troll_Green.gif"
+            },
+            "Wine": {
+                "link": "https://www.tibiawiki.com.br/wiki/Wine",
+                "image": "https://www.tibiawiki.com.br/images/1/15/Wine.gif"
+            },
+            "Bat": {
+                "link": "https://www.tibiawiki.com.br/wiki/Bat",
+                "image": "https://www.tibiawiki.com.br/images/b/b1/Dead_Bat.gif"
+            },
+            "Jalapeño Pepper": {
+                "link": "https://www.tibiawiki.com.br/wiki/Jalapeño_Pepper",
+                "image": "https://www.tibiawiki.com.br/images/d/d7/Jalape%C3%B1o_Pepper.gif"
+            },
+            "Brown Bread": {
+                "link": "https://www.tibiawiki.com.br/wiki/Brown_Bread",
+                "image": "https://www.tibiawiki.com.br/images/4/47/Brown_Bread.gif"
+            },
+            "Powder Herb": {
+                "link": "https://www.tibiawiki.com.br/wiki/Powder_Herb",
+                "image": "https://www.tibiawiki.com.br/images/e/e4/Powder_Herb.gif"
+            },
+            "Red Mushroom": {
+                "link": "https://www.tibiawiki.com.br/wiki/Red_Mushroom",
+                "image": "https://www.tibiawiki.com.br/images/9/96/Red_Mushroom.gif"
+            },
+            "Chicken": {
+                "link": "https://www.tibiawiki.com.br/wiki/Chicken",
+                "image": "https://www.tibiawiki.com.br/images/6/6f/Dead_Chicken.gif"
+            },
+            "Lemon": {
+                "link": "https://www.tibiawiki.com.br/wiki/Lemon",
+                "image": "https://www.tibiawiki.com.br/images/c/c2/Lemon.gif"
+            },
+            "Orange": {
+                "link": "https://www.tibiawiki.com.br/wiki/Orange",
+                "image": "https://www.tibiawiki.com.br/images/4/40/Orange.gif"
+            },
+            "Mango": {
+                "link": "https://www.tibiawiki.com.br/wiki/Mango",
+                "image": "https://www.tibiawiki.com.br/images/f/f2/Mango.gif"
+            },
+            "Coconut Milk": {
+                "link": "https://www.tibiawiki.com.br/wiki/Coconut_Milk",
+                "image": "https://www.tibiawiki.com.br/images/e/e4/Coconut_Milk.gif"
+            },
+            "Stone Herb": {
+                "link": "https://www.tibiawiki.com.br/wiki/Stone_Herb",
+                "image": "https://www.tibiawiki.com.br/images/d/da/Stone_Herb.gif"
+            },
+            "Bar of Chocolate": {
+                "link": "https://www.tibiawiki.com.br/wiki/Bar_of_Chocolate",
+                "image": "https://www.tibiawiki.com.br/images/c/c4/Bar_of_Chocolate.gif"
+            },
+            "Cream Cake": {
+                "link": "https://www.tibiawiki.com.br/wiki/Cream_Cake",
+                "image": "https://www.tibiawiki.com.br/images/9/97/Cream_Cake.gif"
+            },
+            "Banana": {
+                "link": "https://www.tibiawiki.com.br/wiki/Banana",
+                "image": "https://www.tibiawiki.com.br/images/4/4f/Banana.gif"
+            },
+            "Milk": {
+                "link": "https://www.tibiawiki.com.br/wiki/Milk",
+                "image": "https://www.tibiawiki.com.br/images/4/43/Milk.gif"
+            },
+            "Sling Herb": {
+                "link": "https://www.tibiawiki.com.br/wiki/Sling_Herb",
+                "image": "https://www.tibiawiki.com.br/images/7/72/Sling_Herb.gif"
+            },
+            "Star Herb": {
+                "link": "https://www.tibiawiki.com.br/wiki/Star_Herb",
+                "image": "https://www.tibiawiki.com.br/images/c/c5/Star_Herb.gif"
+            },
+            "Carrot": {
+                "link": "https://www.tibiawiki.com.br/wiki/Carrot",
+                "image": "https://www.tibiawiki.com.br/images/b/b5/Carrot.gif"
+            },
+            "Corncob": {
+                "link": "https://www.tibiawiki.com.br/wiki/Corncob",
+                "image": "https://www.tibiawiki.com.br/images/9/9b/Corncob.gif"
+            },
+            "Cheese": {
+                "link": "https://www.tibiawiki.com.br/wiki/Cheese",
+                "image": "https://www.tibiawiki.com.br/images/6/6a/Cheese.gif"
+            },
+            "White Mushroom": {
+                "link": "https://www.tibiawiki.com.br/wiki/White_Mushroom",
+                "image": "https://www.tibiawiki.com.br/images/e/ed/White_Mushroom.gif"
+            },
+            "Brown Mushroom": {
+                "link": "https://www.tibiawiki.com.br/wiki/Brown_Mushroom",
+                "image": "https://www.tibiawiki.com.br/images/e/ef/Brown_Mushroom.gif"
+            },
+            "Shadow Herb": {
+                "link": "https://www.tibiawiki.com.br/wiki/Shadow_Herb",
+                "image": "https://www.tibiawiki.com.br/images/1/15/Shadow_Herb.gif"
+            },
+            "Mead": {
+                "link": "https://www.tibiawiki.com.br/wiki/Mead",
+                "image": "https://www.tibiawiki.com.br/images/c/c1/Mead.gif"
+            },
+            "Ham": {
+                "link": "https://www.tibiawiki.com.br/wiki/Ham",
+                "image": "https://www.tibiawiki.com.br/images/e/e8/Ham.gif"
+            },
+            "Plum": {
+                "link": "https://www.tibiawiki.com.br/wiki/Plum",
+                "image": "https://www.tibiawiki.com.br/images/4/48/Plum.gif"
+            },
+            "Beetroot": {
+                "link": "https://www.tibiawiki.com.br/wiki/Beetroot",
+                "image": "https://www.tibiawiki.com.br/images/f/f0/Beetroot.gif"
+            },
+            "Pumpkin": {
+                "link": "https://www.tibiawiki.com.br/wiki/Pumpkin",
+                "image": "https://www.tibiawiki.com.br/images/c/cc/Pumpkin.gif"
+            },
+            "Northern Pike": {
+                "link": "https://www.tibiawiki.com.br/wiki/Northern_Pike",
+                "image": "https://www.tibiawiki.com.br/images/8/83/Northern_Pike.gif"
+            },
+            "Rainbow Trout": {
+                "link": "https://www.tibiawiki.com.br/wiki/Rainbow_Trout",
+                "image": "https://www.tibiawiki.com.br/images/5/51/Rainbow_Trout.gif"
+            },
+            "Green Perch": {
+                "link": "https://www.tibiawiki.com.br/wiki/Green_Perch",
+                "image": "https://www.tibiawiki.com.br/images/2/27/Green_Perch.gif"
+            },
+            "Shrimp": {
+                "link": "https://www.tibiawiki.com.br/wiki/Shrimp",
+                "image": "https://www.tibiawiki.com.br/images/8/8c/Shrimp.gif"
+            },
+            "Roll": {
+                "link": "https://www.tibiawiki.com.br/wiki/Roll",
+                "image": "https://www.tibiawiki.com.br/images/8/8f/Roll.gif"
+            },
+            "Fern": {
+                "link": "https://www.tibiawiki.com.br/wiki/Fern",
+                "image": "https://www.tibiawiki.com.br/images/5/5c/Fern.gif"
+            },
+            "Cookie": {
+                "link": "https://www.tibiawiki.com.br/wiki/Cookie",
+                "image": "https://www.tibiawiki.com.br/images/4/42/Cookie.gif"
+            },
+            "Peanut": {
+                "link": "https://www.tibiawiki.com.br/wiki/Peanut",
+                "image": "https://www.tibiawiki.com.br/images/4/43/Peanut.gif"
+            },
+            "Rice Ball": {
+                "link": "https://www.tibiawiki.com.br/wiki/Rice_Ball",
+                "image": "https://www.tibiawiki.com.br/images/0/00/Rice_Ball.gif"
+            },
+            "Sandcrawler Shell": {
+                "link": "https://www.tibiawiki.com.br/wiki/Sandcrawler_Shell",
+                "image": "https://www.tibiawiki.com.br/images/6/65/Sandcrawler_Shell.gif"
+            },
+            "Water": {
+                "link": "https://www.tibiawiki.com.br/wiki/Water",
+                "image": "https://www.tibiawiki.com.br/images/6/6a/Water_%28L%C3%ADquido%29.gif"
+            },
+            "Candy": {
+                "link": "https://www.tibiawiki.com.br/wiki/Candy",
+                "image": "https://www.tibiawiki.com.br/images/a/a7/Candy.gif"
+            },
+            "Candy Cane": {
+                "link": "https://www.tibiawiki.com.br/wiki/Candy_Cane",
+                "image": "https://www.tibiawiki.com.br/images/0/0d/Candy_Cane.gif"
+            },
+            "Gingerbreadman": {
+                "link": "https://www.tibiawiki.com.br/wiki/Gingerbreadman",
+                "image": "https://www.tibiawiki.com.br/images/4/4e/Gingerbreadman.gif"
+            },
+            "Flask of Demonic Blood": {
+                "link": "https://www.tibiawiki.com.br/wiki/Flask_of_Demonic_Blood",
+                "image": "https://www.tibiawiki.com.br/images/8/8c/Flask_of_Demonic_Blood.gif"
+            },
+            "Honeycomb": {
+                "link": "https://www.tibiawiki.com.br/wiki/Honeycomb",
+                "image": "https://www.tibiawiki.com.br/images/3/3e/Honeycomb.gif"
+            },
+            "Bottle of Bug Milk": {
+                "link": "https://www.tibiawiki.com.br/wiki/Bottle_of_Bug_Milk",
+                "image": "https://www.tibiawiki.com.br/images/e/e6/Bottle_of_Bug_Milk.gif"
+            },
+            "Bottle of Bug Milk": {
+                "link": "https://www.tibiawiki.com.br/wiki/Bottle_of_Bug_Milk",
+                "image": "https://www.tibiawiki.com.br/images/e/e6/Bottle_of_Bug_Milk.gif"
+            },
+            "Blessed Wooden Stake": {
+                "link": "https://www.tibiawiki.com.br/wiki/Blessed_Wooden_Stake",
+                "image": "https://www.tibiawiki.com.br/images/7/75/Blessed_Wooden_Stake.gif"
+            }
+        }
+
+        const foods = [
+            {
+                "name": "Rotworm Stew",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Rotworm_Stew",
+                "image": "https://www.tibiawiki.com.br/images/7/7a/Rotworm_Stew.gif",
+                "ingredients": [
+                    {
+                        "name": "Meat",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Potato",
+                        "quantity": 20
+                    },
+                    {
+                        "name": "Onion",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Bulb of Garlic",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Flour",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Beer",
+                        "quantity": 2
+                    }
+                ]
+            },
+            {
+                "name": "Hydra Tongue Salad",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Hydra_Tongue_Salad",
+                "image": "https://www.tibiawiki.com.br/images/d/d3/Hydra_Tongue_Salad.gif",
+                "ingredients": [
+                    {
+                        "name": "Hydra Tongue",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Tomato",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Cucumber",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Egg",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Troll Green",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Wine",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "name": "Roasted Dragon Wings",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Roasted_Dragon_Wings",
+                "image": "https://www.tibiawiki.com.br/images/e/ed/Roasted_Dragon_Wings.gif",
+                "ingredients": [
+                    {
+                        "name": "Bat",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Jalapeño Pepper",
+                        "quantity": 3
+                    },
+                    {
+                        "name": "Brown Bread",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Egg",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Powder Herb",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Red Mushroom",
+                        "quantity": 5
+                    }
+                ]
+            },
+            {
+                "name": "Tropical Fried Terrorbird",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Tropical_Fried_Terrorbird",
+                "image": "https://www.tibiawiki.com.br/images/0/02/Tropical_Fried_Terrorbird.gif",
+                "ingredients": [
+                    {
+                        "name": "Chicken",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Lemon",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Orange",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Mango",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Coconut Milk",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Stone Herb",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "name": "Banana Chocolate Shake",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Banana_Chocolate_Shake",
+                "image": "https://www.tibiawiki.com.br/images/c/c7/Banana_Chocolate_Shake.gif",
+                "ingredients": [
+                    {
+                        "name": "Bar of Chocolate",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Cream Cake",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Banana",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Milk",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Sling Herb",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Star Herb",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "name": "Veggie Casserole",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Veggie_Casserole",
+                "image": "https://www.tibiawiki.com.br/images/d/d9/Veggie_Casserole.gif",
+                "ingredients": [
+                    {
+                        "name": "Carrot",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Tomato",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Corncob",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Cucumber",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Onion",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Bulb of Garlic",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Cheese",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "White Mushroom",
+                        "quantity": 20
+                    },
+                    {
+                        "name": "Brown Mushroom",
+                        "quantity": 5
+                    }
+                ]
+            },
+            {
+                "name": "Filled Jalapeño Peppers",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Filled_Jalapeño_Peppers",
+                "image": "https://www.tibiawiki.com.br/images/f/f2/Filled_Jalape%C3%B1o_Peppers.gif",
+                "ingredients": [
+                    {
+                        "name": "Jalapeño Pepper",
+                        "quantity": 10
+                    },
+                    {
+                        "name": "Cheese",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Troll Green",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Shadow Herb",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Mead",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Egg",
+                        "quantity": 2
+                    }
+                ]
+            },
+            {
+                "name": "Blessed Steak",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Blessed_Steak",
+                "image": "https://www.tibiawiki.com.br/images/a/a2/Blessed_Steak.gif",
+                "ingredients": [
+                    {
+                        "name": "Ham",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Plum",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Onion",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Beetroot",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Pumpkin",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Jalapeño Pepper",
+                        "quantity": 2
+                    }
+                ]
+            },
+            {
+                "name": "Northern Fishburger",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Northern_Fishburger",
+                "image": "https://www.tibiawiki.com.br/images/d/df/Northern_Fishburger.gif",
+                "ingredients": [
+                    {
+                        "name": "Northern Pike",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Rainbow Trout",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Green Perch",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Shrimp",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Roll",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Fern",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "name": "Carrot Cake",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Carrot_Cake",
+                "image": "https://www.tibiawiki.com.br/images/9/95/Carrot_Cake.gif",
+                "ingredients": [
+                    {
+                        "name": "Carrot",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Milk",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Lemon",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Flour",
+                        "quantity": 10
+                    },
+                    {
+                        "name": "Egg",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Cookie",
+                        "quantity": 10
+                    },
+                    {
+                        "name": "Peanut",
+                        "quantity": 2
+                    }
+                ]
+            },
+            {
+                "name": "Coconut Shrimp Bake",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Coconut_Shrimp_Bake",
+                "image": "https://www.tibiawiki.com.br/images/d/d1/Coconut_Shrimp_Bake.gif",
+                "ingredients": [
+                    {
+                        "name": "Coconut Milk",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Brown Mushroom",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Red Mushroom",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Rice Ball",
+                        "quantity": 10
+                    },
+                    {
+                        "name": "Shrimp",
+                        "quantity": 10
+                    }
+                ]
+            },
+            {
+                "name": "Pot of Blackjack",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Pot_of_Blackjack",
+                "image": "https://www.tibiawiki.com.br/images/1/1b/Pot_of_Blackjack.gif",
+                "ingredients": [
+                    {
+                        "name": "Sandcrawler Shell",
+                        "quantity": 5
+                    },
+                    {
+                        "name": "Water",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Carrot",
+                        "quantity": 20
+                    },
+                    {
+                        "name": "Potato",
+                        "quantity": 10
+                    },
+                    {
+                        "name": "Jalapeño Pepper",
+                        "quantity": 3
+                    }
+                ]
+            },
+            {
+                "name": "Demonic Candy Balls",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Demonic_Candy_Ball",
+                "image": "https://www.tibiawiki.com.br/images/1/19/Demonic_Candy_Ball.gif",
+                "ingredients": [
+                    {
+                        "name": "Candy",
+                        "quantity": 3
+                    },
+                    {
+                        "name": "Candy Cane",
+                        "quantity": 3
+                    },
+                    {
+                        "name": "Bar of Chocolate",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Gingerbreadman",
+                        "quantity": 15
+                    },
+                    {
+                        "name": "Flask of Demonic Blood",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "name": "Sweet Mangonaise Elixir",
+                "link": "https://www.tibiawiki.com.br/index.php?title=Sweet_Mangonaise_Elixir",
+                "image": "https://www.tibiawiki.com.br/images/f/f3/Sweet_Mangonaise_Elixir.gif",
+                "ingredients": [
+                    {
+                        "name": "Egg",
+                        "quantity": 40
+                    },
+                    {
+                        "name": "Mango",
+                        "quantity": 20
+                    },
+                    {
+                        "name": "Honeycomb",
+                        "quantity": 10
+                    },
+                    {
+                        "name": "Bottle of Bug Milk",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Blessed Wooden Stake",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ];
+        const selectedFoods = [];
+        const deletedIngredients = [];
+        var promises = [];
+        // Popula o Select de Items.
+        var populateFoodSelect = async () => {
+            $("#foodSelect").empty();
+
+            if (foods != null) { // Verifica se a lista de itens não é nula
+                let id = 0;
+                $("#foodSelect").append("<div class=\"food-option\" style=\"margin-bottom: 25px;\"><input type=\"checkbox\" id=\"food-00\" name=\"all-food\" value=\"all-food\" checked=\"true\" onchange=\"selectAllFoods(this)\"><label class=\"food-title\" for=\"food-00\">Select All Foods</label></div><br><br>");
+                foods.forEach((item) => {
+                    let attrib = item.attrib;
+                    let itemName = item.name;
+                    let image = "<img style=\"width: 25px; height: 25px;\" src=\"" + item.image + "\"/>";
+                    let tooltip = "<span class=\"tooltip\"><div class=\"inspect-label\"> ⓘ </div></span><span class=\"tip\" id=\"fonte3\">Abrir.</span>"
+                    let buttonCopy = "<span class=\"tooltip\"><button class=\"button-copy\" onclick=\"copyName('" + itemName + "')\">⎘</button></span><span class=\"tip\" id=\"fonte3\">Copy Food Name.</span>"
+                    if (attrib != null && !attrib.isEmpty) {
+                        tooltip = "<span class=\"tooltip\"><div class=\"inspect-label\"><a class=\"link-system\" href=\"" + item.link + "\" target=\"blank\"> ⓘ </a> </div></span><span class=\"tip\" id=\"fonte3\">" + attrib + "</span>";
+                    }
+                    $("#foodSelect").append("<div class=\"food-option\"><input type=\"checkbox\" id=\"food-" + id + "\" name=\"" + item.name + "\" value=\"" + item.name + "\" checked=\"true\" onchange=\"updateIngredients(this)\">" + image + "<label class=\"food-title\" for=\"food-" + id + "\"> " + item.name + "</label>" + tooltip + buttonCopy + "</div><br><br>");
+                    id++;
+                    selectedFoods.push(item);
+                });
+                updateIngredientsGreed();
+            }
+        };
+
+        var copyName = async (name) => {
+            try {
+                await navigator.clipboard.writeText(name + " - yes");
+                console.log('Name copied to clipboard successfully!');
+            } catch (error) {
+                console.error('Failed to copy name: ', error);
+            }
+        }
+
+        var selectAllFoods = (checkbox) => {
+            clearArray(selectedFoods);
+            let index = 0;
+            foods.forEach(() => {
+                let ckb = document.getElementById("food-" + index);
+                ckb.checked = checkbox.checked;
+                updateIngredients(ckb, true);
+                index++;
+            });
+        }
+
+        var checkSelectionBoxies = () => {
+            let index = 0;
+            let selectedArr = [];
+            foods.forEach(() => {
+                let ckb = document.getElementById("food-" + index);
+                if (ckb.checked) {
+                    selectedArr.push(ckb);
+                }
+                index++;
+            });
+            if (selectedArr.length == foods.length) {
+                document.getElementById("food-00").checked = true;
+            } else {
+                document.getElementById("food-00").checked = false;
+            }
+        }
+
+        var updateIngredients = (checkbox, isAll) => {
+            let food = foods.find(food => food.name == checkbox.value);
+            if (checkbox.checked) {
+                selectedFoods.push(food);
+            } else {
+                let index = selectedFoods.map(sFood => sFood.name).indexOf(food.name);
+                if (index > -1) { // only splice array when item is found
+                    selectedFoods.splice(index, 1); // 2nd parameter means remove one item only
+                }
+            }
+            updateIngredientsGreed();
+            if (isAll == null || !isAll) {
+                checkSelectionBoxies();
+            }
+        }
+
+        var updateQuantity = () => {
+            updateIngredientsGreed();
+        }
+
+        var updateIngredientsGreed = () => {
+            let ingredientsList = {};
+            selectedFoods.forEach((food) => {
+                food.ingredients.forEach((ingredient) => {
+                    let mIngrediente = ingredientsList[ingredient.name];
+                    if (mIngrediente == null) {
+                        ingredientsList[ingredient.name] = ingredient.quantity;
+                    } else {
+                        ingredientsList[ingredient.name] = mIngrediente + ingredient.quantity;
+                    }
+                });
+            });
+            if (deletedIngredients.length > 0) {
+                deletedIngredients.forEach((ingredient) => {
+                    delete ingredientsList[ingredient];
+                })
+            }
+            updateList(ingredientsList);
+        };
+
+        var updateList = (list) => {
+            let ingredientsListSorted = Object.entries(list).sort(([a,], [b,]) => {
+                const nameA = a.toLowerCase();
+                const nameB = b.toLowerCase();
+
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+            document.getElementById("ingredients").innerHTML = "";
+            let quantity = (document.getElementById("first-time").checked) ? (Number(document.getElementById("qtdPlayers").value) * 2) : Number(document.getElementById("qtdPlayers").value);
+            ingredientsListSorted.forEach((item) => {
+                let key = item[0];
+                let value = item[1];
+                let buttonDelete = "<button class=\"button-delete tooltip \" onclick=\"deleteIngredient('" + key + "')\">✕</button><span class=\"tip\" id=\"fonte3\">Comprado, remover da lista.</span>"
+                let imageBox = "<div class=\"\"><div class=\"image-box\"><img style=\"width: 34px; height 34px;\" src=\"" + ingredients[key].image + "\" /></div><div class=\"quantity-box\">" + (Number(value) * quantity) + "</div></div>";
+                $("#ingredients").append("<li><div class=\"container-flex\">" + imageBox + "<div class=\"title-box \"><a class=\"link-system\" href=\"" + ingredients[key].link + "\" target=\"blank\">" + key + "</a></div>" + buttonDelete + "</div></li>")
+            });
+        }
+
+        var deleteIngredient = (name) => {
+            if (!deletedIngredients.includes(name)) {
+                deletedIngredients.push(name);
+            }
+            updateIngredientsGreed();
+        }
+
+        var reloadIngredients = () => {
+            clearArray(deletedIngredients);
+            updateIngredientsGreed();
+        }
+
+        var clearArray = (array) => {
+            while (array.length > 0) {
+                array.pop();
+            }
+        }
+
+        var getAttributions = async () => {
+
+            foods.forEach((food) => {
+                requestAtrributions(food);
+            });
+        }
+
+        var executedPromises = async () => {
+            await Promise.all(promises);
+
+            clearArray(selectedFoods);
+            populateFoodSelect();
+            $('.loading').css("display", "none");
+        }
+
+        var requestAtrributions = async (food) => {
+            try {
+                $.ajax({
+                    url: food.link + '&action=raw',
+                    type: 'GET',
+                    cors: true ,
+                    contentType:'application/json',
+                    secure: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Accept': '*/*',
+                        'Accept-Encoding': 'gzip, deflate, br',
+                        'Accept-Language': 'en-US,en;q=0.5',
+                        'Connection': 'keep-alive'
+                    }, success: function (codigo) {
+                        promises.push(callbacks(codigo, food));
+                    }, error: function (error) {
+                        promises.push(callbacks(null, food));
+                    }
+                });
+            }catch (error) {
+                console.log(error);
+            }
+        }
+
+        var callbacks = async (codigo, food) => {
+            if (codigo == null) {
+                codigo = "";
+            }
+            let dplArr = codigo.split("| ");
+            let attrib = dplArr.find(str => str.includes("attrib"));
+            attrib = (attrib == null) ? "Abrir food" : attrib;
+            if (attrib != null && !attrib.isEmpty) {
+                if (attrib != "Abrir food") {
+                    attrib = attrib.split("= ")[1].replace(/\[/g, '').replace(/\]/g, '');
+                }
+                let index = foods.findIndex((item) => item.name === food.name);
+                if (index > -1) {
+                    foods[index].attrib = attrib;
+                }
+            }
+            executedPromises();
+        }
+
+        $(document).ready(function () {
+            $("#hot-version").text(hot_version);
+            clearArray(selectedFoods);
+            clearArray(deletedIngredients);
+            $('.loading').css("display", "flex");
+            getAttributions();
+            // populateFoodSelect();
+        });
+
+    </script>
+</body>
+
+</html>
