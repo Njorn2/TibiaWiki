@@ -16,8 +16,7 @@
     .hot-cuisine-loading {
         z-index: 9999;
         background-color: rgba(255, 255, 255, 0.98);
-        /* display: inline-block; */
-        display: none;
+        display: inline-block;
         border-radius: 3px;
         position: absolute;
         height: 100%;
@@ -54,7 +53,7 @@
         width: 300px;
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
-        padding: 5px;
+        padding: 10px 5px 5px 5px;
     }
     .hot-cuisine-players-panel > h2 {
         width: 100%;
@@ -62,6 +61,9 @@
         text-align: center;
         color: white;
         border-bottom: 1px solid black;
+    }
+    .hot-cuisine-players-panel > .hot-cuisine-checkbox-boxes-flex {
+        display: flex;
     }
     .hot-cuisine-players-input-box {
         height: 55px;
@@ -126,7 +128,52 @@
         height: 100%;
         margin-left: 5px;
         align-content: center;
-        color: white;
+        font-weight: bold;
+    }
+    .hot-cuisine-players-panel > div > .hot-cuisine-checkbox-box > label {
+        color: #FFFFFF;
+    }
+
+    .hot-cuisine-foods-panel {
+        width: 300px;
+        margin: 5px 0px 5px 0px;
+        padding: 5px;
+        border-right: 1px solid #000000;
+    }
+    .hot-cuisine-foods-panel > h2 {
+        width: 100%;
+        text-align: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #000000;
+    }
+    .hot-cuisine-foods-panel > .hot-cuisine-checkbox-box > label {
+        color: black;
+    }
+    .hot-cuisine-foods-list {
+        width: 100%;
+        margin-top: 25px;
+    }
+    .hot-cuisine-foods-list-item {
+        width: 100%;
+        display: flex;
+    }
+    .hot-cuisine-foods-list-item {
+        width: 100%;
+        display: flex;
+        align-content: center;
+    }
+    .hot-cuisine-foods-list-item > input {
+        width: 20px;
+        height: 20px;
+    }
+    .hot-cuisine-foods-list-item > img {
+        width: 25px;
+        height: 25px;
+    }
+    .hot-cuisine-foods-list-item > label {
+        height: 100%;
+        margin-left: 5px;
+        align-self: center;
         font-weight: bold;
     }
     
@@ -147,20 +194,286 @@
         <div class="hot-cuisine-players-list-box">
             <label for="hot-cuisine-players-list-select">Personagens:</label>
             <select id="hot-cuisine-players-list-select" type="text" size="10">
-                <option value="" selected>1: Player 1</option>
-                <option value="">2: Player 2</option>
-                <option value="">3: Player 3</option>
-                <option value="">4: Player 4</option>
-                <option value="">5: Player 5</option>
             </select>
         </div>
         <div class="hot-cuisine-players-input-box">
             <label for="hot-cuisine-players-name-input">Nome do Personagem:</label>
             <input type="text" id="hot-cuisine-players-name-input" value="Player 1" placeholder="Nome do Personagem...">
         </div>
+        <div class="hot-cuisine-checkbox-boxes-flex">
+            <div class="hot-cuisine-checkbox-box">
+                <input id="hot-cuisine-checkbox-first-time" type="checkbox" checked>
+                <label for="hot-cuisine-checkbox-first-time">Primeira vez</label>
+            </div>
+            <div class="hot-cuisine-checkbox-box">
+                <input id="hot-cuisine-checkbox-player-done" type="checkbox">
+                <label for="hot-cuisine-checkbox-player-done">Termiado</label>
+            </div>
+        </div>
+    </div>
+    <div class="hot-cuisine-foods-panel">
+        <h2>Foods</h2>
         <div class="hot-cuisine-checkbox-box">
-            <input id="hot-cuisine-checkbox-first-time" type="checkbox" checked>
-            <label for="hot-cuisine-checkbox-first-time">Primeira vez</label>
+            <input id="hot-cuisine-checkbox-select-all-food" type="checkbox" checked>
+            <label for="hot-cuisine-checkbox-select-all-food">Selecionar todas as Foods</label>
+        </div>
+        <div class="hot-cuisine-foods-list">
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+
+    var players = new Array();
+
+    var createPlayerList = (component) => {
+        let quantity = parseInt(component.value || 1);
+        if (quantity <= 0) {
+            component.value = 1;
+            quantity = 1;
+        }
+        const playerList = document.getElementById('hot-cuisine-players-list-select');
+        if (playerList == null) {
+            showAlert();
+            return;
+        }
+        playerList.innerHTML = "";
+        if (players.length > quantity) {
+            players.pop(players.length - quantity);
+        }
+        for (let i = 1; i <= quantity; i++) {
+            if (players.find(iPlayer => iPlayer.id === i) == null) {
+                const player = {
+                    "id": i,
+                    "name": "Player ".concat(i),
+                    "isFirstTime": true,
+                    "isDone": false,
+                    "selected": false
+                }
+                players.push(player);
+            }
+            const option = createPlayerItemListCell(players[i - 1]);
+            playerList.appendChild(option);
+        }
+        if (playerList.children.length == null || playerList.children.length === 0) {
+            showAlert();
+            return;
+        }
+        let index = 0;
+        const player = players.find(player => player.selected == true);
+        if (player) {
+            index = player.id - 1;
+        }
+        playerList.children[index].setAttribute('selected', true);
+        selectPlayer(playerList);
+        updateSavedPlayers();
+    }
+
+    var createPlayerItemListCell = (player) => {
+        const option = new Option(player.id.toString().concat(": ").concat(player.name), player.name);
+        option.setAttribute('list-index', player.id - 1);
+        option.setAttribute('is-first-time', player.isFirstTime);
+
+        return option;
+    }
+
+    var selectPlayer = (component) => {
+        const listOptions = Array.from(document.getElementsByTagName('option'));
+        const selectedOptions = listOptions.filter(op => op.value === component.value);
+        if (selectedOptions == null || selectedOptions.length === 0) {
+            showAlert();
+            return;
+        }
+        const selectedOption = selectedOptions[0];
+
+        // Update Componenents
+        const inputPlayerName = document.getElementById('hot-cuisine-players-name-input');
+        const isFirstTimeCheckbox = document.getElementById('hot-cuisine-checkbox-first-time');
+        const isDoneCheckbox = document.getElementById('hot-cuisine-checkbox-player-done');
+
+        inputPlayerName.value = players[selectedOption.getAttribute("list-index")].name;
+        inputPlayerName.setAttribute('selected-player-id', selectedOption.getAttribute("list-index"));
+        isFirstTimeCheckbox.checked = players[selectedOption.getAttribute("list-index")].isFirstTime;
+        isFirstTimeCheckbox.setAttribute('player-id', players[selectedOption.getAttribute("list-index")].id);
+        isDoneCheckbox.checked = players[selectedOption.getAttribute("list-index")].isDone;
+        isDoneCheckbox.setAttribute('player-id', players[selectedOption.getAttribute("list-index")].id);
+
+        // Update List
+        players.forEach(player => player.selected = false);
+        players[selectedOption.getAttribute("list-index")].selected = true;
+    }
+
+    var changePlayerDataName = (component) => {
+        const name = component.value;
+        players[component.getAttribute('selected-player-id')].name = name;
+
+        const listOptions = Array.from(document.getElementsByTagName('option'));
+        const selectedOptions = listOptions.filter(op => op.getAttribute('list-index') === component.getAttribute('selected-player-id'));
+        if (selectedOptions == null || selectedOptions.length === 0) {
+            showAlert();
+            return;
+        }
+        selectedOptions[0].value = name;
+        const id = parseInt(component.getAttribute('selected-player-id')) + 1;
+        selectedOptions[0].innerText = (id.toString()).concat(': ').concat(name);
+        updateSavedPlayers();
+    }
+
+    var changePlayerDataOptions = (component, type) => {
+        if (type === 'first-time') {
+            players[component.getAttribute("player-id") - 1].isFirstTime = component.checked;
+        }
+        if (type === 'player-done') {
+            players[component.getAttribute("player-id") - 1].isDone = component.checked;
+        }
+        updateSavedPlayers();
+    }
+
+    var updateQuantityPlayersOnLoad = () => {
+        const quantityPlayersInput = document.getElementById('hot-cuisine-players-quantity-input');
+        quantityPlayersInput.value = players.length;
+    }
+
+    var loadFoodsList = () => {
+        const components = document.getElementsByClassName('hot-cuisine-foods-list');
+        if (components == null || Object.keys(components).length === 0) {
+            showAlert();
+            return;
+        }
+        const divFoodList = components[0];
+        divFoodList.innerHTML = "";
+        for(let i = 0; i < foods.length; i++) {
+            const itemList = createFoodItemList(foods[i], i);
+            divFoodList.appendChild(itemList);
+        }
+    }
+   
+    var createFoodItemList = (food, index) => {
+        const div = document.createElement('div');
+        div.classList.add("hot-cuisine-foods-list-item");
+
+        const checkbox = document.createElement('input');
+        checkbox.setAttribute('type', 'checkbox');
+        checkbox.setAttribute('checked', true);
+        checkbox.setAttribute('id', 'food-'.concat(index));
+
+        const img = document.createElement('img');
+        img.setAttribute('src', food.image);
+
+        const label = document.createElement('label');
+        checkbox.setAttribute('for', 'food-'.concat(index));
+        label.innerText = food.name;
+
+        div.appendChild(checkbox);
+        div.appendChild(img);
+        div.appendChild(label);
+
+        return div;
+    }
+
+    var showAlert = (message) => {
+        alert(message || "Desculpe pela inconveniência!\n\nAlgo deu errado. Por favor, recarregue a página.");
+    }
+
+    /* Players Hot Cuisine */
+    const hotCuisinePlayersKey = "tw-hot-cuisine-players";
+    var updateSavedPlayers = () => {
+        savePlayers();
+    }
+    var savePlayers = () => {
+        let data = JSON.stringify(players);
+        localStorage.setItem(hotCuisinePlayersKey, data);
+    }
+
+    var getPlayers = () => {
+        const data = localStorage.getItem(hotCuisinePlayersKey);
+        if (data != null && data.length > 0) {
+            let savedPlayers = JSON.parse(data);
+            return savedPlayers;
+        }
+        return new Array();
+    }
+
+    var deletePlayers = () => {
+        localStorage.removeItem(hotCuisinePlayersKey);
+    }
+
+    var loadAllItens = async () => {
+        let baseURL = 'https://mypper.com/tibia/v1/tibiawiki';
+        $('.hot-cuisine-loading label').text('Loading Imbuements and Itens for You, Adventurer!...');
+        await Promise.all([
+            loadData(baseURL, 'foods', 'HotCuisineFoods'),
+            loadData(baseURL, 'ingredientes', 'HotCuisineIngredientes')
+        ]).then((results) => {
+            console.log("Load Done!");
+            loadFoodsList();
+            $('.hot-cuisine-loading')[0].style.display = 'none';
+        }).catch((error) => {
+            showAlert();
+            console.error('Error:', error);
+        });
+    }
+
+    var loadData = async (baseURL, varName, path) => {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                contentType: 'text/plain; charset=utf-8',
+                url: baseURL + '/index.php?title=Tibia_Wiki:' + path + '/json&action=raw',
+                type: 'GET',
+                success: function(data) {
+                    callbacks(data.replace(/<pre id="[^"]*">/gi, '').replace(/<\/pre>/gi, ''), varName);
+                    resolve('Loaded: ' + varName);
+                },
+                error: function(error) {
+                    console.error(error);
+                    callbacks(null, varName);
+                }
+            });
+        });
+    }
+
+    var callbacks = (codigo, varName) => {
+        if (codigo == null) {
+            codigo = "";
+        } else {
+            console.log('Loaded:', varName);
+            window[varName] = JSON.parse(codigo);
+        }
+    }
+
+    var addEventListeners = () => {
+        // Quantity Players
+        const quantityPlayersInput = document.getElementById('hot-cuisine-players-quantity-input');
+        quantityPlayersInput.addEventListener('input', () => {
+            createPlayerList(quantityPlayersInput);
+        });
+        createPlayerList(quantityPlayersInput);
+
+        const playerSelect = document.getElementById('hot-cuisine-players-list-select');
+        playerSelect.addEventListener('change', function() {
+            selectPlayer(playerSelect);
+        }, false);
+
+        const inputPlayerName = document.getElementById('hot-cuisine-players-name-input');
+        inputPlayerName.addEventListener('input', () => {
+            changePlayerDataName(inputPlayerName);
+        });
+
+        const isFirstTimeCheckbox = document.getElementById('hot-cuisine-checkbox-first-time');
+        isFirstTimeCheckbox.addEventListener('change', function() {
+            changePlayerDataOptions(isFirstTimeCheckbox, 'first-time');
+        }, false);
+        const isDoneCheckbox = document.getElementById('hot-cuisine-checkbox-player-done');
+        isDoneCheckbox.addEventListener('change', function() {
+            changePlayerDataOptions(isDoneCheckbox, 'player-done');
+        }, false);
+
+    }
+    $(document).ready(function () {
+        loadAllItens();
+        players = getPlayers();
+        updateQuantityPlayersOnLoad();
+        addEventListeners();
+    });
+</script>
