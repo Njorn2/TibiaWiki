@@ -178,6 +178,13 @@
         color: #8b1e1e;
         font-weight: bold;
     }
+    .share-points {
+        margin: 4px 0 0;
+        padding-left: 1.25em;
+    }
+    .share-points li {
+        margin-top: 2px;
+    }
     .share-error {
         color: #8b1e1e;
         font-weight: bold;
@@ -215,12 +222,12 @@
         <div id="box-character">
             <div>
                 <label for="names"><b>Personagens</b></label>
-                <textarea id="names" name="names" rows="3" placeholder="Njorn"></textarea>
-                <span class="field-hint">Um ou mais nomes, separados por vírgula. Ex.: Njorn, Knight Sample</span>
+                <textarea id="names" name="names" rows="3" placeholder="Cachero"></textarea>
+                <span class="field-hint">Um ou mais nomes, separados por vírgula. Ex.: Cachero, Njorn, Eternal Oblivion</span>
             </div>
             <button type="button" id="calc-names">buscar personagens</button>
         </div>
-        <div class="version">v2.0.0</div>
+        <div class="version">v1.0.0</div>
     </div>
     <div class="info-result-panel">
         <h3>Info</h3>
@@ -353,7 +360,11 @@
                     strong(member.name),
                     " de level ",
                     strong(entry.level),
-                    " pode compartilhar experiência com personagens do level ",
+                    "."
+                ]);
+                paragraph.append(document.createElement("br"));
+                appendPieces(paragraph, [
+                    "Pode compartilhar experiência com personagens do level ",
                     strong(entry.share_experience.min),
                     " até o level ",
                     strong(entry.share_experience.max),
@@ -369,7 +380,11 @@
                 appendPieces(paragraph, [
                     "Resultado: um personagem level ",
                     strong(entry.level),
-                    " pode compartilhar experiência com personagens do level ",
+                    "."
+                ]);
+                paragraph.append(document.createElement("br"));
+                appendPieces(paragraph, [
+                    "Pode compartilhar experiência com personagens do level ",
                     strong(entry.share_experience.min),
                     " até o level ",
                     strong(entry.share_experience.max),
@@ -421,20 +436,28 @@
         table.append(body);
         result.append(table);
 
-        const verdict = document.createElement("p");
         const party = share.party;
-        if (party.can_share && party.shared_range) {
-            verdict.className = "share-yes";
-            verdict.textContent = "Podem compartilhar experiência entre si. Faixa em comum: do level "
-                + party.shared_range.min + " até o level " + party.shared_range.max
-                + ". Menor level da party: " + party.lowest
-                + ". Maior level da party: " + party.highest + ".";
-        } else {
-            verdict.className = "share-no";
-            verdict.textContent = "Não podem compartilhar experiência entre si. Menor level da party: "
-                + party.lowest + ". Maior level da party: " + party.highest + ".";
+        const canShare = party.can_share && party.shared_range;
+        const tone = canShare ? "share-yes" : "share-no";
+        const verdict = document.createElement("p");
+        verdict.className = tone;
+        verdict.textContent = canShare
+            ? "Podem compartilhar experiência entre si."
+            : "Não podem compartilhar experiência entre si.";
+        const points = document.createElement("ul");
+        points.className = "share-points " + tone;
+        const items = [];
+        if (canShare) {
+            items.push("Faixa em comum: do level " + party.shared_range.min + " até o level " + party.shared_range.max + ".");
         }
-        result.append(verdict);
+        items.push("Menor level da party: " + party.lowest + ".");
+        items.push("Maior level da party: " + party.highest + ".");
+        items.forEach(function (text) {
+            const item = document.createElement("li");
+            item.textContent = text;
+            points.append(item);
+        });
+        result.append(verdict, points);
     }
 
     async function requestShare(levels, members) {
