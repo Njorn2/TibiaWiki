@@ -357,42 +357,38 @@
             const paragraph = document.createElement("p");
             if (member) {
                 appendPieces(paragraph, [
-                    "Resultado: o personagem ",
+                    "O personagem ",
                     strong(member.name),
                     " de level ",
                     strong(entry.level),
-                    "."
+                    " pode compartilhar experiência com personagens de:"
                 ]);
-                paragraph.append(document.createElement("br"));
-                appendPieces(paragraph, [
-                    "Pode compartilhar experiência com personagens do level ",
-                    strong(entry.share_experience.min),
-                    " até o level ",
-                    strong(entry.share_experience.max),
-                    "."
-                ]);
-                if (member.detail) {
-                    const detail = document.createElement("span");
-                    detail.className = "share-detail";
-                    detail.textContent = member.detail;
-                    paragraph.append(detail);
-                }
             } else {
                 appendPieces(paragraph, [
-                    "Resultado: um personagem level ",
+                    "Personagens level ",
                     strong(entry.level),
-                    "."
-                ]);
-                paragraph.append(document.createElement("br"));
-                appendPieces(paragraph, [
-                    "Pode compartilhar experiência com personagens do level ",
-                    strong(entry.share_experience.min),
-                    " até o level ",
-                    strong(entry.share_experience.max),
-                    "."
+                    " podem compartilhar experiência com personagens de:"
                 ]);
             }
-            result.append(paragraph);
+            const points = document.createElement("ul");
+            points.className = "share-points";
+            const item = document.createElement("li");
+            appendPieces(item, [
+                strong("Faixa de level:"),
+                " do level ",
+                strong(entry.share_experience.min),
+                " até o level ",
+                strong(entry.share_experience.max),
+                "."
+            ]);
+            points.append(item);
+            result.append(paragraph, points);
+            if (member && member.detail) {
+                const detail = document.createElement("p");
+                detail.className = "share-detail";
+                detail.textContent = member.detail;
+                result.append(detail);
+            }
             return;
         }
 
