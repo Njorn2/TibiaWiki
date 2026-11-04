@@ -8,24 +8,27 @@
         border: 2px solid #a2a9b1;
         background: #ffffff;
         border-radius: 5px;
-        -webkit-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
-        -moz-box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
         box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
-        font-family: Verdana, Arial, Times New Roman, sans-serif;
+        font-family: Verdana, Arial, sans-serif;
         font-size: 13px;
         color: black;
     }
-    .shared-exp-panel > div > h2 {
+    .shared-exp-panel h2 {
         width: 100%;
         text-align: center;
         border-bottom: 1px solid black;
+        font-size: 16px;
+        margin: 0 0 8px;
+        padding-bottom: 8px;
     }
 
     .menu-side {
-        max-width: 200px;
+        width: 280px;
+        max-width: 280px;
         background-color: #c7451d;
-        padding: 5px;
+        padding: 8px;
         color: white;
+        box-sizing: border-box;
     }
     .loading {
         z-index: 9999;
@@ -37,203 +40,488 @@
         width: 100%;
         top: 0;
         left: 0;
-        align-content: center;
         text-align: center;
     }
 
-    .loading>label {
-        position: relative;
-        bottom: 0px;
-        text-align: center;     
-        font-size: math;
+    .loading > label {
+        display: block;
+        margin-top: 8px;
+        text-align: center;
         background: transparent;
     }
     .loading > span {
         text-align: center;
-        align-content: center;
         background-color: #c7451d;
+        color: white;
         height: 32px;
+        line-height: 32px;
         width: 100%;
         position: absolute;
-        bottom: 0px;
-        left: 0px;
-        text-align: center;     
-        font-size: math;
+        bottom: 0;
+        left: 0;
         border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
     }
     .divisor-line {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
+        display: block;
         border-bottom: 1px solid black;
-        padding: 0.75rem;
+        margin: 12px 0;
     }
-    input#level, input#name {
-        width: calc(100% - 10px);
+    .field-hint {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+        line-height: 1.35;
+    }
+    textarea#levels,
+    textarea#names {
+        width: 100%;
+        box-sizing: border-box;
         border: 1px solid #a2a9b1;
         border-radius: 5px;
         font-weight: bold;
         text-align: center;
+        font-family: inherit;
+        font-size: 13px;
+        padding: 6px;
+        resize: vertical;
+        min-height: 64px;
+        color: black;
     }
-    #box-character {
-        margin-top: 25px;
+    #box-character,
+    #box-level {
+        margin-top: 4px;
     }
-    #box-character > div > label, #box-level > div > label {
+    #box-character > div > label,
+    #box-level > div > label {
         display: block;
-    }
-    #box-character > div > label, #box-level > div > label {
         width: 100%;
+        margin-bottom: 4px;
     }
-    #box-character > button, #box-level > button {
-        margin-top: 5px;
-        width: 200px;
-        height: 25px;
+    #box-character > button,
+    #box-level > button {
+        margin-top: 8px;
+        width: 100%;
+        min-height: 32px;
         border-radius: 5px;
         background-color: #f0f0f0;
         color: black;
         border: none;
         font-weight: bold;
+        cursor: pointer;
     }
-    #box-character > button:hover, #box-level > button:hover {
+    #box-character > button:hover,
+    #box-level > button:hover {
         background-color: #eec1c1;
     }
-    #box-character > button:active, #box-level > button:active {
+    #box-character > button:active,
+    #box-level > button:active {
         background-color: #f79797;
+    }
+    #box-character > button:disabled,
+    #box-level > button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
     }
     .version {
         width: 100%;
         text-align: center;
-        padding: 10px 0px 0px 0px;
+        padding: 10px 0 0;
         font-weight: bold;
     }
     .info-result-panel {
         display: block;
-        width: calc(100% - 210px);
-        padding: 5px;
+        width: calc(100% - 280px);
+        padding: 12px;
+        box-sizing: border-box;
     }
     #result-share-exp {
-        margin-top: 15px;
+        margin-top: 8px;
         display: block;
     }
-    /* Extra small devices (phones, less than 576px) */
+    #result-share-exp p {
+        margin: 8px 0 0;
+        line-height: 1.45;
+    }
+    .share-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    .share-table th,
+    .share-table td {
+        border: 1px solid #a2a9b1;
+        padding: 6px 8px;
+        text-align: center;
+    }
+    .share-table th {
+        background: #c7451d;
+        color: white;
+    }
+    .share-table caption {
+        text-align: left;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .share-detail {
+        display: block;
+        margin-top: 2px;
+        font-weight: normal;
+        font-size: 11px;
+        color: #333;
+    }
+    .share-yes {
+        color: #0b6b2a;
+        font-weight: bold;
+    }
+    .share-no {
+        color: #8b1e1e;
+        font-weight: bold;
+    }
+    .share-error {
+        color: #8b1e1e;
+        font-weight: bold;
+    }
     @media (max-width: 575.98px) {
         .shared-exp-panel {
             display: block;
         }
-
         .menu-side {
+            width: 100%;
             max-width: 100%;
         }
-        #box-character > button, #box-level > button {
-            width: 100%;
-        }
         .info-result-panel {
-            width: calc(100% - 10px);
+            width: 100%;
         }
     }
 </style>
 <div class="shared-exp-panel">
-    <div class="loading">
-        <img src="https://www.tibiawiki.com.br/images/c/ce/The_Epic_Wisdom.gif" /><br />
-        <label>Loading...</label>
+    <div class="loading" aria-hidden="true">
+        <img src="https://www.tibiawiki.com.br/images/c/ce/The_Epic_Wisdom.gif" alt="">
+        <label>Consultando o Umanthir...</label>
         <span>@TibiaWiki</span>
     </div>
     <div class="menu-side">
         <h2>Calculadora de compartilhamento de experiência</h2>
         <div id="box-level">
             <div>
-                <label for="level"><b>Level:</b></label>
-                <input id="level" name="level" type="number" value="8">
+                <label for="levels"><b>Levels</b></label>
+                <textarea id="levels" name="levels" rows="3">8</textarea>
+                <span class="field-hint">Um ou mais levels, separados por vírgula. Ex.: 200, 213, 227</span>
             </div>
-            <button onclick="calcule()">calcular level</button>
+            <button type="button" id="calc-levels">calcular levels</button>
         </div>
         <span class="divisor-line"></span>
         <div id="box-character">
             <div>
-                <label for="name"><b>Nome do personagem:</b></label>
-                <input id="name" name="name" type="text" value="">
+                <label for="names"><b>Personagens</b></label>
+                <textarea id="names" name="names" rows="3" placeholder="Njorn"></textarea>
+                <span class="field-hint">Um ou mais nomes, separados por vírgula. Ex.: Njorn, Knight Sample</span>
             </div>
-            <button onclick="searchCharacter()">buscar personagem</button>
+            <button type="button" id="calc-names">buscar personagens</button>
         </div>
-        <div class="version">
-            v1.0.0
-        </div>
+        <div class="version">v2.0.0</div>
     </div>
     <div class="info-result-panel">
         <h3>Info</h3>
-        <label>Use os campos de <b>level</b> ou <b>nome do personagem</b> para calcular o level mínimo e máximo para compartilhar experiência.</label>
+        <p>Informe <b>levels</b> ou <b>nomes de personagens</b>. A faixa de cada um e a faixa em comum da party vêm da API do Umanthir.</p>
         <span class="divisor-line"></span>
-        <label id="result-share-exp"></label>
+        <div id="result-share-exp" role="status" aria-live="polite"></div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
-        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/@umanthir/sdk@1.0.0/dist/umanthir.min.js"
+    integrity="sha384-5MuGh62DE5J4Fks8YeYVe1FzZdniPuZiTOceqddqgkrcDMbPgqX/vDl6L2SHchgw"
+    crossorigin="anonymous"></script>
 <script>
-    var calcule = () => {
-        const levelValue = document.getElementById("level").value;
-        const result = document.getElementById("result-share-exp");
-        if (result == null) {
-            alert("Por favor, recarregue a página pra que todos os componentes sejam carregados corretamente.");
-            return
-        }
-        if (levelValue == null) {
-            result.innerHTML = "Erro ao calcular o level de compartilhamento de experiência. Por favor, informa apenas números.";
-            return
-        }
-        const min = parseInt((levelValue / 3) * 2);
-        const max = parseInt((levelValue / 2) * 3);
-        if (min == null || max == null) {
-            result.innerHTML = "Erro ao calcular o level de compartilhamento de experiência. Por favor, informa apenas números.";
-            return
-        }
-        result.innerHTML = `<b>Resultado:</b> Um personagem level <b>${levelValue}</b> pode compartilhar experiência com personagens do Level <b>${min}</b> até o level <b>${max}</b>.`;
+    const MAX_ITEMS = 100;
+    const client = typeof Umanthir === "function" ? new Umanthir() : null;
+
+    const levelsInput = document.getElementById("levels");
+    const namesInput = document.getElementById("names");
+    const levelsButton = document.getElementById("calc-levels");
+    const namesButton = document.getElementById("calc-names");
+    const result = document.getElementById("result-share-exp");
+
+    levelsButton.addEventListener("click", calculateByLevels);
+    namesButton.addEventListener("click", calculateByCharacters);
+
+    function showLoading(status) {
+        const loading = document.querySelector(".loading");
+        loading.style.display = status ? "block" : "none";
+        loading.setAttribute("aria-hidden", status ? "false" : "true");
+        levelsButton.disabled = status;
+        namesButton.disabled = status;
     }
 
-    var searchCharacter = async () => {
+    function parseLevels(raw) {
+        const tokens = String(raw).split(/[\s,;]+/).map((token) => token.trim()).filter(Boolean);
+        if (tokens.length === 0) {
+            return { error: "Informe ao menos um level." };
+        }
+        if (tokens.length > MAX_ITEMS) {
+            return { error: "Informe no máximo 100 levels." };
+        }
+        const levels = [];
+        for (const token of tokens) {
+            if (!/^[0-9]+$/.test(token)) {
+                return { error: "O valor \"" + token + "\" não é um level válido. Use apenas números inteiros." };
+            }
+            const level = Number(token);
+            if (level < 1 || level > 100000) {
+                return { error: "O level " + token + " está fora do intervalo permitido (1 a 100000)." };
+            }
+            levels.push(level);
+        }
+        return { levels: levels };
+    }
+
+    function parseNames(raw) {
+        const names = String(raw).split(/[,;\n]+/).map((name) => name.trim()).filter(Boolean);
+        if (names.length === 0) {
+            return { error: "Informe ao menos um nome de personagem." };
+        }
+        if (names.length > MAX_ITEMS) {
+            return { error: "Informe no máximo 100 personagens." };
+        }
+        return { names: names };
+    }
+
+    function describeError(error) {
+        if (!client || typeof Umanthir !== "function") {
+            return "Não foi possível carregar o SDK do Umanthir.";
+        }
+        if (error instanceof Umanthir.NotFoundError) {
+            return "Personagem não encontrado.";
+        }
+        if (error instanceof Umanthir.RateLimitError) {
+            const wait = error.retryAfter ? " Tente novamente em " + error.retryAfter + " s." : "";
+            return "Limite de consultas do Umanthir atingido." + wait;
+        }
+        if (error instanceof Umanthir.TimeoutError) {
+            return "A consulta ao Umanthir demorou demais. Tente de novo.";
+        }
+        if (error instanceof Umanthir.ConnectionError) {
+            return "Não foi possível conectar à API do Umanthir.";
+        }
+        if (error instanceof Umanthir.ServiceUnavailableError) {
+            return "A API do Umanthir está indisponível no momento.";
+        }
+        if (error instanceof Umanthir.ValidationError) {
+            return error.message;
+        }
+        if (error instanceof Umanthir.APIError && error.apiMessage) {
+            return error.apiMessage;
+        }
+        return "Erro ao consultar o Umanthir.";
+    }
+
+    function clearResult() {
+        result.replaceChildren();
+    }
+
+    function showMessage(message, className) {
+        clearResult();
+        const paragraph = document.createElement("p");
+        paragraph.className = className || "";
+        paragraph.textContent = message;
+        result.append(paragraph);
+    }
+
+    function strong(value) {
+        const element = document.createElement("strong");
+        element.textContent = String(value);
+        return element;
+    }
+
+    function appendPieces(parent, pieces) {
+        pieces.forEach(function (piece) {
+            parent.append(typeof piece === "string" ? document.createTextNode(piece) : piece);
+        });
+    }
+
+    function renderShare(share, members) {
+        clearResult();
+        const single = share.levels.length === 1;
+        if (single) {
+            const entry = share.levels[0];
+            const member = members ? members[0] : null;
+            const paragraph = document.createElement("p");
+            if (member) {
+                appendPieces(paragraph, [
+                    "Resultado: o personagem ",
+                    strong(member.name),
+                    " de level ",
+                    strong(entry.level),
+                    " pode compartilhar experiência com personagens do level ",
+                    strong(entry.share_experience.min),
+                    " até o level ",
+                    strong(entry.share_experience.max),
+                    "."
+                ]);
+                if (member.detail) {
+                    const detail = document.createElement("span");
+                    detail.className = "share-detail";
+                    detail.textContent = member.detail;
+                    paragraph.append(detail);
+                }
+            } else {
+                appendPieces(paragraph, [
+                    "Resultado: um personagem level ",
+                    strong(entry.level),
+                    " pode compartilhar experiência com personagens do level ",
+                    strong(entry.share_experience.min),
+                    " até o level ",
+                    strong(entry.share_experience.max),
+                    "."
+                ]);
+            }
+            result.append(paragraph);
+            return;
+        }
+
+        const table = document.createElement("table");
+        table.className = "share-table";
+        const caption = document.createElement("caption");
+        caption.textContent = "Faixa de cada integrante";
+        table.append(caption);
+
+        const head = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        ["Integrante", "Level", "Mínimo", "Máximo"].forEach(function (label) {
+            const cell = document.createElement("th");
+            cell.scope = "col";
+            cell.textContent = label;
+            headRow.append(cell);
+        });
+        head.append(headRow);
+        table.append(head);
+
+        const body = document.createElement("tbody");
+        share.levels.forEach(function (entry, index) {
+            const member = members ? members[index] : null;
+            const row = document.createElement("tr");
+            const who = document.createElement("td");
+            who.textContent = member ? member.name : "Level " + entry.level;
+            if (member && member.detail) {
+                const detail = document.createElement("span");
+                detail.className = "share-detail";
+                detail.textContent = member.detail;
+                who.append(detail);
+            }
+            const levelCell = document.createElement("td");
+            levelCell.textContent = String(entry.level);
+            const minCell = document.createElement("td");
+            minCell.textContent = String(entry.share_experience.min);
+            const maxCell = document.createElement("td");
+            maxCell.textContent = String(entry.share_experience.max);
+            row.append(who, levelCell, minCell, maxCell);
+            body.append(row);
+        });
+        table.append(body);
+        result.append(table);
+
+        const verdict = document.createElement("p");
+        const party = share.party;
+        if (party.can_share && party.shared_range) {
+            verdict.className = "share-yes";
+            verdict.textContent = "Podem compartilhar experiência entre si. Faixa em comum: do level "
+                + party.shared_range.min + " até o level " + party.shared_range.max
+                + ". Menor level da party: " + party.lowest
+                + ". Maior level da party: " + party.highest + ".";
+        } else {
+            verdict.className = "share-no";
+            verdict.textContent = "Não podem compartilhar experiência entre si. Menor level da party: "
+                + party.lowest + ". Maior level da party: " + party.highest + ".";
+        }
+        result.append(verdict);
+    }
+
+    async function requestShare(levels, members) {
+        const payload = levels.length === 1 ? levels[0] : levels;
+        const share = await client.tools.shareExperience(payload);
+        renderShare(share, members);
+    }
+
+    async function calculateByLevels() {
+        if (result == null) {
+            return;
+        }
+        const parsed = parseLevels(levelsInput.value);
+        if (parsed.error) {
+            showMessage(parsed.error, "share-error");
+            return;
+        }
+        if (!client) {
+            showMessage("Não foi possível carregar o SDK do Umanthir.", "share-error");
+            return;
+        }
         showLoading(true);
-        const characterName = document.getElementById("name").value;
-        const result = document.getElementById("result-share-exp");
-        if (characterName == null || characterName.length === 0) {
-            showLoading(false);
-            return
-        }
-        if (result == null) {
-            showLoading(false);
-            alert("Por favor, recarregue a página pra que todos os componentes sejam carregados corretamente.");
-            return
-        }
         try {
-            let response = await fetch(`https://api.tibiadata.com/v4/character/${characterName}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-                showLoading(false);
-            }
-            let data = await response.json();
-            if (data.character == null || data.character.character == null) {
-                result.innerHTML = `Erro ao buscar pelo personagem <b>"${characterName}"</b>`;
-                showLoading(false);
-                return
-            }
-            const level = data.character.character.level;
-            const min = parseInt((level / 3) * 2);
-            const max = parseInt((level / 2) * 3);
-            if (min == null || max == null) {
-                result.innerHTML = "Erro ao calcular o level de compartilhamento de experiência. Por favor, informa apenas números.";
-                showLoading(false);
-                return
-            }
-            result.innerHTML = `<b>Resultado:</b> O personagem <b>${data.character.character.name}</b> de level <b>${data.character.character.level}</b> pode compartilhar experiência com personagens do Level <b>${min}</b> até o level <b>${max}</b>.`;
+            await requestShare(parsed.levels, null);
         } catch (error) {
-            result.innerHTML = `O personagem <b>"${characterName}"</b> não existe.</b>`;
-            console.error('Error fetching data:', error);
+            showMessage(describeError(error), "share-error");
+            console.error(error);
+        } finally {
+            showLoading(false);
         }
-        showLoading(false);
-    }
-    var showLoading = (status) => {
-        document.querySelector('.loading').style.display  = (status) ? 'inline-block' : 'none';
     }
 
+    async function calculateByCharacters() {
+        if (result == null) {
+            return;
+        }
+        const parsed = parseNames(namesInput.value);
+        if (parsed.error) {
+            showMessage(parsed.error, "share-error");
+            return;
+        }
+        if (!client) {
+            showMessage("Não foi possível carregar o SDK do Umanthir.", "share-error");
+            return;
+        }
+        showLoading(true);
+        try {
+            const lookups = await Promise.all(parsed.names.map(async function (name) {
+                try {
+                    const character = await client.characters.get(name);
+                    const info = character.character_information;
+                    const detailParts = [info.vocation, info.world].filter(Boolean);
+                    return {
+                        ok: true,
+                        name: info.name,
+                        level: info.level,
+                        detail: detailParts.join(" · ")
+                    };
+                } catch (error) {
+                    const message = error instanceof Umanthir.NotFoundError
+                        ? "O personagem \"" + name + "\" não existe."
+                        : describeError(error);
+                    return { ok: false, name: name, message: message };
+                }
+            }));
+
+            const failures = lookups.filter(function (lookup) { return !lookup.ok; });
+            if (failures.length > 0) {
+                clearResult();
+                failures.forEach(function (failure) {
+                    const paragraph = document.createElement("p");
+                    paragraph.className = "share-error";
+                    paragraph.textContent = failure.message;
+                    result.append(paragraph);
+                });
+                return;
+            }
+
+            const members = lookups.map(function (lookup) {
+                return { name: lookup.name, level: lookup.level, detail: lookup.detail };
+            });
+            await requestShare(members.map(function (member) { return member.level; }), members);
+        } catch (error) {
+            showMessage(describeError(error), "share-error");
+            console.error(error);
+        } finally {
+            showLoading(false);
+        }
+    }
 </script>
