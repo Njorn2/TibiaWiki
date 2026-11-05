@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    .split-hunt-panel {
+        display: flex;
+        position: relative;
+        border: 2px solid #a2a9b1;
+        background: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 1);
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 13px;
+        color: black;
+    }
+    .split-hunt-panel h2 {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid black;
+        font-size: 16px;
+        margin: 0 0 8px;
+        padding-bottom: 8px;
+        color: white;
+    }
+    .split-hunt-panel .menu-side {
+        width: 280px;
+        max-width: 280px;
+        background-color: #c7451d;
+        padding: 8px;
+        color: white;
+        box-sizing: border-box;
+    }
+    .split-hunt-panel .loading {
+        z-index: 9999;
+        background-color: rgba(255, 255, 255, 0.98);
+        display: none;
+        border-radius: 3px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+    }
+    .split-hunt-panel .loading > label {
+        display: block;
+        margin-top: 8px;
+        text-align: center;
+        background: transparent;
+        color: black;
+    }
+    .split-hunt-panel .loading > span {
+        text-align: center;
+        background-color: #c7451d;
+        color: white;
+        height: 32px;
+        line-height: 32px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+    .split-hunt-panel .divisor-line {
+        display: block;
+        border-bottom: 1px solid black;
+        margin: 12px 0;
+    }
+    .split-hunt-panel .field-hint {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+        line-height: 1.35;
+    }
+    .split-hunt-panel textarea#analyzer {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 12px;
+        padding: 6px;
+        resize: vertical;
+        min-height: 112px;
+        color: black;
+        background: #fff;
+    }
+    .split-hunt-panel #box-analyzer > div > label {
+        display: block;
+        width: 100%;
+        margin-bottom: 4px;
+    }
+    .split-hunt-panel #box-analyzer > button,
+    .split-hunt-panel .split-copy {
+        margin-top: 8px;
+        width: 100%;
+        min-height: 32px;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        color: black;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 13px;
+    }
+    .split-hunt-panel #box-analyzer > button + button {
+        margin-top: 6px;
+    }
+    .split-hunt-panel #box-analyzer > button:hover,
+    .split-hunt-panel .split-copy:hover {
+        background-color: #eec1c1;
+    }
+    .split-hunt-panel #box-analyzer > button:active,
+    .split-hunt-panel .split-copy:active {
+        background-color: #f79797;
+    }
+    .split-hunt-panel #box-analyzer > button:disabled,
+    .split-hunt-panel .split-copy:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+    .split-hunt-panel button:focus-visible,
+    .split-hunt-panel textarea:focus-visible,
+    .split-hunt-panel input:focus-visible,
+    .split-hunt-panel summary:focus-visible {
+        outline: 2px solid #1a1a1a;
+        outline-offset: 2px;
+    }
+    .split-hunt-panel #calc-split {
+        min-height: 36px;
+    }
+    .split-hunt-panel .side-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 6px;
+    }
+    .split-hunt-panel .side-actions button {
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 32px;
+        margin-top: 0;
+        padding: 4px 6px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        background: transparent;
+        color: white;
+        font-weight: bold;
+        font-family: inherit;
+        font-size: 12px;
+        line-height: 1.2;
+        cursor: pointer;
+    }
+    .split-hunt-panel .side-actions button:hover {
+        background: rgba(255, 255, 255, 0.16);
+    }
+    .split-hunt-panel .side-actions button:active {
+        background: rgba(255, 255, 255, 0.28);
+    }
+    .split-hunt-panel .side-actions button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+    .split-hunt-panel .side-actions button:focus-visible {
+        outline-color: white;
+    }
+    .split-hunt-panel .version {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0 0;
+        font-weight: bold;
+    }
+    .split-hunt-panel .info-result-panel {
+        display: block;
+        width: calc(100% - 280px);
+        padding: 12px;
+        box-sizing: border-box;
+        min-width: 0;
+    }
+    .split-hunt-panel #result-split-hunt {
+        margin-top: 8px;
+        display: block;
+    }
+    .split-hunt-panel #result-split-hunt p {
+        margin: 8px 0 0;
+        line-height: 1.45;
+    }
+    .split-hunt-panel .share-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    .split-hunt-panel .share-table th,
+    .split-hunt-panel .share-table td {
+        border: 1px solid #a2a9b1;
+        padding: 6px 8px;
+        text-align: center;
+        vertical-align: top;
+    }
+    .split-hunt-panel .share-table th {
+        background: #c7451d;
+        color: white;
+    }
+    .split-hunt-panel .share-table caption {
+        text-align: left;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .split-hunt-panel .share-detail {
+        display: block;
+        margin-top: 2px;
+        font-weight: normal;
+        font-size: 11px;
+        color: #333;
+    }
+    .split-hunt-panel .share-yes {
+        color: #0b6b2a;
+        font-weight: bold;
+    }
+    .split-hunt-panel .share-no {
+        color: #8b1e1e;
+        font-weight: bold;
+    }
+    .split-hunt-panel .split-pay {
+        color: #6b3a12;
+        font-weight: bold;
+    }
+    .split-hunt-panel .split-receive {
+        color: #0b6b2a;
+        font-weight: bold;
+    }
+    .split-hunt-panel .how-it-works {
+        margin: 0 0 8px;
+    }
+    .split-hunt-panel .how-it-works summary {
+        cursor: pointer;
+        font-weight: bold;
+        color: #c7451d;
+    }
+    .split-hunt-panel .how-it-works p {
+        margin: 8px 0 0;
+        line-height: 1.45;
+    }
+    .split-hunt-panel .result-empty {
+        margin: 0;
+        color: #333;
+        font-weight: normal;
+    }
+    .split-hunt-panel .info-result-panel h3 {
+        margin: 16px 0 0;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #a2a9b1;
+        font-size: 15px;
+        color: #1a1a1a;
+    }
+    .split-hunt-panel .split-verdict {
+        font-size: 15px;
+    }
+    .split-hunt-panel .split-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+        gap: 6px;
+        margin-top: 8px;
+    }
+    .split-hunt-panel .split-stat {
+        min-width: 0;
+        padding: 6px 8px;
+        border-radius: 5px;
+        background: #c7451d;
+        color: white;
+    }
+    .split-hunt-panel .split-stat span {
+        display: block;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    .split-hunt-panel .split-stat strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 14px;
+        word-break: break-word;
+    }
+    .split-hunt-panel .split-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+    }
+    .split-hunt-panel .split-actions .split-copy,
+    .split-hunt-panel .split-actions .split-copy-status {
+        width: auto;
+        margin-top: 0;
+    }
+    .split-hunt-panel .split-actions .split-copy-status {
+        display: inline;
+        min-height: 0;
+    }
+    .split-hunt-panel .share-points {
+        margin: 8px 0 0;
+        padding-left: 1.25em;
+    }
+    .split-hunt-panel .share-points li {
+        margin-top: 2px;
+    }
+    .split-hunt-panel .share-error {
+        color: #8b1e1e;
+        font-weight: bold;
+    }
+    .split-hunt-panel .split-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .split-hunt-panel .split-transfers {
+        margin: 8px 0 0;
+        padding-left: 0;
+        list-style: none;
+    }
+    .split-hunt-panel .split-transfer {
+        margin-top: 8px;
+        padding: 8px;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+    }
+    .split-hunt-panel #result-split-hunt .split-transfer p {
+        margin: 0;
+    }
+    .split-hunt-panel .split-line-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+    }
+    .split-hunt-panel .split-bank-line {
+        flex: 1 1 12em;
+        min-width: 0;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 12px;
+        font-weight: normal;
+        color: #1a1a1a;
+        word-break: break-word;
+    }
+    .split-hunt-panel .split-copy-line,
+    .split-hunt-panel .party-remove {
+        width: auto;
+        margin-top: 0;
+        min-height: 28px;
+        padding: 4px 10px;
+    }
+    .split-hunt-panel .party-tools {
+        margin-top: 8px;
+    }
+    .split-hunt-panel .party-heading {
+        display: block;
+        font-weight: bold;
+    }
+    .split-hunt-panel .party-extra-label {
+        margin-top: 6px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    .split-hunt-panel .party-extra-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    .split-hunt-panel .party-extra-row label {
+        min-width: 0;
+    }
+    .split-hunt-panel .party-scroll {
+        max-height: 232px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable;
+    }
+    .split-hunt-panel .party-card {
+        background: #fff;
+        color: #1a1a1a;
+        border-radius: 5px;
+        padding: 6px 8px;
+        margin-top: 6px;
+    }
+    .split-hunt-panel .party-card:first-child {
+        margin-top: 0;
+    }
+    .split-hunt-panel .party-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+    }
+    .split-hunt-panel .party-name {
+        font-weight: bold;
+        word-break: break-word;
+    }
+    .split-hunt-panel .party-card label {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    .split-hunt-panel .party-card input {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 2px;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        padding: 4px 6px;
+        font: inherit;
+        font-weight: normal;
+        color: #1a1a1a;
+        background: #fff;
+    }
+    .split-hunt-panel .party-extra-total {
+        display: block;
+        margin-top: 6px;
+        font-size: 11px;
+        font-weight: normal;
+        min-height: 1.2em;
+    }
+    .split-hunt-panel .split-line-status {
+        font-size: 11px;
+        font-weight: bold;
+        color: #0b6b2a;
+    }
+    .split-hunt-panel .split-copy {
+        max-width: 280px;
+    }
+    .split-hunt-panel .split-copy-status {
+        display: block;
+        margin-top: 6px;
+        min-height: 1.2em;
+    }
+    .split-hunt-panel .split-discord {
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #f7f7f7;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        padding: 8px;
+        margin: 8px 0 0;
+        max-width: 100%;
+        overflow-x: auto;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 12px;
+        color: #1a1a1a;
+    }
+    .split-hunt-panel .history-dialog {
+        width: min(560px, calc(100vw - 24px));
+        max-height: min(640px, calc(100vh - 24px));
+        box-sizing: border-box;
+        border: 2px solid #a2a9b1;
+        border-radius: 5px;
+        padding: 12px;
+        overflow: auto;
+        color: #1a1a1a;
+        background: #fff;
+    }
+    .split-hunt-panel .history-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.45);
+    }
+    .split-hunt-panel .history-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 0;
+    }
+    .split-hunt-panel .history-dialog h3 {
+        margin: 0;
+        font-size: 16px;
+        color: #1a1a1a;
+    }
+    .split-hunt-panel .history-head .split-copy,
+    .split-hunt-panel .history-item .split-copy,
+    .split-hunt-panel .history-actions .split-copy {
+        width: auto;
+        margin-top: 0;
+    }
+    .split-hunt-panel .history-list {
+        max-height: min(360px, 50vh);
+        margin-top: 8px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+    .split-hunt-panel .history-item {
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        padding: 8px;
+        margin-top: 8px;
+    }
+    .split-hunt-panel .history-item p {
+        margin: 4px 0 0;
+        line-height: 1.45;
+    }
+    .split-hunt-panel .history-item .split-copy {
+        margin-top: 8px;
+    }
+    .split-hunt-panel .history-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .split-hunt-panel .history-actions .split-copy-status {
+        margin-top: 0;
+    }
+    @media (max-width: 575.98px) {
+        .split-hunt-panel .history-list {
+            max-height: min(240px, 40vh);
+        }
+        .split-hunt-panel .share-table thead {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .split-hunt-panel .share-table,
+        .split-hunt-panel .share-table tbody,
+        .split-hunt-panel .share-table tr,
+        .split-hunt-panel .share-table td {
+            display: block;
+            width: auto;
+        }
+        .split-hunt-panel .share-table tr {
+            border: 1px solid #a2a9b1;
+            margin-top: 8px;
+            padding: 6px 8px;
+        }
+        .split-hunt-panel .share-table td {
+            border: none;
+            text-align: left;
+            padding: 2px 0;
+        }
+        .split-hunt-panel .share-table td::before {
+            content: attr(data-label);
+            display: inline-block;
+            min-width: 7.5em;
+            font-weight: bold;
+        }
+        .split-hunt-panel .share-detail {
+            display: inline;
+            margin-left: 6px;
+        }
+    }
+    @media (max-width: 575.98px) {
+        .split-hunt-panel {
+            display: block;
+        }
+        .split-hunt-panel .menu-side,
+        .split-hunt-panel .info-result-panel {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+<div class="split-hunt-panel">
+    <div class="loading" aria-hidden="true">
+        <img src="https://www.tibiawiki.com.br/images/c/ce/The_Epic_Wisdom.gif" alt="">
+        <label>Calculando o split...</label>
+        <span>@TibiaWiki</span>
+    </div>
+    <div class="menu-side">
+        <h2>Calculadora de split de hunt</h2>
+        <form id="split-form">
+            <div id="box-analyzer">
+                <div>
+                    <label for="analyzer"><b>Party Hunt Analyser</b></label>
+                    <textarea id="analyzer" name="analyzer" rows="5" spellcheck="false" autocomplete="off" aria-describedby="analyzer-hint" placeholder="Cole aqui o texto copiado do jogo"></textarea>
+                    <span class="field-hint" id="analyzer-hint">Pelo menos dois integrantes, cada um com a linha Balance. Até 64 KB. O texto do analyser não fica salvo.</span>
+                </div>
+                <div id="party-tools" class="party-tools" hidden>
+                    <span class="party-heading">Integrantes</span>
+                    <span class="field-hint">Role para ver os outros. TC entra como quantidade vezes o preço.</span>
+                    <div id="party-members" class="party-scroll" aria-label="Integrantes da party"></div>
+                </div>
+                <button type="submit" id="calc-split">calcular split</button>
+                <div class="side-actions">
+                    <button type="button" id="fill-example">preencher exemplo</button>
+                    <button type="button" id="open-history">histórico</button>
+                </div>
+            </div>
+        </form>
+        <div class="version">v1.0.0</div>
+    </div>
+    <div class="info-result-panel">
+        <details class="how-it-works">
+            <summary>Como funciona</summary>
+            <p>Cole o texto do <b>Party Hunt Analyser</b>. O lucro ou o prejuízo é dividido em partes iguais. Quem ficou acima da cota transfere gold para quem ficou abaixo. Dá para remover um integrante ou somar gasto extra em gold coin e Tibia Coin. Depois de calcular, dá para guardar o split no histórico deste navegador.</p>
+        </details>
+        <div id="result-split-hunt" role="status" aria-live="polite">
+            <p class="result-empty">Cole o Party Hunt Analyser e calcule o split. O resultado aparece aqui.</p>
+        </div>
+    </div>
+    <dialog id="history-dialog" class="history-dialog" aria-labelledby="history-title">
+        <form method="dialog" class="history-head">
+            <h3 id="history-title">Histórico de splits</h3>
+            <button type="submit" class="split-copy">fechar</button>
+        </form>
+        <span class="field-hint">Salvo só neste navegador.</span>
+        <div id="history-list"></div>
+        <div class="history-actions">
+            <button type="button" id="export-history" class="split-copy">exportar JSON</button>
+            <span id="history-status" class="split-copy-status" role="status"></span>
+        </div>
+    </dialog>
+</div>
+<script
+    src="https://cdn.jsdelivr.net/npm/@umanthir/sdk@1.0.0/dist/umanthir.min.js"
+    integrity="sha384-5MuGh62DE5J4Fks8YeYVe1FzZdniPuZiTOceqddqgkrcDMbPgqX/vDl6L2SHchgw"
+    crossorigin="anonymous"></script>
+<script>
+    const MAX_HUNT_BYTES = 65536;
+    const HISTORY_KEY = "tibiawiki.split-hunt.history";
+    const HISTORY_LIMIT = 100;
+    const EXAMPLE_ANALYZER = [
+        "Session data: From 2026-10-24, 09:22:21 to 2026-10-24, 11:49:20",
+        "Session: 02:26h",
+        "Loot Type: Leader",
+        "Loot: 37,346,426",
+        "Supplies: 10,586,766",
+        "Balance: 26,759,660",
+        "Aldor",
+        "  Loot: 15,406,481",
+        "  Supplies: 990,847",
+        "  Balance: 14,415,634",
+        "  Damage: 31,087,106",
+        "  Healing: 5,312,882",
+        "Bryn",
+        "  Loot: 53,601",
+        "  Supplies: 1,541,659",
+        "  Balance: -1,488,058",
+        "  Damage: 35,836,000",
+        "  Healing: 15,399,191",
+        "Cael Var (Leader)",
+        "  Loot: 19,643,824",
+        "  Supplies: 3,026,175",
+        "  Balance: 16,617,649",
+        "  Damage: 22,221,354",
+        "  Healing: 10,163,264",
+        "Dorin",
+        "  Loot: 2,242,520",
+        "  Supplies: 5,028,085",
+        "  Balance: -2,785,565",
+        "  Damage: 51,284,298",
+        "  Healing: 3,893,937"
+    ].join("\n");
+
+    const client = typeof Umanthir === "function" ? new Umanthir() : null;
+    const partyTools = document.getElementById("party-tools");
+    const partyMembers = document.getElementById("party-members");
+    const savedAdjustments = {};
+    let partySignature = "";
+    let calcToken = 0;
+    const goldFormat = new Intl.NumberFormat("pt-BR");
+    const percentFormat = new Intl.NumberFormat("pt-BR", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    });
+
+    const panel = document.querySelector(".split-hunt-panel");
+    const form = document.getElementById("split-form");
+    const analyzerInput = document.getElementById("analyzer");
+    const calcButton = document.getElementById("calc-split");
+    const exampleButton = document.getElementById("fill-example");
+    const historyButton = document.getElementById("open-history");
+    const historyDialog = document.getElementById("history-dialog");
+    const historyList = document.getElementById("history-list");
+    const exportHistoryButton = document.getElementById("export-history");
+    const historyStatus = document.getElementById("history-status");
+    const result = document.getElementById("result-split-hunt");
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        calculateSplit();
+    });
+    exampleButton.addEventListener("click", function () {
+        Object.keys(savedAdjustments).forEach(function (name) {
+            delete savedAdjustments[name];
+        });
+        partySignature = "";
+        analyzerInput.value = EXAMPLE_ANALYZER;
+        showEmptyResult();
+        syncPartyTools();
+        analyzerInput.focus();
+    });
+    analyzerInput.addEventListener("input", function () {
+        syncPartyTools();
+    });
+
+    function showLoading(status) {
+        const loading = panel.querySelector(".loading");
+        loading.style.display = status ? "block" : "none";
+        loading.setAttribute("aria-hidden", status ? "false" : "true");
+        panel.setAttribute("aria-busy", status ? "true" : "false");
+        calcButton.disabled = status;
+        exampleButton.disabled = status;
+        historyButton.disabled = status;
+        partyMembers.querySelectorAll("button, input").forEach(function (control) {
+            control.disabled = status;
+        });
+    }
+
+    function parseAnalyzer(raw) {
+        const text = String(raw);
+        if (text.trim() === "") {
+            return { error: "Cole o texto do Party Hunt Analyser." };
+        }
+        if (new TextEncoder().encode(text).length > MAX_HUNT_BYTES) {
+            return { error: "O texto passa de 64 KB." };
+        }
+        return { text: text };
+    }
+
+    function describeError(error) {
+        if (!client || typeof Umanthir !== "function") {
+            return "Não foi possível carregar o SDK do Umanthir.";
+        }
+        if (error instanceof Umanthir.RateLimitError) {
+            const wait = error.retryAfter ? " Tente novamente em " + error.retryAfter + " s." : "";
+            return "Limite de consultas do Umanthir atingido." + wait;
+        }
+        if (error instanceof Umanthir.TimeoutError) {
+            return "A consulta ao Umanthir demorou demais. Tente de novo.";
+        }
+        if (error instanceof Umanthir.ConnectionError) {
+            return "Não foi possível conectar à API do Umanthir.";
+        }
+        if (error instanceof Umanthir.ServiceUnavailableError) {
+            return "A API do Umanthir está indisponível no momento.";
+        }
+        if (error instanceof Umanthir.ValidationError) {
+            if (error.message && error.message.indexOf("64 KB") !== -1) {
+                return "O texto passa de 64 KB.";
+            }
+            return "Cole o texto do Party Hunt Analyser.";
+        }
+        if (error instanceof Umanthir.APIError) {
+            if (error.status === 400) {
+                return "O texto não parece um Party Hunt Analyser válido. Inclua pelo menos dois integrantes e a linha Balance de cada um.";
+            }
+            if (error.status === 413) {
+                return "O texto passa de 64 KB.";
+            }
+            if (error.apiMessage) {
+                return error.apiMessage;
+            }
+        }
+        return "Erro ao consultar o Umanthir.";
+    }
+
+    function clearResult() {
+        result.replaceChildren();
+    }
+
+    function showEmptyResult() {
+        const empty = document.createElement("p");
+        empty.className = "result-empty";
+        empty.textContent = "Cole o Party Hunt Analyser e calcule o split. O resultado aparece aqui.";
+        result.replaceChildren(empty);
+    }
+
+    function showMessage(message, className) {
+        clearResult();
+        const paragraph = document.createElement("p");
+        paragraph.className = className || "";
+        paragraph.textContent = message;
+        result.append(paragraph);
+    }
+
+    function strong(value) {
+        const element = document.createElement("strong");
+        element.textContent = String(value);
+        return element;
+    }
+
+    function appendPieces(parent, pieces) {
+        pieces.forEach(function (piece) {
+            parent.append(typeof piece === "string" ? document.createTextNode(piece) : piece);
+        });
+    }
+
+    function gold(value) {
+        return goldFormat.format(value);
+    }
+
+    function percent(value) {
+        return percentFormat.format(Math.round(value * 100) / 100) + "%";
+    }
+
+    function isMember(member) {
+        return Boolean(member)
+            && typeof member.name === "string"
+            && typeof member.leader === "boolean"
+            && Number.isFinite(member.loot)
+            && Number.isFinite(member.supplies)
+            && Number.isFinite(member.balance)
+            && Number.isFinite(member.difference)
+            && Number.isFinite(member.damage)
+            && Number.isFinite(member.healing)
+            && Number.isFinite(member.damage_percent)
+            && Number.isFinite(member.healing_percent);
+    }
+
+    function isTransfer(transfer) {
+        return Boolean(transfer)
+            && typeof transfer.from === "string"
+            && typeof transfer.to === "string"
+            && Number.isFinite(transfer.amount)
+            && transfer.amount >= 1
+            && typeof transfer.text === "string";
+    }
+
+    function isSplit(value) {
+        return Boolean(value)
+            && Number.isFinite(value.loot)
+            && Number.isFinite(value.supplies)
+            && Number.isFinite(value.balance)
+            && Number.isFinite(value.share)
+            && Number.isFinite(value.remainder)
+            && value.remainder >= 0
+            && Number.isFinite(value.damage)
+            && Number.isFinite(value.healing)
+            && Array.isArray(value.members)
+            && value.members.every(isMember)
+            && Array.isArray(value.transfers)
+            && value.transfers.every(isTransfer);
+    }
+
+    function memberCell(member) {
+        const cell = document.createElement("td");
+        cell.dataset.label = "Integrante";
+        cell.textContent = member.name;
+        if (member.leader) {
+            const detail = document.createElement("span");
+            detail.className = "share-detail";
+            detail.textContent = "Líder";
+            cell.append(detail);
+        }
+        return cell;
+    }
+
+    function numberCell(value, label) {
+        const cell = document.createElement("td");
+        cell.dataset.label = label;
+        cell.textContent = gold(value);
+        return cell;
+    }
+
+    function differenceCell(value) {
+        const cell = document.createElement("td");
+        cell.dataset.label = "Diferença";
+        if (value > 0) {
+            cell.className = "split-pay";
+            cell.textContent = "paga " + gold(value);
+        } else if (value < 0) {
+            cell.className = "split-receive";
+            cell.textContent = "recebe " + gold(Math.abs(value));
+        } else {
+            cell.textContent = "quite";
+        }
+        return cell;
+    }
+
+    function statCell(amount, part, label) {
+        const cell = document.createElement("td");
+        cell.dataset.label = label;
+        cell.textContent = gold(amount);
+        const detail = document.createElement("span");
+        detail.className = "share-detail";
+        detail.textContent = percent(part);
+        cell.append(detail);
+        return cell;
+    }
+
+    function renderSummary(split) {
+        const verdict = document.createElement("p");
+        verdict.className = "split-verdict";
+        if (split.balance > 0) {
+            verdict.classList.add("share-yes");
+            appendPieces(verdict, ["Lucro da party: ", strong(gold(split.balance) + " gold"), "."]);
+        } else if (split.balance < 0) {
+            verdict.classList.add("share-no");
+            appendPieces(verdict, ["Prejuízo da party: ", strong(gold(split.balance) + " gold"), "."]);
+        } else {
+            verdict.textContent = "A party ficou no zero.";
+        }
+
+        const stats = document.createElement("div");
+        stats.className = "split-stats";
+        [
+            ["Loot", gold(split.loot) + " gold"],
+            ["Supplies", gold(split.supplies) + " gold"],
+            ["Cota de cada integrante", gold(split.share) + " gold"]
+        ].forEach(function (line) {
+            const box = document.createElement("div");
+            box.className = "split-stat";
+            const name = document.createElement("span");
+            name.textContent = line[0];
+            const amount = document.createElement("strong");
+            amount.textContent = line[1];
+            box.append(name, amount);
+            stats.append(box);
+        });
+
+        const points = document.createElement("ul");
+        points.className = "share-points";
+        const lines = [
+            ["Dano da party", gold(split.damage) + "."],
+            ["Cura da party", gold(split.healing) + "."]
+        ];
+        if (split.remainder > 0) {
+            lines.push([
+                "Resto da divisão",
+                gold(split.remainder) + " gold, que ficam com quem paga."
+            ]);
+        }
+        lines.forEach(function (line) {
+            const item = document.createElement("li");
+            appendPieces(item, [strong(line[0] + ": "), line[1]]);
+            points.append(item);
+        });
+        return [verdict, stats, points];
+    }
+
+    function renderMembers(members) {
+        const wrap = document.createElement("div");
+        wrap.className = "split-table-wrap";
+        const table = document.createElement("table");
+        table.className = "share-table";
+        const caption = document.createElement("caption");
+        caption.textContent = "Resultado por integrante";
+        table.append(caption);
+
+        const head = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        ["Integrante", "Loot", "Supplies", "Balance", "Diferença", "Dano", "Cura"].forEach(function (label) {
+            const cell = document.createElement("th");
+            cell.scope = "col";
+            cell.textContent = label;
+            headRow.append(cell);
+        });
+        head.append(headRow);
+        table.append(head);
+
+        const body = document.createElement("tbody");
+        members.forEach(function (member) {
+            const row = document.createElement("tr");
+            row.append(
+                memberCell(member),
+                numberCell(member.loot, "Loot"),
+                numberCell(member.supplies, "Supplies"),
+                numberCell(member.balance, "Balance"),
+                differenceCell(member.difference),
+                statCell(member.damage, member.damage_percent, "Dano"),
+                statCell(member.healing, member.healing_percent, "Cura")
+            );
+            body.append(row);
+        });
+        table.append(body);
+        wrap.append(table);
+        return wrap;
+    }
+
+    function renderTransfers(transfers) {
+        const heading = document.createElement("h3");
+        heading.textContent = "Transferências";
+        if (transfers.length === 0) {
+            const empty = document.createElement("p");
+            empty.textContent = "Ninguém precisa transferir.";
+            return [heading, empty];
+        }
+
+        const intro = document.createElement("p");
+        intro.textContent = "Linhas para o NPC do banco, na ordem do analisador.";
+        const list = document.createElement("ol");
+        list.className = "split-transfers";
+        const lines = [];
+        const lineStatuses = [];
+        transfers.forEach(function (transfer) {
+            const command = bankCommand(transfer);
+            lines.push(command);
+            const item = document.createElement("li");
+            item.className = "split-transfer";
+            const sentence = document.createElement("p");
+            appendPieces(sentence, [
+                strong(transfer.from),
+                " transfere ",
+                strong(gold(transfer.amount) + " gold"),
+                " para ",
+                strong(transfer.to),
+                "."
+            ]);
+            item.append(sentence);
+            const row = document.createElement("div");
+            row.className = "split-line-row";
+            const bankLine = document.createElement("span");
+            bankLine.className = "split-bank-line";
+            bankLine.textContent = command;
+            const lineButton = document.createElement("button");
+            lineButton.type = "button";
+            lineButton.className = "split-copy split-copy-line";
+            lineButton.textContent = "copiar";
+            lineButton.setAttribute("aria-label", "Copiar o comando do banco: " + command);
+            const lineStatus = document.createElement("span");
+            lineStatus.className = "split-line-status";
+            lineStatus.setAttribute("role", "status");
+            lineStatuses.push(lineStatus);
+            lineButton.addEventListener("click", function () {
+                copyText(command, bankLine, lineStatus, "Copiada.");
+            });
+            row.append(bankLine, lineButton, lineStatus);
+            item.append(row);
+            list.append(item);
+        });
+
+        const copyButton = document.createElement("button");
+        copyButton.type = "button";
+        copyButton.className = "split-copy";
+        copyButton.textContent = "copiar linhas do banco";
+        const copyStatus = document.createElement("span");
+        copyStatus.className = "split-copy-status";
+        copyStatus.setAttribute("role", "status");
+        const plainPreview = document.createElement("pre");
+        plainPreview.className = "split-discord";
+        plainPreview.hidden = true;
+        plainPreview.textContent = lines.join("\n");
+        copyButton.addEventListener("click", function () {
+            lineStatuses.forEach(function (status) {
+                status.textContent = "";
+            });
+            copyText(lines.join("\n"), plainPreview, copyStatus, "Linhas copiadas.");
+        });
+
+        const actions = document.createElement("div");
+        actions.className = "split-actions";
+        const discordButton = document.createElement("button");
+        discordButton.type = "button";
+        discordButton.className = "split-copy";
+        discordButton.textContent = "copiar para o Discord";
+        const discordStatus = document.createElement("span");
+        discordStatus.className = "split-copy-status";
+        discordStatus.setAttribute("role", "status");
+        const discordPreview = document.createElement("pre");
+        discordPreview.className = "split-discord";
+        discordPreview.hidden = true;
+        discordButton.addEventListener("click", function () {
+            const message = discordMessage(transfers);
+            discordPreview.hidden = false;
+            discordPreview.textContent = message;
+            const success = message.length > 2000
+                ? "Mensagem do Discord copiada. Ela passa de 2000 caracteres e o Discord pode cortar."
+                : "Mensagem do Discord copiada. Cada bloco mostra o botão Copy.";
+            copyText(message, discordPreview, discordStatus, success);
+        });
+        actions.append(copyButton, discordButton);
+        return [heading, intro, list, actions, copyStatus, plainPreview, discordStatus, discordPreview];
+    }
+
+    function bankCommand(transfer) {
+        const prefix = transfer.from + ": ";
+        if (transfer.text.indexOf(prefix) === 0) {
+            return transfer.text.slice(prefix.length);
+        }
+        return "transfer " + transfer.amount + " to " + transfer.to;
+    }
+
+    function discordMessage(transfers) {
+        const blocks = transfers.map(function (transfer) {
+            const command = bankCommand(transfer);
+            const fence = command.indexOf("```") === -1 ? "```" : "````";
+            return "**" + transfer.from + ":**\n" + fence + "\n" + command + "\n" + fence;
+        }).join("\n");
+        return "**Split de hunt**\nhttps://www.tibiawiki.com.br\n\n" + blocks;
+    }
+
+    function selectNode(node) {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        const selection = window.getSelection();
+        if (!selection) {
+            return;
+        }
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    function copyExact(text) {
+        let copied = false;
+        function onCopy(event) {
+            if (!event.clipboardData) {
+                return;
+            }
+            event.preventDefault();
+            event.clipboardData.setData("text/plain", text);
+            copied = true;
+        }
+        document.addEventListener("copy", onCopy);
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.top = "0";
+        area.style.left = "0";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        const previous = document.activeElement;
+        area.focus();
+        area.select();
+        area.setSelectionRange(0, text.length);
+        let commandOk = false;
+        try {
+            commandOk = document.execCommand("copy");
+        } catch (error) {
+            commandOk = false;
+        }
+        document.removeEventListener("copy", onCopy);
+        area.remove();
+        if (previous && previous.focus) {
+            previous.focus();
+        }
+        return copied || commandOk;
+    }
+
+    function markManualCopy(fallbackNode, status) {
+        if (fallbackNode) {
+            fallbackNode.hidden = false;
+            selectNode(fallbackNode);
+        }
+        status.textContent = "Selecione o texto e copie manualmente.";
+    }
+
+    function copyText(text, fallbackNode, status, successMessage) {
+        if (copyExact(text)) {
+            status.textContent = successMessage;
+            return;
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+                status.textContent = successMessage;
+            }).catch(function (error) {
+                console.error(error && error.name ? error.name : "copy");
+                markManualCopy(fallbackNode, status);
+            });
+            return;
+        }
+        markManualCopy(fallbackNode, status);
+    }
+
+    function renderSplit(split, extraTotal) {
+        clearResult();
+        renderSummary(split).forEach(function (node) {
+            result.append(node);
+        });
+        if (extraTotal > 0) {
+            const note = document.createElement("p");
+            appendPieces(note, ["Gastos extras incluídos: ", strong(gold(extraTotal) + " gold"), "."]);
+            result.append(note);
+        }
+        result.append(renderSaveControl(buildHistoryEntry(split, analyzerInput.value)));
+        renderTransfers(split.transfers).forEach(function (node) {
+            result.append(node);
+        });
+        result.append(renderMembers(split.members));
+    }
+
+    function isHistoryEntry(entry) {
+        return Boolean(entry)
+            && typeof entry.dataHora === "string"
+            && typeof entry.sessao === "string"
+            && Number.isFinite(entry.loot)
+            && Number.isFinite(entry.supplies)
+            && Number.isFinite(entry.cota)
+            && Array.isArray(entry.mensagens)
+            && entry.mensagens.every(function (message) {
+                return typeof message === "string";
+            });
+    }
+
+    function loadHistory() {
+        try {
+            const raw = localStorage.getItem(HISTORY_KEY);
+            if (!raw) {
+                return [];
+            }
+            const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed)) {
+                return [];
+            }
+            const entries = parsed.filter(isHistoryEntry).slice(0, HISTORY_LIMIT);
+            if (entries.length !== parsed.length) {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(entries));
+            }
+            return entries;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function readSession(text) {
+        const parsed = parseMembers(text);
+        const occupied = {};
+        parsed.members.forEach(function (member) {
+            for (let index = member.start; index <= member.end; index += 1) {
+                occupied[index] = true;
+            }
+        });
+        let from = "";
+        let to = "";
+        let session = "";
+        parsed.lines.forEach(function (line, index) {
+            if (occupied[index]) {
+                return;
+            }
+            const data = line.match(/^Session data:\s*From\s+(.+?)\s+to\s+(.+?)\s*$/i);
+            if (data) {
+                from = data[1];
+                to = data[2];
+            }
+            const duration = line.match(/^Session:\s*(.+?)\s*$/);
+            if (duration) {
+                session = duration[1];
+            }
+        });
+        return { from: from, to: to, session: session };
+    }
+
+    function huntWhen(session) {
+        if (session.from && session.to) {
+            return session.from + " a " + session.to;
+        }
+        return session.from || session.to;
+    }
+
+    function transferSentence(transfer) {
+        return "**" + transfer.from + "** transfere **" + gold(transfer.amount) + " gold** para **" + transfer.to + "**.";
+    }
+
+    function buildHistoryEntry(split, analyzerText) {
+        const session = readSession(analyzerText);
+        return {
+            dataHora: huntWhen(session),
+            sessao: session.session,
+            loot: split.loot,
+            supplies: split.supplies,
+            cota: split.share,
+            mensagens: split.transfers.map(transferSentence)
+        };
+    }
+
+    function sameHistoryEntry(left, right) {
+        return left.dataHora === right.dataHora
+            && left.sessao === right.sessao
+            && left.loot === right.loot
+            && left.supplies === right.supplies
+            && left.cota === right.cota
+            && left.mensagens.join("\n") === right.mensagens.join("\n");
+    }
+
+    function rememberSplit(entry) {
+        try {
+            const entries = loadHistory();
+            if (entries.some(function (saved) { return sameHistoryEntry(saved, entry); })) {
+                return { ok: true, message: "Este split já está no histórico." };
+            }
+            entries.unshift(entry);
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, HISTORY_LIMIT)));
+            return { ok: true, message: "Salvo no histórico." };
+        } catch (error) {
+            return { ok: false, message: "Não foi possível salvar neste navegador." };
+        }
+    }
+
+    function refreshHistoryButton() {
+        const count = loadHistory().length;
+        historyButton.textContent = count > 0 ? "histórico (" + count + ")" : "histórico";
+    }
+
+    function renderMessage(message) {
+        const paragraph = document.createElement("p");
+        const match = message.match(/^\*\*([\s\S]+?)\*\* transfere \*\*([\s\S]+?)\*\* para \*\*([\s\S]+?)\*\*\.$/);
+        if (!match) {
+            paragraph.textContent = message;
+            return paragraph;
+        }
+        appendPieces(paragraph, [
+            strong(match[1]),
+            " transfere ",
+            strong(match[2]),
+            " para ",
+            strong(match[3]),
+            "."
+        ]);
+        return paragraph;
+    }
+
+    function historyFact(label, value) {
+        const paragraph = document.createElement("p");
+        appendPieces(paragraph, [strong(label + ": "), value]);
+        return paragraph;
+    }
+
+    function renderHistory() {
+        historyStatus.textContent = "";
+        historyStatus.className = "split-copy-status";
+        historyList.replaceChildren();
+        const entries = loadHistory();
+        exportHistoryButton.disabled = entries.length === 0;
+        if (entries.length === 0) {
+            const empty = document.createElement("p");
+            empty.textContent = "Nenhum split salvo neste navegador.";
+            historyList.append(empty);
+            return;
+        }
+        entries.forEach(function (entry, index) {
+            const item = document.createElement("article");
+            item.className = "history-item";
+            item.append(
+                historyFact("Data e hora", entry.dataHora || "não informada"),
+                historyFact("Sessão", entry.sessao || "não informada"),
+                historyFact("Loot", gold(entry.loot) + " gold"),
+                historyFact("Supplies", gold(entry.supplies) + " gold"),
+                historyFact("Cota de cada integrante", gold(entry.cota) + " gold")
+            );
+            if (entry.mensagens.length === 0) {
+                const none = document.createElement("p");
+                none.textContent = "Ninguém precisou transferir.";
+                item.append(none);
+            } else {
+                entry.mensagens.forEach(function (message) {
+                    item.append(renderMessage(message));
+                });
+            }
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "split-copy";
+            removeButton.textContent = "apagar";
+            const when = entry.dataHora || "sem data";
+            removeButton.setAttribute("aria-label", "Apagar o split de " + when);
+            removeButton.addEventListener("click", function () {
+                const current = loadHistory();
+                current.splice(index, 1);
+                try {
+                    localStorage.setItem(HISTORY_KEY, JSON.stringify(current));
+                } catch (error) {
+                    historyStatus.className = "split-copy-status share-error";
+                    historyStatus.textContent = "Não foi possível apagar neste navegador.";
+                    return;
+                }
+                refreshHistoryButton();
+                renderHistory();
+                historyStatus.textContent = "Split apagado.";
+            });
+            item.append(removeButton);
+            historyList.append(item);
+        });
+    }
+
+    function exportHistory() {
+        const entries = loadHistory();
+        if (entries.length === 0) {
+            historyStatus.className = "split-copy-status share-error";
+            historyStatus.textContent = "Nenhum split para exportar.";
+            return;
+        }
+        const json = JSON.stringify(entries, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const now = new Date();
+        const pad = function (value) { return String(value).padStart(2, "0"); };
+        link.href = url;
+        link.download = "split-hunt-historico-" + now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + ".json";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(function () {
+            URL.revokeObjectURL(url);
+        }, 1000);
+        historyStatus.className = "split-copy-status";
+        historyStatus.textContent = "Histórico exportado.";
+    }
+
+    function renderSaveControl(entry) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "split-copy";
+        button.textContent = "salvar no histórico";
+        const status = document.createElement("span");
+        status.className = "split-copy-status";
+        status.setAttribute("role", "status");
+        button.addEventListener("click", function () {
+            const outcome = rememberSplit(entry);
+            status.className = outcome.ok ? "split-copy-status" : "split-copy-status share-error";
+            status.textContent = outcome.message;
+            if (outcome.ok) {
+                button.disabled = true;
+                refreshHistoryButton();
+            }
+        });
+        const row = document.createElement("div");
+        row.className = "split-actions";
+        row.append(button, status);
+        return row;
+    }
+
+    function openHistory() {
+        renderHistory();
+        if (typeof historyDialog.showModal === "function") {
+            historyDialog.showModal();
+            return;
+        }
+        historyDialog.setAttribute("open", "");
+    }
+
+    function parseMembers(text) {
+        const lines = String(text).split(/\r?\n/);
+        const members = [];
+        let current = null;
+        function closeMember() {
+            if (current) {
+                members.push(current);
+            }
+            current = null;
+        }
+        lines.forEach(function (line, index) {
+            if (line.trim() === "") {
+                return;
+            }
+            if (!/^\s/.test(line) && line.indexOf(":") === -1) {
+                closeMember();
+                const leader = / \(Leader\)$/.test(line.trim());
+                current = {
+                    name: leader ? line.trim().replace(/ \(Leader\)$/, "") : line.trim(),
+                    leader: leader,
+                    start: index,
+                    end: index
+                };
+                return;
+            }
+            if (current && /^\s/.test(line)) {
+                current.end = index;
+            }
+        });
+        closeMember();
+        return { lines: lines, members: members };
+    }
+
+    function parseAnalyzerNumber(raw) {
+        const cleaned = String(raw).replace(/[^\d-]/g, "");
+        if (!/^-?\d+$/.test(cleaned)) {
+            return null;
+        }
+        const value = Number(cleaned);
+        return Number.isSafeInteger(value) ? value : null;
+    }
+
+    function formatAnalyzerNumber(value) {
+        const sign = value < 0 ? "-" : "";
+        const body = String(Math.abs(value)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return sign + body;
+    }
+
+    function readField(block, key) {
+        for (let index = 0; index < block.length; index += 1) {
+            const match = block[index].match(/^\s*([A-Za-z][A-Za-z ]*):\s*(.*)$/);
+            if (match && match[1] === key) {
+                return parseAnalyzerNumber(match[2]);
+            }
+        }
+        return null;
+    }
+
+    function withField(block, key, value) {
+        const formatted = formatAnalyzerNumber(value);
+        let found = false;
+        const next = block.map(function (line) {
+            const match = line.match(/^(\s*)([A-Za-z][A-Za-z ]*):\s*(.*)$/);
+            if (match && match[2] === key) {
+                found = true;
+                return match[1] + key + ": " + formatted;
+            }
+            return line;
+        });
+        if (!found) {
+            const sample = next.find(function (line) { return /^\s+\S/.test(line); });
+            const indent = sample ? sample.match(/^\s*/)[0] : "  ";
+            const field = indent + key + ": " + formatted;
+            const balanceAt = next.findIndex(function (line) { return /^\s*Balance:/.test(line); });
+            if (key === "Supplies" && balanceAt >= 0) {
+                next.splice(balanceAt, 0, field);
+            } else {
+                next.push(field);
+            }
+        }
+        return next;
+    }
+
+    function parseExtra(raw) {
+        const text = String(raw).trim();
+        if (text === "") {
+            return { value: 0 };
+        }
+        const digits = text.replace(/[.\s]/g, "").replace(/,/g, "");
+        if (!/^\d+$/.test(digits)) {
+            return { error: "Use apenas números inteiros nos gastos extras." };
+        }
+        const value = Number(digits);
+        if (!Number.isSafeInteger(value)) {
+            return { error: "O gasto extra passou do limite numérico." };
+        }
+        return { value: value };
+    }
+
+    function extraCost(fields) {
+        const gold = parseExtra(fields.gold);
+        const tc = parseExtra(fields.tc);
+        const price = parseExtra(fields.price);
+        if (gold.error) {
+            return gold;
+        }
+        if (tc.error) {
+            return tc;
+        }
+        if (price.error) {
+            return price;
+        }
+        if ((tc.value > 0 && price.value === 0) || (tc.value === 0 && price.value > 0)) {
+            return { error: "Informe a quantidade de Tibia Coin e o preço de cada uma." };
+        }
+        const total = gold.value + tc.value * price.value;
+        if (!Number.isSafeInteger(total)) {
+            return { error: "O gasto extra passou do limite numérico." };
+        }
+        return { value: total };
+    }
+
+    function emptyAdjustment() {
+        return { gold: "", tc: "", price: "" };
+    }
+
+    function captureAdjustments() {
+        partyMembers.querySelectorAll(".party-card").forEach(function (card) {
+            savedAdjustments[card.dataset.name] = {
+                gold: card.querySelector("[data-extra='gold']").value,
+                tc: card.querySelector("[data-extra='tc']").value,
+                price: card.querySelector("[data-extra='price']").value
+            };
+        });
+    }
+
+    function removeMemberAt(text, index) {
+        const parsed = parseMembers(text);
+        const member = parsed.members[index];
+        if (!member) {
+            return text;
+        }
+        const next = parsed.lines.slice();
+        next.splice(member.start, member.end - member.start + 1);
+        return next.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+    }
+
+    function applyAdjustments(text, amounts) {
+        const parsed = parseMembers(text);
+        const lines = parsed.lines.slice();
+        for (let index = parsed.members.length - 1; index >= 0; index -= 1) {
+            const extra = amounts[index] || 0;
+            if (extra === 0) {
+                continue;
+            }
+            const member = parsed.members[index];
+            const block = lines.slice(member.start, member.end + 1);
+            const supplies = readField(block, "Supplies");
+            const balance = readField(block, "Balance");
+            if (balance === null) {
+                continue;
+            }
+            let updated = withField(block, "Supplies", (supplies === null ? 0 : supplies) + extra);
+            updated = withField(updated, "Balance", balance - extra);
+            lines.splice(member.start, block.length, ...updated);
+        }
+        return lines.join("\n");
+    }
+
+    function updateCardTotal(card) {
+        const total = card.querySelector(".party-extra-total");
+        const cost = extraCost({
+            gold: card.querySelector("[data-extra='gold']").value,
+            tc: card.querySelector("[data-extra='tc']").value,
+            price: card.querySelector("[data-extra='price']").value
+        });
+        if (cost.error) {
+            total.className = "party-extra-total share-error";
+            total.textContent = cost.error;
+            return;
+        }
+        total.className = "party-extra-total";
+        total.textContent = cost.value > 0 ? "Gasto extra: " + gold(cost.value) + " gold." : "";
+    }
+
+    function renderPartyCard(member, index) {
+        const saved = savedAdjustments[member.name] || emptyAdjustment();
+        const card = document.createElement("div");
+        card.className = "party-card";
+        card.dataset.name = member.name;
+        const head = document.createElement("div");
+        head.className = "party-card-head";
+        const name = document.createElement("span");
+        name.className = "party-name";
+        name.textContent = member.name;
+        if (member.leader) {
+            const leader = document.createElement("span");
+            leader.className = "share-detail";
+            leader.textContent = "Líder";
+            name.append(leader);
+        }
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "split-copy party-remove";
+        removeButton.textContent = "remover";
+        removeButton.setAttribute("aria-label", "Remover " + member.name + " da party");
+        removeButton.addEventListener("click", function () {
+            removePartyMember(index);
+        });
+        head.append(name, removeButton);
+
+        const extras = document.createElement("div");
+        extras.className = "party-extra-label";
+        extras.textContent = "Gastos extras";
+        const goldLabel = document.createElement("label");
+        goldLabel.textContent = "Gold coin";
+        const goldInput = document.createElement("input");
+        goldInput.type = "text";
+        goldInput.inputMode = "numeric";
+        goldInput.autocomplete = "off";
+        goldInput.dataset.extra = "gold";
+        goldInput.value = saved.gold;
+        goldInput.setAttribute("aria-label", "Gold coin de " + member.name);
+        goldLabel.append(goldInput);
+        const tcLabel = document.createElement("label");
+        tcLabel.textContent = "Tibia Coin (TC)";
+        const tcInput = document.createElement("input");
+        tcInput.type = "text";
+        tcInput.inputMode = "numeric";
+        tcInput.autocomplete = "off";
+        tcInput.dataset.extra = "tc";
+        tcInput.value = saved.tc;
+        tcInput.setAttribute("aria-label", "Tibia Coin de " + member.name);
+        tcLabel.append(tcInput);
+        const priceLabel = document.createElement("label");
+        priceLabel.textContent = "Preço de cada TC";
+        const priceInput = document.createElement("input");
+        priceInput.type = "text";
+        priceInput.inputMode = "numeric";
+        priceInput.autocomplete = "off";
+        priceInput.dataset.extra = "price";
+        priceInput.value = saved.price;
+        priceInput.setAttribute("aria-label", "Preço de cada Tibia Coin de " + member.name);
+        priceLabel.append(priceInput);
+        const extraRow = document.createElement("div");
+        extraRow.className = "party-extra-row";
+        extraRow.append(tcLabel, priceLabel);
+        const total = document.createElement("span");
+        total.className = "party-extra-total";
+        card.append(head, extras, goldLabel, extraRow, total);
+        card.querySelectorAll("input").forEach(function (input) {
+            input.addEventListener("input", function () {
+                captureAdjustments();
+                updateCardTotal(card);
+            });
+        });
+        updateCardTotal(card);
+        return card;
+    }
+
+    function syncPartyTools(options) {
+        const keepCalculation = Boolean(options && options.keepCalculation);
+        const parsed = parseMembers(analyzerInput.value);
+        const signature = parsed.members.map(function (member) {
+            return member.name + (member.leader ? "*" : "");
+        }).join("\n");
+        if (signature === partySignature) {
+            return;
+        }
+        captureAdjustments();
+        const present = {};
+        parsed.members.forEach(function (member) {
+            present[member.name] = true;
+        });
+        Object.keys(savedAdjustments).forEach(function (name) {
+            if (!present[name]) {
+                delete savedAdjustments[name];
+            }
+        });
+        if (partySignature !== "" && !keepCalculation) {
+            showEmptyResult();
+        }
+        partySignature = signature;
+        partyMembers.replaceChildren();
+        partyTools.hidden = parsed.members.length === 0;
+        parsed.members.forEach(function (member, index) {
+            partyMembers.append(renderPartyCard(member, index));
+        });
+    }
+
+    function removePartyMember(index) {
+        const parsed = parseMembers(analyzerInput.value);
+        const member = parsed.members[index];
+        if (!member) {
+            return;
+        }
+        captureAdjustments();
+        delete savedAdjustments[member.name];
+        analyzerInput.value = removeMemberAt(analyzerInput.value, index);
+        syncPartyTools({ keepCalculation: true });
+        calculateSplit();
+    }
+
+    async function calculateSplit() {
+        const token = ++calcToken;
+        captureAdjustments();
+        const parsed = parseAnalyzer(analyzerInput.value);
+        if (parsed.error) {
+            showMessage(parsed.error, "share-error");
+            return;
+        }
+        const members = parseMembers(parsed.text).members;
+        if (members.length < 2) {
+            showMessage("Deixe pelo menos dois integrantes na party.", "share-error");
+            return;
+        }
+        const costs = [];
+        for (let index = 0; index < members.length; index += 1) {
+            const fields = savedAdjustments[members[index].name] || emptyAdjustment();
+            const cost = extraCost(fields);
+            if (cost.error) {
+                showMessage(members[index].name + ": " + cost.error, "share-error");
+                return;
+            }
+            costs.push(cost.value);
+        }
+        const extraTotal = costs.reduce(function (sum, value) { return sum + value; }, 0);
+        if (!Number.isSafeInteger(extraTotal)) {
+            showMessage("O gasto extra passou do limite numérico.", "share-error");
+            return;
+        }
+        for (let index = 0; index < members.length; index += 1) {
+            if (costs[index] === 0) {
+                continue;
+            }
+            const block = parsed.text.split(/\r?\n/).slice(members[index].start, members[index].end + 1);
+            const supplies = readField(block, "Supplies");
+            const balance = readField(block, "Balance");
+            const baseSupplies = supplies === null ? 0 : supplies;
+            if (balance === null || !Number.isSafeInteger(baseSupplies + costs[index]) || !Number.isSafeInteger(balance - costs[index])) {
+                showMessage(members[index].name + ": o gasto extra passou do limite numérico.", "share-error");
+                return;
+            }
+        }
+        if (!client) {
+            showMessage("Não foi possível carregar o SDK do Umanthir.", "share-error");
+            return;
+        }
+        showLoading(true);
+        try {
+            const split = await client.tools.splitHunt(applyAdjustments(parsed.text, costs));
+            if (token !== calcToken) {
+                return;
+            }
+            if (!isSplit(split)) {
+                showMessage("A resposta do Umanthir veio em um formato inesperado.", "share-error");
+                return;
+            }
+            renderSplit(split, extraTotal);
+        } catch (error) {
+            if (token !== calcToken) {
+                return;
+            }
+            showMessage(describeError(error), "share-error");
+            console.error(error && error.name, error && error.status, error && error.message);
+        } finally {
+            if (token === calcToken) {
+                showLoading(false);
+            }
+        }
+    }
+
+    historyButton.addEventListener("click", openHistory);
+    exportHistoryButton.addEventListener("click", exportHistory);
+    historyDialog.addEventListener("click", function (event) {
+        if (event.target === historyDialog) {
+            historyDialog.close();
+        }
+    });
+    refreshHistoryButton();
+    syncPartyTools();
+</script>
