@@ -97,8 +97,9 @@
         width: 100%;
         min-height: 32px;
         border-radius: 5px;
-        background-color: #f0f0f0;
-        color: black;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        color: #1a1a1a;
         border: none;
         font-weight: bold;
         cursor: pointer;
@@ -124,6 +125,7 @@
     .split-hunt-panel .split-copy {
         background-color: #c7451d;
         color: white;
+        border: 1px solid #8c2c10;
     }
     .split-hunt-panel .split-copy:hover {
         background-color: #a83714;
@@ -211,6 +213,13 @@
     .split-hunt-panel .share-table th {
         background: #c7451d;
         color: white;
+        white-space: nowrap;
+    }
+    .split-hunt-panel .share-head-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+        vertical-align: -3px;
     }
     .split-hunt-panel .share-table caption {
         text-align: left;
@@ -277,8 +286,8 @@
         min-width: 0;
         padding: 6px 8px;
         border-radius: 5px;
-        background: #c7451d;
-        color: white;
+        background: #f6e4dc;
+        color: #1a1a1a;
     }
     .split-hunt-panel .split-stat span {
         display: block;
@@ -556,8 +565,31 @@
         .split-hunt-panel .share-table td::before {
             content: attr(data-label);
             display: inline-block;
-            min-width: 7.5em;
+            min-width: 8.6em;
+            padding-left: 18px;
+            background-repeat: no-repeat;
+            background-position: left center;
+            background-size: 14px 14px;
             font-weight: bold;
+        }
+        .split-hunt-panel .share-table td[data-label="Integrante"]::before {
+            background-image: url("https://www.tibiawiki.com.br/images/0/0a/Icon-vip-widget.png");
+        }
+        .split-hunt-panel .share-table td[data-label="Loot"]::before {
+            background-image: url("https://www.tibiawiki.com.br/images/c/c4/Icon-trade.png");
+        }
+        .split-hunt-panel .share-table td[data-label="Supplies"]::before {
+            background-image: url("https://www.tibiawiki.com.br/images/3/35/Icon-charactertrade.png");
+        }
+        .split-hunt-panel .share-table td[data-label="Balance"]::before,
+        .split-hunt-panel .share-table td[data-label="Diferença"]::before {
+            background-image: url("https://www.tibiawiki.com.br/images/1/14/Icon-balance.png");
+        }
+        .split-hunt-panel .share-table td[data-label="Dano"]::before {
+            background-image: url("https://www.tibiawiki.com.br/images/c/cd/Icon-battlelist.png");
+        }
+        .split-hunt-panel .share-table td[data-label="Cura"]::before {
+            background-image: url("https://www.tibiawiki.com.br/images/e/e2/Icon-healing.png");
         }
         .split-hunt-panel .share-detail {
             display: inline;
@@ -955,10 +987,27 @@
 
         const head = document.createElement("thead");
         const headRow = document.createElement("tr");
-        ["Integrante", "Loot", "Supplies", "Balance", "Diferença", "Dano", "Cura"].forEach(function (label) {
+        [
+            ["Integrante", "https://www.tibiawiki.com.br/images/0/0a/Icon-vip-widget.png"],
+            ["Loot", "https://www.tibiawiki.com.br/images/c/c4/Icon-trade.png"],
+            ["Supplies", "https://www.tibiawiki.com.br/images/3/35/Icon-charactertrade.png"],
+            ["Balance", "https://www.tibiawiki.com.br/images/1/14/Icon-balance.png"],
+            ["Diferença", "https://www.tibiawiki.com.br/images/1/14/Icon-balance.png"],
+            ["Dano", "https://www.tibiawiki.com.br/images/c/cd/Icon-battlelist.png"],
+            ["Cura", "https://www.tibiawiki.com.br/images/e/e2/Icon-healing.png"]
+        ].forEach(function (column) {
             const cell = document.createElement("th");
             cell.scope = "col";
-            cell.textContent = label;
+            const icon = document.createElement("img");
+            icon.className = "share-head-icon";
+            icon.src = column[1];
+            icon.alt = "";
+            icon.width = 16;
+            icon.height = 16;
+            icon.setAttribute("aria-hidden", "true");
+            const text = document.createElement("span");
+            text.textContent = column[0];
+            cell.append(icon, text);
             headRow.append(cell);
         });
         head.append(headRow);
