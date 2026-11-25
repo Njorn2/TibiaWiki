@@ -1,215 +1,263 @@
 <style>
-    .no, .hide {
-        display:none;
+    .hide {
+        display: none;
+    }
+    .xp-calc {
+        display: flex;
+        justify-content: center;
+        container-type: inline-size;
+        font-family: Verdana, Arial, sans-serif;
+        color: #202122;
     }
     .calc_bg {
-        background-color: #ffffff;
-        color: #000000;
-        font-family: Verdana, Arial, Times New Roman, sans-serif;
-        font-size: 12px;
+        width: 100%;
+        max-width: 640px;
+        box-sizing: border-box;
+        background: #ffffff;
+        font-size: 13px;
+        line-height: 1.4;
         border: 2px solid #a2a9b1;
-        border-left: #c7451d 5px solid;
-        border-collapse: separate;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
+        border-left: 5px solid #c7451d;
         border-radius: 5px;
-        position: relative;
     }
-
-    .calc_bg input {
-        font-family: Verdana, Arial, Times New Roman, sans-serif;
-        /* width: 55px; */
-        border-radius: 5px;
-        border-left: #c7451d 5px solid;
-        background: #f8f8f8;
-        border-collapse: separate;
-        margin: 0px 5px 0px 5px;
-        padding: 1px 1px 1px 1px;
-        line-height: 18px;
-        text-align: center;
-        display: inline-block;
-        vertical-align: top;
-        white-space: nowrap;
-        font-size: 13px;
-        color: black;
+    .xp-lead {
+        margin: 0;
+        padding: 12px 14px;
+        border-bottom: 1px solid #eaecf0;
     }
-
-    .calc_bg select {
-        font-family: Verdana, Arial, Times New Roman, sans-serif;
-        width: 200px;
-        border-radius: 5px;
-        border-left: #c7451d 5px solid;
-        background: #f8f8f8;
-        border-collapse: separate;
-        margin: 0px 5px 0px 5px;
-        padding: 1px 1px 1px 1px;
-        height: 24px;
-        text-align: center;
-        display: inline-block;
-        vertical-align: top;
-        white-space: nowrap;
-        font-size: 13px;
-        color: black;
-    }
-
-    .calc_bg select option {
-        color: black;
-    }
-
-    .calc_border_bottom {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
-        border-bottom: 1px solid #000000;
-        padding: 0.75rem;
-    }
-
-    .calc_header {
-        width: 100%;
-        margin-bottom: 20px;
-        display: flex;
-        flex-flow: column wrap;
-        align-items: center;
-        -webkit-border-top-left-radius: 3px;
-        -moz-border-top-left-radius: 3px;
-        border-top-left-radius: 3px;
-    }
-
-    .info-box {
-        padding: 10px;
-        text-align: left;
-        margin: 0px 5px 0px 5px;
-    }
-
-    .border-bottom {
-       border-bottom: 1px solid black;
-    }
-    
-
-    .data-box {
-        display: flex;
-    }
-
-    .data-box>div {
-        padding-left: 10px;
-        flex: 1;
-        text-align: center;
-        align-items: center;
-    }
-
-    .data-box>div>label {
-        margin-bottom: 5px;
-    }
-
-    .data-box>div>div>select,
-    .data-box>div>div>input {
-        margin-top: 5px;
-    }
-    .span-version {
-        padding: 15px;
-        background-color: #f8f9fa;
-        border: 1px solid #eaecf0;
-        color: black;
-        margin-top: 5px;
-        width: 350px;
-        text-align: center;
-    }
-    .panel-party-xp {
-        max-width: 600px;
-    }
-    .loading {
-        background-color: rgba(255, 255, 255, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 3px;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        top:0;
-        left:0;
-    }
-    .loading > label {
-        position: absolute;
-        bottom: 0;
+    .xp-fields {
         display: grid;
-        text-align: center;
-        align-items: center;
-        height: 30px;
-        width: 100%;
-        background-color: #c7451d;
-        font-size: math;
+        grid-template-columns: minmax(0, 1.5fr) minmax(96px, 0.7fr) minmax(96px, 0.7fr);
+        gap: 12px 10px;
+        padding: 12px 14px;
+        border-bottom: 1px solid #eaecf0;
+    }
+    .xp-field-wide {
+        grid-column: 1 / -1;
+    }
+    .xp-field label {
+        display: block;
+        margin-bottom: 4px;
         font-weight: bold;
     }
-    .loading > img {
-        height: 55px;
+    .xp-field-title {
+        margin: 2px 0 8px;
+        font-weight: bold;
+    }
+    .calc_bg input,
+    .calc_bg select {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 32px;
+        margin: 0;
+        padding: 4px 8px;
+        border: 1px solid #a2a9b1;
+        border-left: 5px solid #c7451d;
+        border-radius: 5px;
+        background: #f8f9fa;
+        color: #202122;
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 13px;
+        text-align: left;
+    }
+    .xp-field-narrow input {
+        text-align: center;
+    }
+    .calc_bg input:focus-visible,
+    .calc_bg select:focus-visible {
+        outline: 2px solid #c7451d;
+        outline-offset: 1px;
+    }
+    .xp-hint,
+    .xp-note,
+    .xp-end {
+        margin: 4px 0 0;
+        color: #54595d;
+    }
+    .xp-output {
+        padding: 12px 14px 4px;
+    }
+    .xp-output.is-busy #shard-result,
+    .xp-output.is-stale #shard-result {
+        opacity: 0.45;
+    }
+    .xp-status {
+        margin: 0 0 8px;
+        color: #54595d;
+    }
+    .xp-kicker {
+        margin: 0;
+        font-weight: bold;
+    }
+    .xp-total {
+        margin: 2px 0 0;
+        font-size: 22px;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+    .xp-section {
+        margin: 12px 0 0;
+        font-weight: bold;
+    }
+    .shard-plan {
+        list-style: none;
+        margin: 4px 0 0;
+        padding: 0;
+        max-height: 240px;
+        overflow: auto;
+    }
+    .shard-plan li {
+        display: grid;
+        grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: baseline;
+        padding: 7px 0;
+        border-bottom: 1px solid #eaecf0;
+    }
+    .shard-step-index {
+        color: #c7451d;
+        font-weight: bold;
+    }
+    .shard-step-xp {
+        color: #54595d;
+        white-space: nowrap;
+    }
+    .xp-gain {
+        margin: 10px 0 0;
+        padding: 8px 10px;
+        background: #f8f9fa;
+        border-left: 4px solid #c7451d;
+        border-radius: 5px;
+    }
+    .xp-warning {
+        margin: 10px 0 0;
+        padding: 8px 10px;
+        background: #fff6f2;
+        border: 1px solid #e6b5a4;
+        border-radius: 5px;
+    }
+    .xp-legend {
+        margin: 0;
+        padding: 12px 14px 0;
+        color: #54595d;
+    }
+    .xp-actions {
+        padding: 12px 14px 0;
+    }
+    #calcular {
+        min-width: 140px;
+        min-height: 34px;
+        padding: 6px 16px;
+        border: 1px solid #8c2c10;
+        border-radius: 5px;
+        background: #c7451d;
+        color: #ffffff;
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    #calcular:hover {
+        background: #a33a18;
+    }
+    #calcular:focus-visible {
+        outline: 2px solid #c7451d;
+        outline-offset: 2px;
+    }
+    #calcular:disabled {
+        opacity: 0.65;
+        cursor: default;
+    }
+    .span-version {
+        margin: 8px 0 0;
+        padding: 10px 14px 12px;
+        border-top: 1px solid #eaecf0;
+        color: #54595d;
+        text-align: left;
+    }
+    @container (max-width: 560px) {
+        .xp-fields {
+            grid-template-columns: 1fr 1fr;
+        }
+        .xp-field:first-child,
+        .xp-field-wide {
+            grid-column: 1 / -1;
+        }
+        #calcular {
+            width: 100%;
+        }
+    }
+    @media (max-width: 560px) {
+        .xp-fields {
+            grid-template-columns: 1fr 1fr;
+        }
+        .xp-field:first-child,
+        .xp-field-wide {
+            grid-column: 1 / -1;
+        }
+        #calcular {
+            width: 100%;
+        }
     }
 </style>
 
-<div style="display: flex; flex-flow: column wrap; align-items: center">
+<div class="xp-calc">
     <div id="calc_shard" class="calc_bg">
-        <div class="info-box border-bottom">
-            Como Usar: <br />
-            - Escolha qual item de experiência você usará.<br />
-            - Informe a quantidade de item que você irá entregar ao NPC. <br />
-            - Informe qual o seu level. <br />
-        </div>
-        <div class="data-box info-box border-bottom">
-            <div>
-                <label>Item</label>
-                <div id="botao_item" class="selection-items">
-                    <select id="item" onchange="changeItem()"><option value="1">Midnight Shard</option><option value="2">Stone of Insight</option></select>
-                </div>
+        <p class="xp-lead">Preencha os dados e clique em Calcular. No Midnight Shard, a experiência atual mostra a ordem de entrega que rende mais.</p>
+        <div class="xp-fields">
+            <div class="xp-field">
+                <label for="item">Item</label>
+                <select id="item" onchange="changeItem()">
+                    <option value="1">Midnight Shard</option>
+                    <option value="2">Stone of Insight</option>
+                </select>
+                <p id="item-hint" class="xp-hint">Cada shard rende 300 de experiência vezes o level.</p>
             </div>
-            <div>
-                <label>Quantidade</label>
-                <div id="botao_shard">
-                    <input name="quantidade" max="80" min="1" id="quantidade" type="number" size="10" value="1" onblur="this.value=!this.value?&#39;1&#39;:this.value;" />
-                </div>
+            <div class="xp-field xp-field-narrow">
+                <label for="quantidade">Quantidade</label>
+                <input name="quantidade" max="80" min="1" id="quantidade" type="number" value="1" onblur="this.value=!this.value?'1':this.value;">
+                <p id="quantity-hint" class="xp-hint">Até 80 por ano.</p>
             </div>
-            <div>
-                <label>Level</label>
-                <div id="botao_level">
-                    <input name="level" min="8" id="level" type="number" size="10" value="8" onblur="this.value=!this.value?&#39;0&#39;:this.value;" />
-                </div>
+            <div class="xp-field xp-field-narrow">
+                <label for="level">Level</label>
+                <input name="level" min="8" id="level" type="number" value="8" onblur="this.value=!this.value?'8':this.value;">
             </div>
-        </div>
-        <div class="data-box info-box border-bottom">
-            <div>
-                <label>Experiência (Soment Números)</label>
-                <div id="botao_item" class="selection-items">
-                    <input id="experience" >
-                </div>
+            <div id="experience-box" class="xp-field xp-field-wide">
+                <p class="xp-field-title">O level sozinho assume o começo do level. A experiência atual mostra quanto já foi ganho, para dividir os shards.</p>
+                <label for="experience">Experiência atual</label>
+                <input id="experience" inputmode="numeric" autocomplete="off" placeholder="140099160" aria-describedby="experience-hint">
+                <p id="experience-hint" class="xp-hint">Total do personagem, somente números, sem pontos.</p>
             </div>
         </div>
-        <div class="info-box">
-            <label id="shard-result"></label><br /><br />
-            <label id="warning-label" class="hide" style="font-size: 15px;"><br />
-                Mas atenção! Você só pode usar 80 shards por ano.
-            </label>
+        <p id="split-legend" class="xp-legend">Split dos shards: cada shard rende 300 de experiência vezes o level da entrega. Em cada level, o cálculo usa só a quantidade necessária para subir e guarda o restante para os levels seguintes, onde cada shard vale mais.</p>
+        <div class="xp-actions">
+            <button type="button" id="calcular">Calcular</button>
         </div>
+        <div class="xp-output">
+            <p id="shard-status" class="xp-status hide" role="status"></p>
+            <div id="shard-result" aria-live="polite"></div>
+            <p id="warning-label" class="xp-warning hide" role="status"></p>
+        </div>
+        <p class="span-version">© TibiaWiki.com.br — Versão 2.5.0</p>
     </div>
-    <span class="span-version">© TibiaWiki.com.br - Versão 2.2.0</span>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PH&#104;ENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@umanthir/sdk@1.1.0/dist/umanthir.min.js" integrity="sha384-fGCgF4CT/VJAG38XkwYIDXPusa37MVw5oeZZJeZnjRoCRbQ5GeQkRdeGAHulD05Z" crossorigin="anonymous"></script>
 <script>
         $(document).ready(function () {
-            $('#calc_shard').bind("keyup change", function () {
-                let item = $("select#item").val();
-                if (item == 2) {
-                    managerStoneOfInsight();
-                } else {
-                    managerMidnightShards();
-                }
-                showComponent($('#shard-result'));
-            });
+            $("#calcular").on("click", calculate);
+            $("#calc_shard").on("keyup change", markStale);
             $("#calc_shard").keydown(function (event) {
-                if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39)) {
+                if (event.keyCode == 13 && event.target.tagName === "INPUT") {
+                    event.preventDefault();
+                    calculate();
+                    return;
+                }
+                if (event.ctrlKey || event.metaKey) {
+                    return;
+                }
+                if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode >= 35 && event.keyCode <= 39)) {
                     return;
                 } else {
                     if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
@@ -217,28 +265,200 @@
                     }
                 }
             });
+            $("#experience").on("paste", function (event) {
+                var clipboard = event.originalEvent.clipboardData || window.clipboardData;
+                if (!clipboard) {
+                    return;
+                }
+                var digits = String(clipboard.getData("text") || "").replace(/\D/g, "");
+                event.preventDefault();
+                if (!digits) {
+                    return;
+                }
+                var input = this;
+                var start = input.selectionStart;
+                var end = input.selectionEnd;
+                var value = input.value;
+                if (start == null || end == null) {
+                    input.value = digits;
+                } else {
+                    input.value = value.slice(0, start) + digits + value.slice(end);
+                    var caret = start + digits.length;
+                    input.setSelectionRange(caret, caret);
+                }
+                $(input).trigger("keyup");
+            });
             showResultOnStart();
         });
-        function showResultOnStart() {
+        function calculate() {
             let item = $("select#item").val();
+            document.querySelector(".xp-output").classList.remove("is-stale");
             if (item == 2) {
                 managerStoneOfInsight();
             } else {
                 managerMidnightShards();
             }
             showComponent($('#shard-result'));
+            if (item != 2 && Number($('#quantidade').val()) <= 0) {
+                hideComponent($('#shard-result'));
+                calculatedSnapshot = "";
+                return;
+            }
+            calculatedSnapshot = fieldSnapshot();
         }
+        function showResultOnStart() {
+            var box = document.getElementById("shard-result");
+            box.replaceChildren();
+            var note = document.createElement("p");
+            note.className = "xp-note";
+            note.textContent = "Preencha os dados e clique em Calcular.";
+            box.append(note);
+        }
+        var xpClient = null;
+        var levelExperience = {};
+        var shardToken = 0;
+        var calculatedSnapshot = "";
+
+        function createClient() {
+            if (typeof Umanthir !== "function") {
+                return null;
+            }
+            if (typeof window.UMANTHIR_KEY === "string" && window.UMANTHIR_KEY) {
+                return new Umanthir({ apiKey: window.UMANTHIR_KEY });
+            }
+            return new Umanthir();
+        }
+
+        function whenUmanthir(run, fail) {
+            var failSafe = fail || function () {};
+            var settled = false;
+            var armed = false;
+            function succeed() {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                run();
+            }
+            function giveUp() {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                failSafe();
+            }
+            function watch() {
+                if (typeof Umanthir === "function") {
+                    succeed();
+                    return true;
+                }
+                var pending = window.tibiawiki && window.tibiawiki.umanthir;
+                if (!armed && pending && typeof pending.then === "function") {
+                    armed = true;
+                    pending.then(function () {
+                        if (typeof Umanthir === "function") {
+                            succeed();
+                        }
+                    }, giveUp);
+                }
+                return settled;
+            }
+            if (watch()) {
+                return;
+            }
+            var tries = 0;
+            var timer = setInterval(function () {
+                tries += 1;
+                if (watch() || settled) {
+                    clearInterval(timer);
+                    return;
+                }
+                if (tries >= 50) {
+                    clearInterval(timer);
+                    giveUp();
+                }
+            }, 100);
+            if (window.mw && mw.loader && typeof mw.loader.using === "function") {
+                mw.loader.using("site").then(watch, function () {});
+            }
+        }
+
+        function ensureClient() {
+            if (xpClient) {
+                return Promise.resolve(xpClient);
+            }
+            return new Promise(function (resolve, reject) {
+                whenUmanthir(function () {
+                    if (!xpClient) {
+                        xpClient = createClient();
+                    }
+                    if (!xpClient) {
+                        reject(new Error("sdk"));
+                        return;
+                    }
+                    resolve(xpClient);
+                }, function () {
+                    reject(new Error("sdk"));
+                });
+            });
+        }
+
+        function fieldSnapshot() {
+            return [
+                $("select#item").val(),
+                $("#quantidade").val(),
+                $("#level").val(),
+                $("#experience").val()
+            ].join("|");
+        }
+
+        function markStale() {
+            var output = document.querySelector(".xp-output");
+            if (!calculatedSnapshot || fieldSnapshot() === calculatedSnapshot || output.classList.contains("is-busy")) {
+                return;
+            }
+            output.classList.add("is-stale");
+            var status = document.getElementById("shard-status");
+            status.textContent = "Os dados mudaram. Clique em Calcular para atualizar.";
+            status.classList.remove("hide");
+        }
+
         function changeItem() {
             let item = $("select#item").val();
             let max = 80;
+            let experienceBox = document.getElementById("experience-box");
+            let splitLegend = document.getElementById("split-legend");
+            let itemHint = document.getElementById("item-hint");
+            let quantityHint = document.getElementById("quantity-hint");
             if (item == 2) {
                max = 1;
+               experienceBox.classList.add("hide");
+               splitLegend.classList.add("hide");
+               itemHint.textContent = "A pedra rende 100 vezes o level ao quadrado.";
+               quantityHint.textContent = "Só é possível usar 1 por ano.";
+            } else {
+               experienceBox.classList.remove("hide");
+               splitLegend.classList.remove("hide");
+               itemHint.textContent = "Cada shard rende 300 de experiência vezes o level.";
+               quantityHint.textContent = "Até 80 por ano.";
             }
             let input = document.getElementById("quantidade");
             input.setAttribute("max",max);
             input.value = 1;
+            clearResult();
+        }
+        function clearResult() {
+            shardToken += 1;
+            calculatedSnapshot = "";
+            setBusy(false);
+            document.querySelector(".xp-output").classList.remove("is-stale");
+            hideComponent($("#warning-label"));
+            showResultOnStart();
+            showComponent($("#shard-result"));
         }
         function managerStoneOfInsight() {
+            shardToken += 1;
+            setBusy(false);
             hideAllWarnings();
             
             let quantidade = $('#quantidade').val();
@@ -248,25 +468,237 @@
 
             if (quantidade >= 2) {
                 showComponent($('#shard-result'));
-                showComponent($('#warning-label'), "Mas atenção! Você só pode usar 1 stone por ano.");
+                showWarning("Só é possível usar 1 stone por ano.");
             } else {
                 showComponent($('#shard-result'));
                 hideComponent($('#warning-label'));
             }
         }
         function managerMidnightShards() {
-            hideAllWarnings();
-            let quantidade = $('#quantidade').val();
-            let level = $('#level').val();
-            let experience = ((300 * level) * quantidade);
-            showMessage(experience);
-            
-            (quantidade > 80) ? showComponent(('#warning-label'), "Mas atenção! Você só pode usar 80 shards por ano.") : hideComponent($('#warning-label'));
-
-            if (quantidade <= 0) {
+            let quantidade = Math.floor(Number($('#quantidade').val()));
+            let level = Math.floor(Number($('#level').val()));
+            if (!Number.isFinite(quantidade) || quantidade <= 0) {
+                shardToken += 1;
+                setBusy(false);
                 hideComponent($('#shard-result'));
                 hideComponent($('#warning-label'));
+                return;
             }
+            if (quantidade > 80) {
+                showWarning("Só é possível usar 80 shards por ano.");
+            } else {
+                hideComponent($('#warning-label'));
+            }
+            let currentExperience = readExperience();
+            if (currentExperience === null) {
+                shardToken += 1;
+                setBusy(false);
+                showTotal(300 * level * quantidade, "Informe a experiência atual para calcular a divisão que rende mais.");
+                return;
+            }
+            setBusy(true, "Calculando a entrega que rende mais…");
+            shardToken += 1;
+            let token = shardToken;
+            optimizeMidnightShards(currentExperience, quantidade, level).then(function (plan) {
+                if (token !== shardToken) {
+                    return;
+                }
+                setBusy(false);
+                renderShardPlan(plan);
+                markStale();
+            }).catch(function () {
+                if (token !== shardToken) {
+                    return;
+                }
+                setBusy(false);
+                showTotal(300 * level * quantidade, "Não foi possível consultar a experiência agora. O total considera todos os shards no level informado.");
+                markStale();
+            });
+        }
+
+        function readExperience() {
+            var digits = String($("#experience").val() || "").replace(/\D/g, "");
+            if (!digits) {
+                return null;
+            }
+            var value = Number(digits);
+            if (!Number.isSafeInteger(value) || value < 0) {
+                return null;
+            }
+            return value;
+        }
+
+        function thresholdFor(level) {
+            if (Object.prototype.hasOwnProperty.call(levelExperience, level)) {
+                return Promise.resolve(levelExperience[level]);
+            }
+            return xpClient.tools.experienceForLevel(level).then(function (data) {
+                levelExperience[level] = Number(data.experience);
+                return levelExperience[level];
+            });
+        }
+
+        function optimizeMidnightShards(currentExperience, quantidade, typedLevel) {
+            return ensureClient().then(function () {
+                return xpClient.tools.levelForExperience(currentExperience).then(function (position) {
+                    var level = Number(position.level);
+                    var xp = Number(position.experience);
+                    return spendShards(xp, level, quantidade).then(function (spent) {
+                        return xpClient.tools.levelForExperience(spent.finalXp).then(function (end) {
+                            return {
+                                startLevel: level,
+                                typedLevel: typedLevel,
+                                steps: spent.steps,
+                                total: spent.total,
+                                naive: 300 * level * quantidade,
+                                endLevel: Number(end.level)
+                            };
+                        });
+                    });
+                });
+            });
+        }
+
+        function spendShards(xp, level, shards) {
+            var steps = [];
+            var total = 0;
+            var guard = 0;
+
+            function next() {
+                if (shards <= 0 || guard > 200) {
+                    return Promise.resolve({ steps: steps, total: total, finalXp: xp });
+                }
+                guard += 1;
+                return thresholdFor(level + 1).then(function (nextLevelXp) {
+                    var need = nextLevelXp - xp;
+                    if (need <= 0) {
+                        level += 1;
+                        return next();
+                    }
+                    var perShard = 300 * level;
+                    var take = Math.ceil(need / perShard);
+                    var used = Math.min(take, shards);
+                    var gained = used * perShard;
+                    steps.push({ level: level, shards: used, xp: gained });
+                    total += gained;
+                    xp += gained;
+                    shards -= used;
+                    if (used === take) {
+                        level += 1;
+                    }
+                    return next();
+                });
+            }
+
+            return next();
+        }
+
+        function renderShardPlan(plan) {
+            var box = document.getElementById("shard-result");
+            box.replaceChildren();
+            box.append(resultKicker(), resultTotal(plan.total));
+            if (plan.typedLevel !== plan.startLevel) {
+                box.append(resultNote("Esse total de experiência corresponde ao level " + plan.startLevel + "."));
+            }
+            if (plan.steps.length > 1) {
+                var heading = document.createElement("p");
+                heading.className = "xp-section";
+                heading.textContent = "Entregue nesta ordem";
+                box.append(heading);
+                var list = document.createElement("ol");
+                list.className = "shard-plan";
+                plan.steps.forEach(function (step, index) {
+                    var item = document.createElement("li");
+                    var order = document.createElement("span");
+                    order.className = "shard-step-index";
+                    order.textContent = String(index + 1);
+                    var action = document.createElement("span");
+                    action.textContent = step.shards + " " + shardNoun(step.shards) + " no level " + step.level;
+                    var xp = document.createElement("span");
+                    xp.className = "shard-step-xp";
+                    xp.textContent = formatNumber(step.xp);
+                    item.append(order, action, xp);
+                    list.append(item);
+                });
+                box.append(list);
+                var extra = plan.total - plan.naive;
+                if (extra > 0) {
+                    var gain = document.createElement("p");
+                    gain.className = "xp-gain";
+                    gain.textContent = "Dividir a entrega rende " + formatNumber(extra) + " a mais do que entregar tudo no level " + plan.startLevel + " (" + formatNumber(plan.naive) + ").";
+                    box.append(gain);
+                }
+                if (plan.endLevel) {
+                    var end = document.createElement("p");
+                    end.className = "xp-end";
+                    end.textContent = "O personagem termina no level " + plan.endLevel + ".";
+                    box.append(end);
+                }
+            } else if (plan.steps.length === 1) {
+                var step = plan.steps[0];
+                var message = plan.endLevel > plan.startLevel
+                    ? "Entregue os " + step.shards + " " + shardNoun(step.shards) + " no level " + step.level + ". Isso leva o personagem ao level " + plan.endLevel + " e não sobra shard para o level seguinte."
+                    : "Entregue os " + step.shards + " " + shardNoun(step.shards) + " no level " + step.level + ". Essa quantidade ainda não alcança o próximo level.";
+                box.append(resultNote(message));
+            }
+        }
+
+        function showTotal(total, note) {
+            var box = document.getElementById("shard-result");
+            box.replaceChildren();
+            box.append(resultKicker(), resultTotal(total));
+            if (note) {
+                box.append(resultNote(note));
+            }
+        }
+
+        function resultKicker() {
+            var line = document.createElement("p");
+            line.className = "xp-kicker";
+            line.textContent = "Experiência recebida";
+            return line;
+        }
+
+        function resultTotal(total) {
+            var line = document.createElement("p");
+            line.className = "xp-total";
+            line.textContent = formatNumber(total);
+            return line;
+        }
+
+        function resultNote(text) {
+            var line = document.createElement("p");
+            line.className = "xp-note";
+            line.textContent = text;
+            return line;
+        }
+
+        function setBusy(busy, message) {
+            var output = document.querySelector(".xp-output");
+            var status = document.getElementById("shard-status");
+            output.classList.toggle("is-busy", busy);
+            document.getElementById("calcular").disabled = busy;
+            if (busy) {
+                status.textContent = message;
+                status.classList.remove("hide");
+            } else {
+                status.textContent = "";
+                status.classList.add("hide");
+            }
+        }
+
+        function showWarning(message) {
+            var warning = document.getElementById("warning-label");
+            warning.textContent = message;
+            warning.classList.remove("hide");
+        }
+
+        function shardNoun(count) {
+            return count === 1 ? "shard" : "shards";
+        }
+
+        function formatNumber(value) {
+            return Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
         function hideAllWarnings() {
@@ -284,6 +716,6 @@
             $(component).removeClass("hide");
         }
         function showMessage(experience) {
-            $('#shard-result').text('Você receberá ' + experience.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' de experiência.');
+            showTotal(Number(experience), "");
         }
 </script>

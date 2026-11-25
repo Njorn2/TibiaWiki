@@ -699,7 +699,91 @@
         "  Healing: 3,893,937"
     ].join("\n");
 
-    const client = typeof Umanthir === "function" ? new Umanthir() : null;
+    let client = null;
+
+    function createClient() {
+        if (typeof Umanthir !== "function") {
+            return null;
+        }
+        if (typeof window.UMANTHIR_KEY === "string" && window.UMANTHIR_KEY) {
+            return new Umanthir({ apiKey: window.UMANTHIR_KEY });
+        }
+        return new Umanthir();
+    }
+
+    function whenUmanthir(run, fail) {
+        const failSafe = fail || function () {};
+        let settled = false;
+        let armed = false;
+        function succeed() {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            run();
+        }
+        function giveUp() {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            failSafe();
+        }
+        function watch() {
+            if (typeof Umanthir === "function") {
+                succeed();
+                return true;
+            }
+            const pending = window.tibiawiki && window.tibiawiki.umanthir;
+            if (!armed && pending && typeof pending.then === "function") {
+                armed = true;
+                pending.then(function () {
+                    if (typeof Umanthir === "function") {
+                        succeed();
+                    }
+                }, giveUp);
+            }
+            return settled;
+        }
+        if (watch()) {
+            return;
+        }
+        let tries = 0;
+        const timer = setInterval(function () {
+            tries += 1;
+            if (watch() || settled) {
+                clearInterval(timer);
+                return;
+            }
+            if (tries >= 50) {
+                clearInterval(timer);
+                giveUp();
+            }
+        }, 100);
+        if (window.mw && mw.loader && typeof mw.loader.using === "function") {
+            mw.loader.using("site").then(watch, function () {});
+        }
+    }
+
+    function ensureClient() {
+        if (client) {
+            return Promise.resolve(client);
+        }
+        return new Promise(function (resolve, reject) {
+            whenUmanthir(function () {
+                if (!client) {
+                    client = createClient();
+                }
+                if (!client) {
+                    reject(new Error("sdk"));
+                    return;
+                }
+                resolve(client);
+            }, function () {
+                reject(new Error("sdk"));
+            });
+        });
+    }
     const partyTools = document.getElementById("party-tools");
     const partyMembers = document.getElementById("party-members");
     const savedAdjustments = {};
@@ -1827,12 +1911,9 @@
                 return;
             }
         }
-        if (!client) {
-            showMessage("Não foi possível carregar o SDK do Umanthir.", "share-error");
-            return;
-        }
         showLoading(true);
         try {
+            await ensureClient();
             const split = await client.tools.splitHunt(applyAdjustments(parsed.text, costs));
             if (token !== calcToken) {
                 return;

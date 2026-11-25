@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementar o catálogo HouseSpy</title>
+    <style>
+        body {
+            margin: 0;
+            background: #f6f6f6;
+            color: #202122;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        main {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 24px 16px 48px;
+        }
+        h1 {
+            font-size: 22px;
+            line-height: 1.3;
+            margin: 0 0 12px;
+        }
+        h2 {
+            font-size: 16px;
+            margin: 28px 0 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #a2a9b1;
+        }
+        code, textarea {
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 12px;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 0 4px;
+        }
+        textarea {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 180px;
+            margin: 8px 0;
+            padding: 10px;
+            border: 1px solid #a2a9b1;
+            border-radius: 5px;
+            background: #fff;
+            color: #000;
+            white-space: pre;
+            overflow: auto;
+        }
+        button {
+            min-height: 32px;
+            padding: 4px 12px;
+            border: 1px solid #8c2c10;
+            border-radius: 5px;
+            background: #c7451d;
+            color: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:focus-visible, textarea:focus-visible {
+            outline: 2px solid #1a1a1a;
+            outline-offset: 2px;
+        }
+        .note {
+            margin: 12px 0;
+            padding: 10px 12px;
+            border: 1px solid #a2a9b1;
+            border-left: 5px solid #c7451d;
+            border-radius: 5px;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Catálogo de casas com o HouseSpy</h1>
+    <p>Esta versão carrega a lista de casas da API, filtra por cidade e abre a planta no visualizador. O painel ao lado mostra preço, cidade, localização no mapa, tamanho, camas, andares e, quando a API enviar, o número de janelas. Ela não substitui o widget das páginas de casa.</p>
+    <p class="note">A API hoje não envia o número de janelas. A linha Janelas só aparece se esse campo vier no detalhe da casa. Preço é o aluguel em gp. A localização abre o mapa do Tibia Wiki nas coordenadas da entrada.</p>
+    <p>O SDK do Umanthir não vai neste bloco. O <code>MediaWiki:Common.js</code> carrega o script e expõe a promessa <code>tibiawiki.umanthir</code>. O widget espera o módulo <code>site</code> e essa promessa. A URL e o hash da versão ficam só no Common.js.</p>
+
+
+    <h2>1. Criar Widget:HouseSpyBrowser</h2>
+    <p>Abra <a href="https://www.tibiawiki.com.br/index.php?title=Widget:HouseSpyBrowser&amp;action=edit">Widget:HouseSpyBrowser</a> e cole o bloco abaixo no lugar de todo o conteúdo.</p>
+    <button type="button" data-copy="template-code">Copiar widget</button>
+    <textarea id="template-code" readonly rows="22">&lt;noinclude&gt;
+Catálogo HouseSpy. Cole este código só na página Widget:HouseSpyBrowser.
+&lt;/noinclude&gt;
+&lt;includeonly&gt;
+&lt;div class="house-browser"&gt;
+    &lt;form class="house-browser-filters" action="#" role="search"&gt;
+        &lt;label&gt;Cidade
+            &lt;select class="house-browser-city"&gt;
+                &lt;option value=""&gt;Todas as cidades&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/label&gt;
+        &lt;label&gt;Tipo
+            &lt;select class="house-browser-kind"&gt;
+                &lt;option value=""&gt;Casas e guildhalls&lt;/option&gt;
+                &lt;option value="house"&gt;Casas&lt;/option&gt;
+                &lt;option value="guildhall"&gt;Guildhalls&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/label&gt;
+        &lt;label&gt;Nome
+            &lt;input class="house-browser-query" type="search" placeholder="Filtrar pelo nome" autocomplete="off"&gt;
+        &lt;/label&gt;
+        &lt;p class="house-browser-count"&gt;Carregando casas…&lt;/p&gt;
+    &lt;/form&gt;
+    &lt;div class="house-browser-list" role="list" aria-label="Casas"&gt;&lt;/div&gt;
+    &lt;div class="house-browser-main"&gt;
+        &lt;div class="house-browser-stage"&gt;
+&lt;div
+    class="house-spy"
+    data-browse="true"
+    data-house=""
+    data-width="100%"
+    data-height="640"
+    role="region"
+    aria-label="Visualizador de casa"&gt;
+    &lt;div class="house-spy-bar"&gt;
+        &lt;p class="house-spy-name"&gt;Casa&lt;/p&gt;
+        &lt;p class="house-spy-meta"&gt;
+            &lt;span class="house-spy-floor" aria-live="polite"&gt;Escolha uma casa&lt;/span&gt;
+        &lt;/p&gt;
+        &lt;div class="house-spy-controls"&gt;
+            &lt;button type="button" class="house-spy-up"&gt;Subir&lt;/button&gt;
+            &lt;button type="button" class="house-spy-down"&gt;Descer&lt;/button&gt;
+            &lt;div class="house-spy-zoom-group" role="group" aria-label="Zoom"&gt;
+                &lt;button type="button" class="house-spy-zoom-out" aria-label="Diminuir zoom"&gt;−&lt;/button&gt;
+                &lt;span class="house-spy-zoom"&gt;100%&lt;/span&gt;
+                &lt;button type="button" class="house-spy-zoom-in" aria-label="Aumentar zoom"&gt;+&lt;/button&gt;
+                &lt;button type="button" class="house-spy-fit"&gt;Ajustar&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;p class="house-spy-hint"&gt;Arraste a planta para mover. A roda do mouse ou os botões ampliam e reduzem.&lt;/p&gt;
+    &lt;div class="house-spy-stage" tabindex="0" aria-label="Planta da casa. Arraste para mover."&gt;
+        &lt;div class="house-spy-canvas"&gt;&lt;/div&gt;
+        &lt;div class="house-spy-status" role="status"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="house-spy-floors" role="tablist" aria-label="Andares" hidden&gt;&lt;/div&gt;
+&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;aside class="house-browser-panel" aria-live="polite"&gt;
+            &lt;h2&gt;Dados da casa&lt;/h2&gt;
+            &lt;p&gt;Selecione uma casa para ver o preço, a cidade e a planta.&lt;/p&gt;
+        &lt;/aside&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;style&gt;
+    .house-browser {
+        box-sizing: border-box;
+        color: #000000;
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 13px;
+        line-height: 1.35;
+    }
+    .house-browser *,
+    .house-browser *::before,
+    .house-browser *::after {
+        box-sizing: border-box;
+    }
+    .house-browser-filters {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 8px 12px;
+        margin: 0 0 8px;
+    }
+    .house-browser-filters label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-weight: bold;
+    }
+    .house-browser-filters select,
+    .house-browser-filters input {
+        min-width: 220px;
+        min-height: 32px;
+        padding: 4px 8px;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        background: #ffffff;
+        color: #000000;
+        font: inherit;
+        font-weight: normal;
+    }
+    .house-browser-count {
+        margin: 0 0 6px;
+    }
+    .house-browser-main {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .house-browser-list,
+    .house-browser-panel {
+        overflow: auto;
+        border: 2px solid #a2a9b1;
+        border-radius: 5px;
+        background: #ffffff;
+    }
+    .house-browser-list {
+        max-height: 220px;
+        margin: 0 0 8px;
+    }
+    .house-browser-panel {
+        flex: 0 0 220px;
+        max-height: 640px;
+    }
+    .house-browser-stage {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    .house-browser-stage .house-spy {
+        width: 100%;
+        max-width: none;
+    }
+    .house-browser-house {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        width: 100%;
+        min-height: 44px;
+        padding: 8px;
+        border: 0;
+        border-bottom: 1px solid #eaecf0;
+        background: #ffffff;
+        color: #000000;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+    }
+    .house-browser-house:hover,
+    .house-browser-house[aria-pressed="true"] {
+        background: #f8e6df;
+    }
+    .house-browser-house[aria-pressed="true"] {
+        box-shadow: inset 4px 0 0 #c7451d;
+    }
+    .house-browser-house-name {
+        font-weight: bold;
+    }
+    .house-browser-house-meta {
+        color: #54595d;
+        font-size: 12px;
+    }
+    .house-browser-panel {
+        padding: 12px;
+    }
+    .house-browser-panel h2 {
+        margin: 0 0 12px;
+        color: #c7451d;
+        font-size: 16px;
+        line-height: 1.3;
+    }
+    .house-browser-panel p {
+        margin: 0;
+    }
+    .house-browser-panel dl {
+        margin: 0;
+    }
+    .house-browser-panel dt {
+        color: #54595d;
+        font-size: 12px;
+    }
+    .house-browser-panel dd {
+        margin: 0 0 10px;
+        font-weight: bold;
+    }
+    .house-browser-panel a {
+        color: #c7451d;
+    }
+    .house-browser-panel h2 a {
+        color: inherit;
+        text-decoration: underline;
+    }
+    @media (max-width: 560px) {
+        .house-browser-main {
+            flex-direction: column;
+        }
+        .house-browser-panel {
+            flex-basis: auto;
+            width: 100%;
+            max-height: none;
+        }
+    }
+&lt;/style&gt;
+&lt;style&gt;
+    .house-spy {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        min-width: 280px;
+        min-height: 240px;
+        border: 2px solid #a2a9b1;
+        border-radius: 5px;
+        background: #ffffff;
+        color: #000000;
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 13px;
+        line-height: 1.35;
+        overflow: hidden;
+    }
+    .house-spy *,
+    .house-spy *::before,
+    .house-spy *::after {
+        box-sizing: border-box;
+    }
+    .house-spy-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+        padding: 8px;
+        background: #c7451d;
+        color: #ffffff;
+    }
+    .house-spy-name,
+    .house-spy-meta,
+    .house-spy-hint {
+        margin: 0;
+    }
+    .house-spy-name {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+    .house-spy-meta {
+        flex: 1 1 140px;
+        min-width: 0;
+        font-size: 12px;
+    }
+    .house-spy-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-left: auto;
+    }
+    .house-spy button {
+        min-height: 32px;
+        padding: 4px 10px;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        background: #ffffff;
+        color: #1a1a1a;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 1.2;
+        cursor: pointer;
+    }
+    .house-spy-up,
+    .house-spy-down {
+        background: #ffffff;
+        color: #1a1a1a;
+        border-color: #ffffff;
+    }
+    .house-spy button:hover {
+        background: #eec1c1;
+    }
+    .house-spy-up:hover,
+    .house-spy-down:hover,
+    .house-spy-floor-button.is-active:hover {
+        background: #a83714;
+        color: #ffffff;
+        border-color: #8c2c10;
+    }
+    .house-spy button:active {
+        background: #f79797;
+    }
+    .house-spy button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+    .house-spy button:focus-visible,
+    .house-spy-stage:focus-visible {
+        outline: 2px solid #1a1a1a;
+        outline-offset: 2px;
+    }
+    .house-spy-zoom-group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .house-spy-zoom-out,
+    .house-spy-zoom-in {
+        min-width: 32px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .house-spy-zoom {
+        min-width: 48px;
+        color: #ffffff;
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+    }
+    .house-spy-hint {
+        padding: 6px 8px 0;
+        color: #333333;
+        font-size: 11px;
+    }
+    .house-spy-stage {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
+        margin: 8px;
+        overflow: hidden;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        background: transparent;
+        cursor: grab;
+        touch-action: none;
+    }
+    .house-spy-stage.is-panning {
+        cursor: grabbing;
+    }
+    .house-spy-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+    }
+    .house-spy img.house-spy-image {
+        position: absolute;
+        display: block;
+        width: auto !important;
+        height: auto !important;
+        max-width: none !important;
+        max-height: none !important;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        user-select: none;
+        -webkit-user-drag: none;
+        pointer-events: none;
+    }
+    .house-spy-status {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(17, 17, 17, 0.82);
+        color: #ffffff;
+        text-align: center;
+    }
+    .house-spy-status.is-visible {
+        display: flex;
+    }
+    .house-spy-status-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        max-width: 360px;
+    }
+    .house-spy-status p {
+        margin: 0;
+    }
+    .house-spy-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: house-spy-spin 0.8s linear infinite;
+    }
+    .house-spy-floors {
+        display: flex;
+        gap: 6px;
+        padding: 0 8px 8px;
+        overflow-x: auto;
+    }
+    .house-spy-floor-button {
+        flex: 0 0 auto;
+        font-weight: normal;
+        white-space: nowrap;
+    }
+    .house-spy-floor-button.is-active {
+        background: #c7451d;
+        color: #ffffff;
+        border-color: #8c2c10;
+        font-weight: bold;
+    }
+    @keyframes house-spy-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .house-spy-spinner {
+            animation: none;
+            border-top-color: rgba(255, 255, 255, 0.35);
+        }
+    }
+&lt;/style&gt;
+&lt;script&gt;
+    (function () {
+        var MAX_SCALE = 8;
+        var client = null;
+
+        whenUmanthir(startViewers, startViewers);
+
+        function startViewers() {
+            if (!client) {
+                client = createClient();
+            }
+            document.querySelectorAll(".house-spy").forEach(function (root) {
+                if (root.getAttribute("data-ready") === "true") {
+                    return;
+                }
+                root.setAttribute("data-ready", "true");
+                mount(root);
+            });
+        }
+
+        function createClient() {
+            if (typeof Umanthir !== "function") {
+                return null;
+            }
+            if (typeof window.UMANTHIR_KEY === "string" &amp;&amp; window.UMANTHIR_KEY) {
+                return new Umanthir({ apiKey: window.UMANTHIR_KEY });
+            }
+            return new Umanthir();
+        }
+
+        function whenUmanthir(run, fail) {
+            var failSafe = fail || function () {};
+            var settled = false;
+            var armed = false;
+            function succeed() {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                run();
+            }
+            function giveUp() {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                failSafe();
+            }
+            function watch() {
+                if (typeof Umanthir === "function") {
+                    succeed();
+                    return true;
+                }
+                var pending = window.tibiawiki &amp;&amp; window.tibiawiki.umanthir;
+                if (!armed &amp;&amp; pending &amp;&amp; typeof pending.then === "function") {
+                    armed = true;
+                    pending.then(function () {
+                        if (typeof Umanthir === "function") {
+                            succeed();
+                        }
+                    }, giveUp);
+                }
+                return settled;
+            }
+            if (watch()) {
+                return;
+            }
+            var tries = 0;
+            var timer = setInterval(function () {
+                tries += 1;
+                if (watch() || settled) {
+                    clearInterval(timer);
+                    return;
+                }
+                if (tries &gt;= 50) {
+                    clearInterval(timer);
+                    giveUp();
+                }
+            }, 100);
+            if (window.mw &amp;&amp; mw.loader &amp;&amp; typeof mw.loader.using === "function") {
+                mw.loader.using("site").then(watch, function () {});
+            }
+        }
+
+        function mount(root) {
+            var nameNode = root.querySelector(".house-spy-name");
+            var floorNode = root.querySelector(".house-spy-floor");
+            var upButton = root.querySelector(".house-spy-up");
+            var downButton = root.querySelector(".house-spy-down");
+            var zoomOutButton = root.querySelector(".house-spy-zoom-out");
+            var zoomInButton = root.querySelector(".house-spy-zoom-in");
+            var zoomNode = root.querySelector(".house-spy-zoom");
+            var fitButton = root.querySelector(".house-spy-fit");
+            var stage = root.querySelector(".house-spy-stage");
+            var canvas = root.querySelector(".house-spy-canvas");
+            var status = root.querySelector(".house-spy-status");
+            var floorsNode = root.querySelector(".house-spy-floors");
+            var state = {
+                slug: "",
+                name: "Casa",
+                floors: [],
+                index: 0,
+                surface: 7,
+                ground: 7,
+                step: { x: 32, y: 32 },
+                sizes: {},
+                urls: {},
+                pending: {},
+                scale: 1,
+                panX: 0,
+                panY: 0,
+                moved: false,
+                fitted: false,
+                token: 0,
+                drag: null
+            };
+
+            applySize(root);
+            upButton.addEventListener("click", function () {
+                stepFloor(-1);
+            });
+            downButton.addEventListener("click", function () {
+                stepFloor(1);
+            });
+            zoomOutButton.addEventListener("click", function () {
+                zoomBy(1 / 1.25);
+            });
+            zoomInButton.addEventListener("click", function () {
+                zoomBy(1.25);
+            });
+            fitButton.addEventListener("click", function () {
+                state.moved = false;
+                fit();
+            });
+            stage.addEventListener("pointerdown", onPointerDown);
+            stage.addEventListener("pointermove", onPointerMove);
+            stage.addEventListener("pointerup", endDrag);
+            stage.addEventListener("pointercancel", endDrag);
+            stage.addEventListener("wheel", onWheel, { passive: false });
+            stage.addEventListener("dblclick", function (event) {
+                event.preventDefault();
+                if (state.moved) {
+                    state.moved = false;
+                    fit();
+                    return;
+                }
+                zoomAt(event.clientX, event.clientY, 2);
+            });
+            root.addEventListener("keydown", onKeyDown);
+            if (typeof ResizeObserver === "function") {
+                var observer = new ResizeObserver(function () {
+                    if (!state.moved) {
+                        fit();
+                    }
+                });
+                observer.observe(stage);
+            }
+            root.addEventListener("housespy:open", function (event) {
+                var slug = event.detail &amp;&amp; typeof event.detail.slug === "string"
+                    ? event.detail.slug.trim()
+                    : "";
+                if (!slug || slug === state.slug) {
+                    return;
+                }
+                root.setAttribute("data-house", slug);
+                loadHouse();
+            });
+            loadHouse();
+
+            function loadHouse() {
+                state.token += 1;
+                var token = state.token;
+                state.slug = resolveSlug(root);
+                state.floors = [];
+                state.ground = 7;
+                state.fitted = false;
+                state.moved = false;
+                canvas.replaceChildren();
+                floorsNode.replaceChildren();
+                floorsNode.hidden = true;
+                upButton.hidden = true;
+                downButton.hidden = true;
+                setBusy(true);
+                if (!state.slug) {
+                    if (root.getAttribute("data-browse") === "true") {
+                        setBusy(false);
+                        hideStatus();
+                        nameNode.textContent = "Casa";
+                        floorNode.textContent = "Escolha uma casa";
+                        return;
+                    }
+                    showError("Informe a casa em data-house, ou abra o visualizador na página da casa.");
+                    return;
+                }
+                if (!client) {
+                    showError("Não foi possível carregar o SDK do Umanthir.");
+                    return;
+                }
+                showStatus("Carregando a casa…", true);
+                client.wiki.house(state.slug).then(function (assembly) {
+                    if (token !== state.token) {
+                        return;
+                    }
+                    var floors = readFloors(assembly);
+                    root.dispatchEvent(new CustomEvent("housespy:loaded", {
+                        bubbles: true,
+                        detail: {
+                            slug: state.slug,
+                            assembly: assembly
+                        }
+                    }));
+                    if (floors.length === 0) {
+                        showError("Esta casa não tem andares publicados.");
+                        return;
+                    }
+                    state.floors = floors;
+                    state.name = readName(assembly, state.slug);
+                    state.surface = readSurface(assembly);
+                    state.ground = readGround(assembly);
+                    state.step = readStep(assembly);
+                    state.index = indexOfFloor(floors, initialFloor(root, floors, assembly));
+                    nameNode.textContent = state.name;
+                    renderFloorButtons();
+                    showFloor(state.index, token);
+                    floors.forEach(function (floor) {
+                        if (floor.z !== state.floors[state.index].z) {
+                            floorUrl(floor.z).catch(function () {});
+                        }
+                    });
+                }).catch(function (error) {
+                    if (token !== state.token) {
+                        return;
+                    }
+                    showLoadError(error);
+                });
+            }
+
+            function showFloor(index) {
+                var floor = state.floors[index];
+                if (!floor) {
+                    return;
+                }
+                var slug = state.slug;
+                state.index = index;
+                var token = ++state.token;
+                updateChrome();
+                if (!state.urls[cacheKey(floor.z)]) {
+                    showStatus("Carregando andar…", true);
+                }
+                revealFloor(floor, slug, token, true);
+                stackedFloors().slice(1).forEach(function (below) {
+                    revealFloor(below, slug, token, false);
+                });
+            }
+
+            function revealFloor(floor, slug, token, primary) {
+                floorUrl(floor.z).then(function (url) {
+                    if (token !== state.token || slug !== state.slug) {
+                        return;
+                    }
+                    var probe = new Image();
+                    probe.onload = function () {
+                        if (token !== state.token || slug !== state.slug) {
+                            return;
+                        }
+                        state.sizes[cacheKey(floor.z)] = {
+                            width: probe.naturalWidth,
+                            height: probe.naturalHeight
+                        };
+                        syncLayers();
+                        if (primary) {
+                            if (!state.fitted) {
+                                fit();
+                            } else {
+                                render();
+                            }
+                            hideStatus();
+                            updateChrome();
+                            return;
+                        }
+                        if (!state.moved) {
+                            fit();
+                        } else {
+                            render();
+                        }
+                    };
+                    probe.onerror = function () {
+                        if (token !== state.token || !primary) {
+                            return;
+                        }
+                        showError("Não foi possível ler a imagem deste andar.");
+                    };
+                    probe.src = url;
+                }).catch(function (error) {
+                    if (token !== state.token || slug !== state.slug || !primary) {
+                        return;
+                    }
+                    showLoadError(error);
+                });
+            }
+
+            function stackedFloors() {
+                var stack = state.floors.slice(state.index);
+                var limit = stack.length;
+                var i;
+                for (i = 0; i &lt; stack.length; i++) {
+                    if (stack[i].z === 7) {
+                        limit = i + 1;
+                        break;
+                    }
+                }
+                return stack.slice(0, limit);
+            }
+
+            function syncLayers() {
+                var top = state.floors[state.index];
+                var ordered = stackedFloors().reverse();
+                var visible = {};
+                ordered.forEach(function (floor) {
+                    var key = cacheKey(floor.z);
+                    var url = state.urls[key];
+                    if (!url || !state.sizes[key]) {
+                        return;
+                    }
+                    visible[floor.z] = true;
+                    var layer = canvas.querySelector('img[data-z="' + floor.z + '"]');
+                    if (!layer) {
+                        layer = document.createElement("img");
+                        layer.className = "house-spy-image";
+                        layer.draggable = false;
+                        layer.alt = "";
+                        layer.setAttribute("data-z", String(floor.z));
+                    }
+                    if (layer.getAttribute("src") !== url) {
+                        layer.src = url;
+                    }
+                    var offset = offsetFor(floor.z);
+                    layer.style.left = offset.x + "px";
+                    layer.style.top = offset.y + "px";
+                    layer.alt = floor === top
+                        ? "Planta de " + state.name + ", " + floorLabel(floor).toLowerCase()
+                        : "";
+                    canvas.append(layer);
+                });
+                Array.prototype.forEach.call(canvas.querySelectorAll("img"), function (layer) {
+                    if (!visible[layer.getAttribute("data-z")]) {
+                        layer.remove();
+                    }
+                });
+            }
+
+            function floorUrl(z) {
+                var slug = state.slug;
+                var key = slug + ":" + z;
+                if (state.urls[key]) {
+                    return Promise.resolve(state.urls[key]);
+                }
+                if (state.pending[key]) {
+                    return state.pending[key];
+                }
+                state.pending[key] = client.wiki.houseFloor(slug, z).then(function (bytes) {
+                    var url = URL.createObjectURL(new Blob([bytes], { type: "image/png" }));
+                    if (slug === state.slug) {
+                        state.urls[key] = url;
+                    } else {
+                        URL.revokeObjectURL(url);
+                    }
+                    delete state.pending[key];
+                    return url;
+                }, function (error) {
+                    delete state.pending[key];
+                    throw error;
+                });
+                return state.pending[key];
+            }
+
+            function cacheKey(z) {
+                return state.slug + ":" + z;
+            }
+
+            function stepFloor(direction) {
+                var next = state.index + direction;
+                if (next &lt; 0 || next &gt;= state.floors.length) {
+                    return;
+                }
+                showFloor(next);
+            }
+
+            function renderFloorButtons() {
+                floorsNode.replaceChildren();
+                var several = state.floors.length &gt; 1;
+                floorsNode.hidden = !several;
+                upButton.hidden = !several;
+                downButton.hidden = !several;
+                floorButtonOrder().forEach(function (item) {
+                    var button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "house-spy-floor-button";
+                    button.setAttribute("role", "tab");
+                    button.dataset.index = String(item.index);
+                    button.textContent = groundLabel(item.floor.z);
+                    button.title = floorLabel(item.floor);
+                    button.addEventListener("click", function () {
+                        showFloor(item.index);
+                    });
+                    floorsNode.append(button);
+                });
+            }
+
+            function updateChrome() {
+                var floor = state.floors[state.index];
+                floorNode.textContent = floor
+                    ? floorLabel(floor) + " · z " + floor.z + " · " + (state.index + 1) + " de " + state.floors.length
+                    : "Sem andar";
+                upButton.disabled = state.index &lt;= 0;
+                downButton.disabled = state.index &lt; 0 || state.index &gt;= state.floors.length - 1;
+                var buttons = floorsNode.querySelectorAll(".house-spy-floor-button");
+                buttons.forEach(function (button) {
+                    var active = Number(button.dataset.index) === state.index;
+                    button.classList.toggle("is-active", active);
+                    button.setAttribute("aria-selected", active ? "true" : "false");
+                    button.tabIndex = active ? 0 : -1;
+                });
+                stage.setAttribute("aria-label", floor
+                    ? "Planta de " + state.name + ", " + floorLabel(floor) + ". Arraste para mover."
+                    : "Planta da casa. Arraste para mover.");
+            }
+
+            function floorLabel(floor) {
+                var place = floor.place || "";
+                var match = /^(\d+)_(above|below)$/.exec(place);
+                if (place === "surface") {
+                    return "Superfície";
+                }
+                if (match) {
+                    return relativeLabel(Number(match[1]), match[2] === "above");
+                }
+                var delta = state.surface - floor.z;
+                if (delta === 0) {
+                    return "Superfície";
+                }
+                return relativeLabel(Math.abs(delta), delta &gt; 0);
+            }
+
+            function relativeLabel(count, above) {
+                var noun = count === 1 ? "andar" : "andares";
+                return count + " " + noun + (above ? " acima" : " abaixo");
+            }
+
+            function groundLabel(z) {
+                var delta = state.ground - z;
+                if (delta === 0) {
+                    return "entrada";
+                }
+                return (delta &gt; 0 ? "+" : "") + delta;
+            }
+
+            function floorButtonOrder() {
+                return state.floors.map(function (floor, index) {
+                    return { floor: floor, index: index };
+                }).sort(function (a, b) {
+                    return b.floor.z - a.floor.z;
+                });
+            }
+
+            function offsetFor(z) {
+                var anchor = state.floors[state.floors.length - 1];
+                if (!anchor) {
+                    return { x: 0, y: 0 };
+                }
+                var levelsAbove = anchor.z - z;
+                return {
+                    x: -levelsAbove * state.step.x,
+                    y: -levelsAbove * state.step.y
+                };
+            }
+
+            function stackBounds() {
+                var left = Infinity;
+                var top = Infinity;
+                var right = -Infinity;
+                var bottom = -Infinity;
+                var any = false;
+                stackedFloors().forEach(function (floor) {
+                    var size = state.sizes[cacheKey(floor.z)];
+                    if (!size) {
+                        return;
+                    }
+                    var offset = offsetFor(floor.z);
+                    any = true;
+                    left = Math.min(left, offset.x);
+                    top = Math.min(top, offset.y);
+                    right = Math.max(right, offset.x + size.width);
+                    bottom = Math.max(bottom, offset.y + size.height);
+                });
+                if (!any) {
+                    return null;
+                }
+                return {
+                    x: left,
+                    y: top,
+                    width: right - left,
+                    height: bottom - top
+                };
+            }
+
+            function render() {
+                canvas.style.transform = "translate(" + state.panX + "px, " + state.panY + "px) scale(" + state.scale + ")";
+                zoomNode.textContent = Math.round(state.scale * 100) + "%";
+            }
+
+            function fit() {
+                var bounds = stackBounds();
+                var rect = stage.getBoundingClientRect();
+                if (!bounds || rect.width &lt; 2 || rect.height &lt; 2) {
+                    return false;
+                }
+                var padding = 12;
+                var fitted = Math.min(
+                    (rect.width - padding) / bounds.width,
+                    (rect.height - padding) / bounds.height
+                );
+                var limits = scaleBounds(fitted);
+                state.scale = clamp(fitted, limits.min, limits.max);
+                state.panX = (rect.width - bounds.width * state.scale) / 2 - bounds.x * state.scale;
+                state.panY = (rect.height - bounds.height * state.scale) / 2 - bounds.y * state.scale;
+                state.fitted = true;
+                render();
+                return true;
+            }
+
+            function zoomBy(factor) {
+                var rect = stage.getBoundingClientRect();
+                zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, factor);
+            }
+
+            function zoomAt(clientX, clientY, factor) {
+                var floor = state.floors[state.index];
+                var size = floor &amp;&amp; state.sizes[cacheKey(floor.z)];
+                if (!size) {
+                    return;
+                }
+                var rect = stage.getBoundingClientRect();
+                var offset = offsetFor(floor.z);
+                var px = clientX - rect.left;
+                var py = clientY - rect.top;
+                var originX = state.panX + offset.x * state.scale;
+                var originY = state.panY + offset.y * state.scale;
+                var localX = (px - originX) / state.scale;
+                var localY = (py - originY) / state.scale;
+                var fitted = Math.min(rect.width / size.width, rect.height / size.height);
+                var bounds = scaleBounds(fitted);
+                var next = clamp(state.scale * factor, bounds.min, bounds.max);
+                state.scale = next;
+                state.panX = px - offset.x * next - localX * next;
+                state.panY = py - offset.y * next - localY * next;
+                state.moved = true;
+                render();
+            }
+
+            function scaleBounds(fitted) {
+                var safeFit = Number.isFinite(fitted) &amp;&amp; fitted &gt; 0 ? fitted : 1;
+                return {
+                    min: Math.max(0.05, Math.min(0.25, safeFit)),
+                    max: Math.max(MAX_SCALE, safeFit)
+                };
+            }
+
+            function onPointerDown(event) {
+                if (event.button !== 0 || !state.sizes[cacheKey(currentZ())]) {
+                    return;
+                }
+                state.drag = {
+                    id: event.pointerId,
+                    x: event.clientX,
+                    y: event.clientY,
+                    panX: state.panX,
+                    panY: state.panY
+                };
+                stage.classList.add("is-panning");
+                stage.setPointerCapture(event.pointerId);
+            }
+
+            function onPointerMove(event) {
+                if (!state.drag || state.drag.id !== event.pointerId) {
+                    return;
+                }
+                var dx = event.clientX - state.drag.x;
+                var dy = event.clientY - state.drag.y;
+                state.panX = state.drag.panX + dx;
+                state.panY = state.drag.panY + dy;
+                if (Math.abs(dx) + Math.abs(dy) &gt;= 3) {
+                    state.moved = true;
+                }
+                render();
+            }
+
+            function endDrag(event) {
+                if (!state.drag || state.drag.id !== event.pointerId) {
+                    return;
+                }
+                state.drag = null;
+                stage.classList.remove("is-panning");
+            }
+
+            function onWheel(event) {
+                if (!state.sizes[cacheKey(currentZ())]) {
+                    return;
+                }
+                event.preventDefault();
+                zoomAt(event.clientX, event.clientY, event.deltaY &lt; 0 ? 1.15 : 1 / 1.15);
+            }
+
+            function onKeyDown(event) {
+                var target = event.target;
+                if (target &amp;&amp; (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+                    return;
+                }
+                if (event.key === "ArrowUp" || event.key === "PageUp") {
+                    event.preventDefault();
+                    stepFloor(-1);
+                } else if (event.key === "ArrowDown" || event.key === "PageDown") {
+                    event.preventDefault();
+                    stepFloor(1);
+                } else if (event.key === "+" || event.key === "=") {
+                    event.preventDefault();
+                    zoomBy(1.25);
+                } else if (event.key === "-" || event.key === "_") {
+                    event.preventDefault();
+                    zoomBy(1 / 1.25);
+                } else if (event.key === "0" || event.key === "Home") {
+                    event.preventDefault();
+                    state.moved = false;
+                    fit();
+                }
+            }
+
+            function currentZ() {
+                var floor = state.floors[state.index];
+                return floor ? floor.z : null;
+            }
+
+            function setBusy(busy) {
+                upButton.disabled = busy;
+                downButton.disabled = busy;
+                zoomInButton.disabled = busy;
+                zoomOutButton.disabled = busy;
+                fitButton.disabled = busy;
+            }
+
+            function showStatus(message, spinner) {
+                status.classList.add("is-visible");
+                status.replaceChildren();
+                var card = document.createElement("div");
+                card.className = "house-spy-status-card";
+                if (spinner) {
+                    var spin = document.createElement("div");
+                    spin.className = "house-spy-spinner";
+                    spin.setAttribute("aria-hidden", "true");
+                    card.append(spin);
+                }
+                var paragraph = document.createElement("p");
+                paragraph.textContent = message;
+                card.append(paragraph);
+                status.append(card);
+                floorNode.textContent = message;
+            }
+
+            function hideStatus() {
+                status.classList.remove("is-visible");
+                status.replaceChildren();
+                setBusy(false);
+            }
+
+            function showError(message, action, actionLabel) {
+                setBusy(true);
+                zoomInButton.disabled = true;
+                zoomOutButton.disabled = true;
+                fitButton.disabled = true;
+                status.classList.add("is-visible");
+                status.replaceChildren();
+                var card = document.createElement("div");
+                card.className = "house-spy-status-card";
+                var paragraph = document.createElement("p");
+                paragraph.textContent = message;
+                card.append(paragraph);
+                var retry = document.createElement("button");
+                retry.type = "button";
+                retry.textContent = actionLabel || "Tentar de novo";
+                retry.addEventListener("click", action || loadHouse);
+                card.append(retry);
+                status.append(card);
+                floorNode.textContent = message;
+            }
+
+            function showLoadError(error) {
+                if (error instanceof Umanthir.GoneError &amp;&amp; error.replacedBy) {
+                    var renamed = error.replacedBy;
+                    showError("Esta casa foi renomeada no cliente.", function () {
+                        root.setAttribute("data-house", renamed);
+                        loadHouse();
+                    }, "Abrir nome atual");
+                    return;
+                }
+                showError(describeError(error));
+            }
+        }
+
+        function applySize(root) {
+            root.style.width = cssSize(root.getAttribute("data-width"), "720");
+            root.style.height = cssSize(root.getAttribute("data-height"), "480");
+        }
+
+        function cssSize(value, fallback) {
+            var raw = String(value || "").trim() || fallback;
+            if (/^-?\d+(\.\d+)?$/.test(raw)) {
+                return raw + "px";
+            }
+            return raw;
+        }
+
+        function resolveSlug(root) {
+            var explicit = String(root.getAttribute("data-house") || "").trim().toLowerCase();
+            if (explicit) {
+                return slugify(explicit);
+            }
+            if (root.getAttribute("data-browse") === "true") {
+                return "";
+            }
+            var pageName = "";
+            if (window.mw &amp;&amp; window.mw.config &amp;&amp; typeof window.mw.config.get === "function") {
+                var configured = window.mw.config.get("wgPageName");
+                if (typeof configured === "string" &amp;&amp; configured.indexOf(":") === -1) {
+                    pageName = configured.replace(/_/g, " ");
+                }
+            }
+            if (!pageName) {
+                pageName = document.title.split(" - ")[0].trim();
+            }
+            if (!pageName || pageName.toLowerCase() === "housespy") {
+                return "";
+            }
+            return slugify(pageName);
+        }
+
+        function decodeEntities(value) {
+            var named = { amp: "&amp;", apos: "'", quot: "\"", lt: "&lt;", gt: "&gt;" };
+            var current = String(value);
+            var guard = 0;
+            while (guard &lt; 3) {
+                var next = current
+                    .replace(/&amp;#(\d+);/g, function (match, code) {
+                        var point = Number(code);
+                        return point &gt; 0 &amp;&amp; point &lt;= 65535 ? String.fromCharCode(point) : match;
+                    })
+                    .replace(/&amp;#x([\da-f]+);/gi, function (match, hex) {
+                        var point = parseInt(hex, 16);
+                        return point &gt; 0 &amp;&amp; point &lt;= 65535 ? String.fromCharCode(point) : match;
+                    })
+                    .replace(/&amp;([a-z]+);/gi, function (match, name) {
+                        var key = name.toLowerCase();
+                        return Object.prototype.hasOwnProperty.call(named, key) ? named[key] : match;
+                    });
+                if (next === current) {
+                    break;
+                }
+                current = next;
+                guard += 1;
+            }
+            return current;
+        }
+
+        function slugify(name) {
+            var value = decodeEntities(name).normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+            value = value.toLowerCase().replace(/['’]/g, "-");
+            value = value.replace(/[^a-z0-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+            return value;
+        }
+
+        function readFloors(assembly) {
+            var list = assembly &amp;&amp; Array.isArray(assembly.floors) ? assembly.floors : [];
+            var seen = {};
+            var floors = [];
+            list.forEach(function (floor) {
+                var z = Number(floor &amp;&amp; floor.z);
+                if (!Number.isInteger(z) || z &lt; 0 || z &gt; 15 || seen[z]) {
+                    return;
+                }
+                seen[z] = true;
+                floors.push({
+                    z: z,
+                    place: typeof floor.place === "string" ? floor.place : ""
+                });
+            });
+            floors.sort(function (a, b) {
+                return a.z - b.z;
+            });
+            return floors;
+        }
+
+        function readName(assembly, slug) {
+            var house = assembly &amp;&amp; assembly.house;
+            if (house &amp;&amp; typeof house.name === "string" &amp;&amp; house.name.trim()) {
+                return house.name.trim();
+            }
+            return slug;
+        }
+
+        function readGround(assembly) {
+            var house = assembly &amp;&amp; assembly.house;
+            var entrance = Number(house &amp;&amp; house.entrance &amp;&amp; house.entrance.z);
+            if (Number.isInteger(entrance) &amp;&amp; entrance &gt;= 0 &amp;&amp; entrance &lt;= 15) {
+                return entrance;
+            }
+            return 7;
+        }
+
+        function readSurface(assembly) {
+            var meta = assembly &amp;&amp; assembly.assembly;
+            var surface = Number(meta &amp;&amp; meta.surface_floor);
+            return Number.isFinite(surface) ? surface : 7;
+        }
+
+        function readStep(assembly) {
+            var meta = assembly &amp;&amp; assembly.assembly;
+            var step = meta &amp;&amp; meta.lower_floor_offset;
+            var x = Number(step &amp;&amp; step.x);
+            var y = Number(step &amp;&amp; step.y);
+            return {
+                x: Number.isFinite(x) ? x : 32,
+                y: Number.isFinite(y) ? y : 32
+            };
+        }
+
+        function initialFloor(root, floors, assembly) {
+            var requested = Number(root.getAttribute("data-floor"));
+            if (floors.some(function (floor) { return floor.z === requested; })) {
+                return requested;
+            }
+            var house = assembly &amp;&amp; assembly.house;
+            var entrance = Number(house &amp;&amp; house.entrance &amp;&amp; house.entrance.z);
+            if (floors.some(function (floor) { return floor.z === entrance; })) {
+                return entrance;
+            }
+            var surface = readSurface(assembly);
+            if (floors.some(function (floor) { return floor.z === surface; })) {
+                return surface;
+            }
+            return floors.slice().sort(function (a, b) {
+                return Math.abs(a.z - 7) - Math.abs(b.z - 7);
+            })[0].z;
+        }
+
+        function indexOfFloor(floors, z) {
+            var index = floors.findIndex(function (floor) {
+                return floor.z === z;
+            });
+            return index &gt;= 0 ? index : 0;
+        }
+
+        function describeError(error) {
+            if (!client || typeof Umanthir !== "function") {
+                return "Não foi possível carregar o SDK do Umanthir.";
+            }
+            if (error instanceof Umanthir.NotFoundError) {
+                return "Não há planta publicada para esta casa.";
+            }
+            if (error instanceof Umanthir.GoneError) {
+                return "Esta casa não está mais no cliente.";
+            }
+            if (error instanceof Umanthir.BadRequestError) {
+                return "O identificador da casa não é válido.";
+            }
+            if (error instanceof Umanthir.RateLimitError) {
+                var wait = error.retryAfter ? " Tente novamente em " + error.retryAfter + " s." : "";
+                return "Limite de consultas do Umanthir atingido." + wait;
+            }
+            if (error instanceof Umanthir.TimeoutError) {
+                return "A consulta ao Umanthir demorou demais. Tente de novo.";
+            }
+            if (error instanceof Umanthir.ConnectionError) {
+                return "Não foi possível conectar à API do Umanthir.";
+            }
+            if (error instanceof Umanthir.ServiceUnavailableError) {
+                return "As plantas das casas estão indisponíveis no momento.";
+            }
+            if (error instanceof Umanthir.APIError &amp;&amp; error.apiMessage) {
+                return error.apiMessage;
+            }
+            return "Erro ao consultar o Umanthir.";
+        }
+
+        function clamp(value, min, max) {
+            return Math.min(max, Math.max(min, value));
+        }
+    }());
+&lt;/script&gt;
+&lt;script&gt;
+(function () {
+    var root = document.querySelector(".house-browser");
+    if (!root || root.getAttribute("data-ready") === "true") {
+        return;
+    }
+    root.setAttribute("data-ready", "true");
+
+    var viewer = root.querySelector(".house-spy");
+    var citySelect = root.querySelector(".house-browser-city");
+    var kindSelect = root.querySelector(".house-browser-kind");
+    var queryInput = root.querySelector(".house-browser-query");
+    var list = root.querySelector(".house-browser-list");
+    var countNode = root.querySelector(".house-browser-count");
+    var panel = root.querySelector(".house-browser-panel");
+    var houses = [];
+    var selected = "";
+    var client = null;
+
+    whenUmanthir(startCatalog, startCatalog);
+
+    function startCatalog() {
+        if (!client) {
+            client = createClient();
+        }
+        root.querySelector(".house-browser-filters").addEventListener("submit", function (event) {
+            event.preventDefault();
+        });
+        citySelect.addEventListener("change", renderList);
+        kindSelect.addEventListener("change", renderList);
+        queryInput.addEventListener("input", renderList);
+        viewer.addEventListener("housespy:loaded", function (event) {
+            var detail = event.detail || {};
+            if (detail.slug &amp;&amp; selected &amp;&amp; detail.slug !== selected) {
+                return;
+            }
+            fillPanel(detailsFrom(detail.assembly));
+        });
+        showEmpty();
+        loadHouses();
+    }
+
+    function createClient() {
+        if (typeof Umanthir !== "function") {
+            return null;
+        }
+        if (typeof window.UMANTHIR_KEY === "string" &amp;&amp; window.UMANTHIR_KEY) {
+            return new Umanthir({ apiKey: window.UMANTHIR_KEY });
+        }
+        return new Umanthir();
+    }
+
+    function whenUmanthir(run, fail) {
+        var failSafe = fail || function () {};
+        var settled = false;
+        var armed = false;
+        function succeed() {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            run();
+        }
+        function giveUp() {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            failSafe();
+        }
+        function watch() {
+            if (typeof Umanthir === "function") {
+                succeed();
+                return true;
+            }
+            var pending = window.tibiawiki &amp;&amp; window.tibiawiki.umanthir;
+            if (!armed &amp;&amp; pending &amp;&amp; typeof pending.then === "function") {
+                armed = true;
+                pending.then(function () {
+                    if (typeof Umanthir === "function") {
+                        succeed();
+                    }
+                }, giveUp);
+            }
+            return settled;
+        }
+        if (watch()) {
+            return;
+        }
+        var tries = 0;
+        var timer = setInterval(function () {
+            tries += 1;
+            if (watch() || settled) {
+                clearInterval(timer);
+                return;
+            }
+            if (tries &gt;= 50) {
+                clearInterval(timer);
+                giveUp();
+            }
+        }, 100);
+        if (window.mw &amp;&amp; mw.loader &amp;&amp; typeof mw.loader.using === "function") {
+            mw.loader.using("site").then(watch, function () {});
+        }
+    }
+
+    function loadHouses() {
+        if (!client) {
+            countNode.textContent = "Não foi possível carregar o SDK do Umanthir.";
+            return;
+        }
+        countNode.textContent = "Carregando casas…";
+        client.wiki.houses().then(function (payload) {
+            var rows = payload &amp;&amp; Array.isArray(payload.houses) ? payload.houses : [];
+            houses = rows.slice().sort(function (a, b) {
+                return String(a.name || "").localeCompare(String(b.name || ""), "pt");
+            });
+            fillCities();
+            renderList();
+        }).catch(function () {
+            countNode.textContent = "Não foi possível carregar a lista de casas.";
+        });
+    }
+
+    function fillCities() {
+        var current = citySelect.value;
+        var seen = {};
+        var names = [];
+        houses.forEach(function (house) {
+            var town = String(house.town || "").trim();
+            if (!town || seen[town]) {
+                return;
+            }
+            seen[town] = true;
+            names.push(town);
+        });
+        names.sort(function (a, b) {
+            return a.localeCompare(b, "pt");
+        });
+        citySelect.replaceChildren();
+        var all = document.createElement("option");
+        all.value = "";
+        all.textContent = "Todas as cidades";
+        citySelect.append(all);
+        names.forEach(function (town) {
+            var option = document.createElement("option");
+            option.value = town;
+            option.textContent = town;
+            citySelect.append(option);
+        });
+        if (current &amp;&amp; seen[current]) {
+            citySelect.value = current;
+        }
+    }
+
+    function visibleHouses() {
+        var town = citySelect.value;
+        var kind = kindSelect.value;
+        var query = queryInput.value.trim().toLocaleLowerCase("pt");
+        return houses.filter(function (house) {
+            if (town &amp;&amp; house.town !== town) {
+                return false;
+            }
+            if (kind === "guildhall" &amp;&amp; !house.guildhall) {
+                return false;
+            }
+            if (kind === "house" &amp;&amp; house.guildhall) {
+                return false;
+            }
+            if (!query) {
+                return true;
+            }
+            return String(house.name || "").toLocaleLowerCase("pt").indexOf(query) !== -1;
+        });
+    }
+
+    function countLabel(total) {
+        if (kindSelect.value === "guildhall") {
+            return total + (total === 1 ? " guildhall" : " guildhalls");
+        }
+        return total + (total === 1 ? " casa" : " casas");
+    }
+
+    function renderList() {
+        var rows = visibleHouses();
+        list.replaceChildren();
+        countNode.textContent = countLabel(rows.length);
+        if (rows.length === 0) {
+            var empty = document.createElement("p");
+            empty.className = "house-browser-house-meta";
+            empty.style.padding = "8px";
+            empty.textContent = "Nenhum resultado com esse filtro.";
+            list.append(empty);
+            return;
+        }
+        rows.forEach(function (house) {
+            var button = document.createElement("button");
+            button.type = "button";
+            button.className = "house-browser-house";
+            button.setAttribute("role", "listitem");
+            button.setAttribute("aria-pressed", house.slug === selected ? "true" : "false");
+            var name = document.createElement("span");
+            name.className = "house-browser-house-name";
+            name.textContent = house.name || house.slug || "Casa";
+            var meta = document.createElement("span");
+            meta.className = "house-browser-house-meta";
+            var bits = [];
+            if (house.town) {
+                bits.push(house.town);
+            }
+            if (house.guildhall) {
+                bits.push("Guildhall");
+            }
+            if (Number.isFinite(Number(house.rent))) {
+                bits.push(formatGold(house.rent));
+            }
+            meta.textContent = bits.join(" · ");
+            button.append(name, meta);
+            button.addEventListener("click", function () {
+                openHouse(house);
+            });
+            list.append(button);
+        });
+    }
+
+    function openHouse(house) {
+        if (!house || typeof house.slug !== "string" || !house.slug) {
+            return;
+        }
+        selected = house.slug;
+        renderList();
+        var selectedButton = list.querySelector('[aria-pressed="true"]');
+        if (selectedButton &amp;&amp; typeof selectedButton.scrollIntoView === "function") {
+            selectedButton.scrollIntoView({ block: "nearest" });
+        }
+        fillPanel({
+            name: house.name,
+            town: house.town,
+            rent: house.rent,
+            floors: Array.isArray(house.floors) ? house.floors.length : null
+        });
+        viewer.dispatchEvent(new CustomEvent("housespy:open", {
+            detail: { slug: house.slug }
+        }));
+    }
+
+    function detailsFrom(assembly) {
+        var house = assembly &amp;&amp; assembly.house ? assembly.house : {};
+        var entrance = house.entrance || {};
+        var floorCount = assembly &amp;&amp; Array.isArray(assembly.floors) ? assembly.floors.length : null;
+        if (!floorCount &amp;&amp; assembly &amp;&amp; assembly.box &amp;&amp; Number.isFinite(Number(assembly.box.floors))) {
+            floorCount = Number(assembly.box.floors);
+        }
+        return {
+            name: house.name,
+            town: house.town,
+            rent: house.rent,
+            size: house.size_sqm,
+            beds: house.beds,
+            windows: windowCount(house),
+            floors: floorCount,
+            x: entrance.x,
+            y: entrance.y,
+            z: entrance.z
+        };
+    }
+
+    function windowCount(house) {
+        var keys = ["windows", "open_windows", "openwindows"];
+        var i;
+        for (i = 0; i &lt; keys.length; i++) {
+            if (house[keys[i]] === undefined || house[keys[i]] === null || house[keys[i]] === "") {
+                continue;
+            }
+            var value = Number(house[keys[i]]);
+            if (Number.isFinite(value)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    function fillPanel(data) {
+        panel.replaceChildren();
+        var title = document.createElement("h2");
+        if (data.name) {
+            var pageLink = document.createElement("a");
+            pageLink.href = wikiPageUrl(data.name);
+            pageLink.target = "_blank";
+            pageLink.rel = "noopener noreferrer";
+            pageLink.textContent = data.name;
+            title.append(pageLink);
+        } else {
+            title.textContent = "Casa";
+        }
+        var facts = document.createElement("dl");
+        addFact(facts, "Preço", formatGold(data.rent));
+        addFact(facts, "Cidade", data.town || "—");
+        addMap(facts, data);
+        addFact(facts, "Tamanho", finite(data.size) ? Number(data.size).toLocaleString("pt-BR") + " SQM" : "—");
+        addFact(facts, "Camas", finite(data.beds) ? String(data.beds) : "—");
+        if (data.windows !== null &amp;&amp; data.windows !== undefined &amp;&amp; finite(data.windows)) {
+            addFact(facts, "Janelas", String(data.windows));
+        }
+        addFact(facts, "Andares", finite(data.floors) ? String(data.floors) : "—");
+        panel.append(title, facts);
+    }
+
+    function addFact(facts, label, value) {
+        var term = document.createElement("dt");
+        term.textContent = label;
+        var description = document.createElement("dd");
+        description.textContent = value;
+        facts.append(term, description);
+    }
+
+    function addMap(facts, data) {
+        var term = document.createElement("dt");
+        term.textContent = "Localização no mapa";
+        var description = document.createElement("dd");
+        var x = Number(data.x);
+        var y = Number(data.y);
+        var z = Number(data.z);
+        if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
+            description.textContent = "—";
+        } else {
+            var link = document.createElement("a");
+            link.href = "https://www.tibiawiki.com.br/wiki/mapa#" + x + "," + y + "," + z + ":3";
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = x + ", " + y + ", " + z;
+            description.append(link);
+        }
+        facts.append(term, description);
+    }
+
+    function finite(value) {
+        return value !== null &amp;&amp; value !== undefined &amp;&amp; value !== "" &amp;&amp; Number.isFinite(Number(value));
+    }
+
+    function wikiPageUrl(name) {
+        var title = String(name).trim().replace(/ /g, "_");
+        return "https://www.tibiawiki.com.br/wiki/" + encodeURIComponent(title);
+    }
+
+    function formatGold(value) {
+        if (!finite(value)) {
+            return "—";
+        }
+        return Number(value).toLocaleString("pt-BR") + " gp";
+    }
+
+    function showEmpty() {
+        panel.replaceChildren();
+        var title = document.createElement("h2");
+        title.textContent = "Dados da casa";
+        var message = document.createElement("p");
+        message.textContent = "Selecione uma casa para ver o preço, a cidade e a planta.";
+        panel.append(title, message);
+    }
+}());
+&lt;/script&gt;
+&lt;/includeonly&gt;
+</textarea>
+
+    <h2>2. Chamar na página do catálogo</h2>
+    <p>Na página em que o catálogo deve aparecer, cole:</p>
+    <button type="button" data-copy="insertion-code">Copiar inclusão</button>
+    <textarea id="insertion-code" readonly rows="2">{{#widget:HouseSpyBrowser}}</textarea>
+    <p>Grave as duas páginas e abra a página do catálogo com <code>?action=purge</code>. Escolha uma cidade, selecione uma casa e confira a planta e o painel ao lado.</p>
+</main>
+<script>
+    document.querySelectorAll("[data-copy]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            var area = document.getElementById(button.getAttribute("data-copy"));
+            var done = function () {
+                var previous = button.textContent;
+                button.textContent = "Copiado";
+                setTimeout(function () {
+                    button.textContent = previous;
+                }, 1500);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(area.value).then(done);
+                return;
+            }
+            area.focus();
+            area.select();
+            document.execCommand("copy");
+            done();
+        });
+    });
+</script>
+</body>
+</html>

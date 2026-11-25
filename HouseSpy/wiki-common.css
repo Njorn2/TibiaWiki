@@ -1,0 +1,208 @@
+/* HouseSpy. Acrescentar ao fim de MediaWiki:Common.css. */
+    .house-spy {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        min-width: 280px;
+        min-height: 240px;
+        border: 2px solid #a2a9b1;
+        border-radius: 5px;
+        background: #ffffff;
+        color: #000000;
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 13px;
+        line-height: 1.35;
+        overflow: hidden;
+    }
+    .house-spy *,
+    .house-spy *::before,
+    .house-spy *::after {
+        box-sizing: border-box;
+    }
+    .house-spy-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+        padding: 8px;
+        background: #c7451d;
+        color: #ffffff;
+    }
+    .house-spy-name,
+    .house-spy-meta,
+    .house-spy-hint {
+        margin: 0;
+    }
+    .house-spy-name {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+    .house-spy-meta {
+        flex: 1 1 140px;
+        min-width: 0;
+        font-size: 12px;
+    }
+    .house-spy-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-left: auto;
+    }
+    .house-spy button {
+        min-height: 32px;
+        padding: 4px 10px;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        background: #ffffff;
+        color: #1a1a1a;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 1.2;
+        cursor: pointer;
+    }
+    .house-spy-up,
+    .house-spy-down {
+        background: #ffffff;
+        color: #1a1a1a;
+        border-color: #ffffff;
+    }
+    .house-spy button:hover {
+        background: #eec1c1;
+    }
+    .house-spy-up:hover,
+    .house-spy-down:hover,
+    .house-spy-floor-button.is-active:hover {
+        background: #a83714;
+        color: #ffffff;
+        border-color: #8c2c10;
+    }
+    .house-spy button:active {
+        background: #f79797;
+    }
+    .house-spy button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+    .house-spy button:focus-visible,
+    .house-spy-stage:focus-visible {
+        outline: 2px solid #1a1a1a;
+        outline-offset: 2px;
+    }
+    .house-spy-zoom-group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .house-spy-zoom-out,
+    .house-spy-zoom-in {
+        min-width: 32px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .house-spy-zoom {
+        min-width: 48px;
+        color: #ffffff;
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+    }
+    .house-spy-hint {
+        padding: 6px 8px 0;
+        color: #333333;
+        font-size: 11px;
+    }
+    .house-spy-stage {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
+        margin: 8px;
+        overflow: hidden;
+        border: 1px solid #a2a9b1;
+        border-radius: 5px;
+        background: transparent;
+        cursor: grab;
+        touch-action: none;
+    }
+    .house-spy-stage.is-panning {
+        cursor: grabbing;
+    }
+    .house-spy-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+    }
+    .house-spy img.house-spy-image {
+        position: absolute;
+        display: block;
+        width: auto !important;
+        height: auto !important;
+        max-width: none !important;
+        max-height: none !important;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        user-select: none;
+        -webkit-user-drag: none;
+        pointer-events: none;
+    }
+    .house-spy-status {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(17, 17, 17, 0.82);
+        color: #ffffff;
+        text-align: center;
+    }
+    .house-spy-status.is-visible {
+        display: flex;
+    }
+    .house-spy-status-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        max-width: 360px;
+    }
+    .house-spy-status p {
+        margin: 0;
+    }
+    .house-spy-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: house-spy-spin 0.8s linear infinite;
+    }
+    .house-spy-floors {
+        display: flex;
+        gap: 6px;
+        padding: 0 8px 8px;
+        overflow-x: auto;
+    }
+    .house-spy-floor-button {
+        flex: 0 0 auto;
+        font-weight: normal;
+        white-space: nowrap;
+    }
+    .house-spy-floor-button.is-active {
+        background: #c7451d;
+        color: #ffffff;
+        border-color: #8c2c10;
+        font-weight: bold;
+    }
+    @keyframes house-spy-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .house-spy-spinner {
+            animation: none;
+            border-top-color: rgba(255, 255, 255, 0.35);
+        }
+    }
