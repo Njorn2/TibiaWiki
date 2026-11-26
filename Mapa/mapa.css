@@ -1,0 +1,360 @@
+.tw-map {
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 240px;
+    background: #0c0e10;
+    color: #f4f1ea;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.3;
+    overflow: hidden;
+}
+
+.tw-map *,
+.tw-map *::before,
+.tw-map *::after {
+    box-sizing: border-box;
+}
+
+.tw-map-stage {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.28) 100%),
+        #000;
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+}
+
+.tw-map-stage.is-dragging {
+    cursor: grabbing;
+}
+
+.tw-map-stage:focus-visible {
+    outline: 2px solid #ffe14a;
+    outline-offset: -2px;
+}
+
+.tw-map-world {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+}
+
+.tw-map-tile {
+    position: absolute;
+    width: 256px;
+    height: 256px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    pointer-events: none;
+}
+
+.tw-map-pin,
+.tw-map-hover {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+}
+
+.tw-map-pin {
+    background: rgba(255, 225, 74, 0.28);
+    box-shadow: 0 0 0 1px #111, 0 0 0 2px #ffe14a;
+}
+
+.tw-map-hover {
+    display: none;
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 0 0 1px rgba(255, 225, 74, 0.95);
+}
+
+.tw-map-marker {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border: 2px solid #ffe14a;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #111, 0 0 0 5px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+}
+
+.tw-map-floors,
+.tw-map-tools,
+.tw-map-layers,
+.tw-map-coord,
+.tw-map-close,
+.tw-map-status,
+.tw-map-hint {
+    position: absolute;
+    z-index: 2;
+}
+
+.tw-map-floors,
+.tw-map-tools {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+    background: rgba(12, 14, 16, 0.86);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.tw-map-floors {
+    top: 12px;
+    left: 12px;
+}
+
+.tw-map-tools {
+    top: 12px;
+    right: 12px;
+}
+
+.tw-map.has-close .tw-map-tools {
+    top: 64px;
+}
+
+.tw-map-layers {
+    top: 136px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(12, 14, 16, 0.86);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    color: #f4f1ea;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tw-map-layers input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #ffe14a;
+    cursor: pointer;
+}
+
+.tw-map-layers[aria-busy="true"] {
+    opacity: 0.7;
+}
+
+.tw-map-houses {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.tw-map-houses[hidden] {
+    display: none;
+}
+
+.tw-map-house {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    pointer-events: auto;
+}
+
+.tw-map-house img {
+    display: block;
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.tw-map-house:hover,
+.tw-map-house:focus-visible {
+    z-index: 3;
+}
+
+.tw-map-house:focus-visible {
+    outline: 2px solid #ffe14a;
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.tw-map-house-tip {
+    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+    padding: 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    background: rgba(12, 14, 16, 0.94);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    color: #f4f1ea;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.35;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.tw-map-house-tip b {
+    display: block;
+    color: #ffe14a;
+}
+
+.tw-map-house:hover .tw-map-house-tip,
+.tw-map-house:focus-visible .tw-map-house-tip {
+    display: block;
+}
+
+.tw-map-house.is-below .tw-map-house-tip {
+    top: calc(100% + 8px);
+    bottom: auto;
+}
+
+.tw-map button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.tw-map button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.tw-map button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.tw-map button:focus-visible {
+    outline: 2px solid #ffe14a;
+    outline-offset: 2px;
+}
+
+.tw-map-floor {
+    min-width: 72px;
+    padding: 4px 6px 6px;
+    color: #ffe14a;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tw-map-zoom {
+    min-width: 40px;
+    color: #f4f1ea;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.tw-map-coord {
+    left: 12px;
+    bottom: 12px;
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    background: rgba(12, 14, 16, 0.86);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    font-variant-numeric: tabular-nums;
+}
+
+.tw-map-coord b {
+    display: block;
+    color: #ffe14a;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+}
+
+.tw-map-close {
+    top: 12px;
+    right: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(12, 14, 16, 0.86);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.tw-map-hint {
+    left: 50%;
+    bottom: 64px;
+    margin: 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(12, 14, 16, 0.72);
+    color: #f4f1ea;
+    font-size: 12px;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.tw-map-hint.is-dismissed {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .tw-map-hint {
+        transition: opacity 0.4s ease;
+    }
+}
+
+.tw-map-status {
+    top: 50%;
+    left: 50%;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    margin: 0;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 225, 74, 0.45);
+    border-radius: 12px;
+    background: rgba(12, 14, 16, 0.9);
+    color: #f4f1ea;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.tw-map-status[hidden] {
+    display: none;
+}
+
+@media (max-width: 560px) {
+    .tw-map-hint {
+        display: none;
+    }
+
+    .tw-map-coord {
+        gap: 8px;
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+}

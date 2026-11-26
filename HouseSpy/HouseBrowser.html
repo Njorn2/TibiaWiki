@@ -1657,8 +1657,12 @@
     }
 
     function wikiPageUrl(name) {
-        var title = String(name).trim().replace(/ /g, "_");
-        return "https://www.tibiawiki.com.br/wiki/" + encodeURIComponent(title);
+        var aliases = {
+            "Warriors' Guildhall": "Warriors Guildhall"
+        };
+        var title = String(name || "").trim();
+        title = aliases[title] || title;
+        return "https://www.tibiawiki.com.br/wiki/" + encodeURIComponent(title.replace(/ /g, "_"));
     }
 
     function formatGold(value) {
