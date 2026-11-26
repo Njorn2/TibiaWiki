@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tw-map=".preview">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa do Tibia Wiki</title>
+    <link rel="stylesheet" href="mapa.css">
+    <style>
+        body {
+            margin: 0;
+            background: #f6f6f6;
+            color: #202122;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        main {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 24px 16px 48px;
+        }
+        h1 { font-size: 22px; margin: 0 0 8px; }
+        h2 {
+            font-size: 16px;
+            margin: 28px 0 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #a2a9b1;
+        }
+        .map_wiki { height: 480px; border: 1px solid #a2a9b1; }
+        .map_hunt, .map_hunt_geo { position: relative; }
+        .map_hunt_box, .map_hunt_box_geo { border: 1px solid #a2a9b1; }
+        .map_hunt_coord, .map_frame_coord { display: none; }
+        .map_show { cursor: pointer; color: #0645ad; }
+        .map_frame {
+            z-index: 8010;
+            display: none;
+            position: fixed;
+            width: 520px;
+            height: 450px;
+            top: 50%;
+            left: 50%;
+            margin: -225px 0 0 -260px;
+            background: #000;
+            box-shadow: rgba(0, 0, 0, 0.5) 0 10px 25px;
+        }
+        .map_box { position: absolute; inset: 0; }
+        .map_overlay {
+            display: none;
+            position: fixed;
+            z-index: 8000;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+        }
+        .map_logobox { position: absolute; right: 8px; bottom: 8px; z-index: 2; }
+        a.map_logo {
+            display: block;
+            width: 70px;
+            height: 28px;
+            background: #c7451d;
+            color: #fff;
+            font-size: 12px;
+            line-height: 28px;
+            text-align: center;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Mapa do Tibia Wiki</h1>
+    <p>Prévia local com as imagens de <code>Mapa/.preview</code>. No wiki, o mesmo script lê <code>https://cdn.jsdelivr.net/gh/TibiaWikiBR/map-images@v2026-11-25</code>.</p>
+
+    <h2>Página Mapa</h2>
+    <div class="map_wiki"></div>
+
+    <h2>Lightbox, como na Prima Arbor</h2>
+    <p>Nordeste do depot, (<span class="map_show">
+        <span class="map_overlay"></span>
+        <span class="map_frame_coord">32691,31685,7:3</span>
+        aqui
+        <span class="map_frame">
+            <span class="map_logobox"></span>
+            <span class="map_box"></span>
+        </span>
+    </span>).</p>
+
+    <h2>Infobox</h2>
+    <div class="map_hunt">
+        <span class="map_hunt_coord">32691,31685,7:2</span>
+        <span class="map_logobox"></span>
+        <div class="map_hunt_box"></div>
+    </div>
+</main>
+<script>
+    if (!location.hash) {
+        history.replaceState(null, "", "#32691,31685,7:1");
+    }
+</script>
+<script src="mapa.js"></script>
+</body>
+</html>
